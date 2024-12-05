@@ -29,6 +29,9 @@ ext {
 
 dependencies {
 
+	// PostgreSQL
+	runtimeOnly 'org.postgresql:postgresql'
+
 	// Redis Session Clustering
 	implementation 'org.springframework.session:spring-session-data-redis'
 
