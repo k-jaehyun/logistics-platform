@@ -9,7 +9,6 @@ import com.logistics.platform.hub_service.presentation.response.HubResponse;
 import com.logistics.platform.hub_service.presentation.util.GeoUtils;
 import java.io.IOException;
 import lombok.RequiredArgsConstructor;
-import org.locationtech.jts.geom.Point;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -21,6 +20,7 @@ public class HubService {
 
   public HubResponse createHub(HubCreateRequest hubCreateRequest)
       throws IOException, InterruptedException, ApiException {
+    // todo 허브 이름 중복 확인 로직 추가
     AddressResponse latLngByAddress = geocodingService.getLatLngByAddress(
         hubCreateRequest.getAddress());
     Hub hub = Hub.builder()
