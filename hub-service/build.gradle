@@ -80,6 +80,12 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+
+	// Point
+	implementation 'org.postgresql:postgresql'
+	// hibernate-spatial
+	implementation 'org.hibernate:hibernate-spatial:5.6.11.Final'
+
 }
 
 tasks.named('test') {
