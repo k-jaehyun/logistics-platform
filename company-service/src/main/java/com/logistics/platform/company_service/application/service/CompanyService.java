@@ -3,6 +3,7 @@ package com.logistics.platform.company_service.application.service;
 import com.logistics.platform.company_service.domain.model.Company;
 import com.logistics.platform.company_service.domain.model.CompanyType;
 import com.logistics.platform.company_service.domain.repository.CompanyRepository;
+import com.logistics.platform.company_service.presentation.global.ex.CustomApiException;
 import com.logistics.platform.company_service.presentation.request.CompanyCreateRequest;
 import com.logistics.platform.company_service.presentation.request.CompanyModifyRequest;
 import com.logistics.platform.company_service.presentation.response.CompanyResponse;
@@ -36,6 +37,9 @@ public class CompanyService {
 
   public CompanyResponse getCompany(UUID companyId) {
     Company company = companyRepository.findByIdAble(companyId);
+    if (company == null) {
+      throw new CustomApiException("해당 companyId가 존재하지 않습니다.");
+    }
     return new CompanyResponse(company);
   }
 
@@ -50,7 +54,15 @@ public class CompanyService {
 
   @Transactional
   public CompanyResponse modifyCompany(UUID companyId, CompanyModifyRequest companyModifyRequest) {
+    Company company = companyRepository.findByIdAble(companyId);
+    company.changeCompany(companyModifyRequest);
+    Company savedCompany = companyRepository.save(company);
+    return new CompanyResponse(savedCompany);
+  }
 
-
+  @Transactional
+  public void deleteCompany(UUID companyId) {
+    Company company = companyRepository.findByIdAble(companyId);
+    company.deleteCompany();
   }
 }

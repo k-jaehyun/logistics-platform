@@ -1,5 +1,6 @@
 package com.logistics.platform.company_service.domain.model;
 
+import com.logistics.platform.company_service.presentation.request.CompanyModifyRequest;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -48,4 +49,16 @@ public class Company {
   @Column(nullable = false)
   private boolean isDeleted;
 
+  public void changeCompany(CompanyModifyRequest companyModifyRequest) {
+    this.hubId = companyModifyRequest.getHubId();
+    this.companyName = companyModifyRequest.getCompanyName();
+    this.number = companyModifyRequest.getNumber();
+    this.address = companyModifyRequest.getAddress();
+    this.companyType = !companyModifyRequest.isCheckCompanyType() ? CompanyType.MANUFACTURER
+        : CompanyType.RECEIVER;
+  }
+
+  public void deleteCompany() {
+    this.isDeleted = true;
+  }
 }

@@ -9,10 +9,12 @@ import jakarta.validation.Valid;
 import java.util.List;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
+import org.apache.coyote.Response;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -50,9 +52,11 @@ public class CompanyController {
     return new ResponseDto<>(1, "업체 수정이 완료되었습니다.", companyResponse);
   }
 
-
-
-//  @PathVariable("/{companyId}")
+  @PutMapping("/{companyId}")
+  public ResponseDto<CompanyResponse> delete(@PathVariable UUID companyId) {
+    companyService.deleteCompany(companyId);
+    return new ResponseDto<>(1, "업체 삭제가 완료되었습니다.", null);
+  }
 
 
 
