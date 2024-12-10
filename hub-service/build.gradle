@@ -74,6 +74,9 @@ dependencies {
 	compileOnly 'org.projectlombok:lombok'
 	annotationProcessor 'org.projectlombok:lombok'
 
+	// Valid
+	implementation 'org.springframework.boot:spring-boot-starter-validation'
+
 	// JPA
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 
@@ -83,8 +86,13 @@ dependencies {
 
 	// Point
 	implementation 'org.postgresql:postgresql'
-	// hibernate-spatial
-	implementation 'org.hibernate:hibernate-spatial:5.6.11.Final'
+
+	// Point - hibernate-spatial
+	implementation 'org.hibernate:hibernate-spatial:6.2.2.Final'
+
+	// Geocoding
+	implementation group: 'com.google.maps', name: 'google-maps-services', version: '2.2.0'
+
 
 }
 

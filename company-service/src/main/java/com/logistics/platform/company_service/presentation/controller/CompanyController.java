@@ -9,7 +9,6 @@ import jakarta.validation.Valid;
 import java.util.List;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
-import org.apache.coyote.Response;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -27,7 +26,8 @@ public class CompanyController {
   private final CompanyService companyService;
 
   @PostMapping
-  public ResponseDto<CompanyResponse> create(@RequestBody @Valid CompanyCreateRequest companyCreateRequest) {
+  public ResponseDto<CompanyResponse> create(
+      @RequestBody @Valid CompanyCreateRequest companyCreateRequest) {
 
     CompanyResponse companyResponse = companyService.createCompany(companyCreateRequest);
     return new ResponseDto<>(1, "업체가 생성되었습니다.", companyResponse);
@@ -57,7 +57,6 @@ public class CompanyController {
     companyService.deleteCompany(companyId);
     return new ResponseDto<>(1, "업체 삭제가 완료되었습니다.", null);
   }
-
 
 
 }
