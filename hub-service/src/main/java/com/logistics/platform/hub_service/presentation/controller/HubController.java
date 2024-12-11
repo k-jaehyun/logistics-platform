@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -52,9 +53,11 @@ public class HubController {
     return new ResponseDto<>(ResponseDto.SUCCESS, "허브 수정이 완료되었습니다.", hubResponse);
   }
 
-
-
-
+  @PutMapping("/{hubId}")
+  public ResponseDto<HubResponse> delete(@PathVariable UUID hubId) {
+    hubService.deleteHub(hubId);
+    return new ResponseDto<>(ResponseDto.SUCCESS, "허브 삭제가 완료되었습니다.");
+  }
 
 
 }

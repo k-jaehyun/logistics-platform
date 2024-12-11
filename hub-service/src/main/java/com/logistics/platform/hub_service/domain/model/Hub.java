@@ -87,4 +87,9 @@ public class Hub {
     this.address = hubModifyRequest.getAddress();
     // todo 나중에 수정자 업데이트 추가
   }
+
+  public void deleteHub() {
+    this.isDeleted = true;
+    // todo 나중에 삭제자 업데이트 추가
+  }
 }

@@ -82,4 +82,9 @@ public class HubService {
     Hub savedHub = hubRepository.save(hub);
     return new HubResponse(savedHub);
   }
+
+  public void deleteHub(UUID hubId) {
+    Hub hub = hubRepository.findByHubIdAndIsDeletedFalse(hubId);
+    hub.deleteHub();
+  }
 }
