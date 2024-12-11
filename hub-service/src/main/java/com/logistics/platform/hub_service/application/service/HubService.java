@@ -83,6 +83,7 @@ public class HubService {
     return new HubResponse(savedHub);
   }
 
+  @Transactional
   public void deleteHub(UUID hubId) {
     Hub hub = hubRepository.findByHubIdAndIsDeletedFalse(hubId);
     hub.deleteHub();
