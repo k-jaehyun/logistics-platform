@@ -26,8 +26,7 @@ public class HubService {
 
     Hub exsitHub = hubRepository.findByHubNameAndIsDeletedFalse(
         hubCreateRequest.getHubName());
-    log.info("존재하는 허브 이름 = " + exsitHub.getHubName());
-    if (exsitHub.getHubName().equals(hubCreateRequest.getHubName())) {
+    if (exsitHub != null && exsitHub.getHubName().equals(hubCreateRequest.getHubName())) {
       throw new CustomApiException("해당 허브 이름이 이미 존재합니다.");
     }
 
