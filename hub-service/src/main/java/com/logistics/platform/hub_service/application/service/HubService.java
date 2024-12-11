@@ -64,7 +64,12 @@ public class HubService {
 
   @Transactional(readOnly = true)
   public Page<HubResponse> searchHubs(String keyword, Pageable pageable) {
-    Page<Hub> hubs = hubRepository.findAllByHubNameContainingAndIsDeletedFalse(keyword, pageable);
+    Page<Hub> hubs;
+    if (keyword == null || keyword.trim().isEmpty()) {
+      hubs = hubRepository.findAllByIsDeletedFalse(pageable);
+    } else {
+      hubs = hubRepository.findAllByHubNameContainingAndIsDeletedFalse(keyword, pageable);
+    }
     return hubs.map(HubResponse::new);
   }
 
