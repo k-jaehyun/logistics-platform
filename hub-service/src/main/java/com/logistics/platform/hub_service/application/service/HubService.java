@@ -14,6 +14,7 @@ import java.io.IOException;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -61,7 +62,9 @@ public class HubService {
   }
 
   @Transactional(readOnly = true)
+  @Cacheable(cacheNames = "hubCache", cacheManager = "cacheManager")
   public HubResponse getHub(UUID hubId) {
+    log.info("캐시 작동 확인");
     Hub hub = hubRepository.findByHubIdAndIsDeletedFalse(hubId);
     if (hub == null) {
       throw new CustomApiException("해당 hubId가 존재하지 않습니다.");

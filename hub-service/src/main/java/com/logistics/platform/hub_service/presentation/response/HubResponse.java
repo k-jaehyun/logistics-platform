@@ -2,11 +2,12 @@ package com.logistics.platform.hub_service.presentation.response;
 
 import com.logistics.platform.hub_service.domain.model.Hub;
 import com.logistics.platform.hub_service.domain.model.HubType;
+import java.io.Serializable;
 import java.util.UUID;
 import lombok.Getter;
 
 @Getter
-public class HubResponse {
+public class HubResponse implements Serializable {
 
   private UUID hubId;
 
