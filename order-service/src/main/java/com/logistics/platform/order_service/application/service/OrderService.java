@@ -5,6 +5,7 @@ import com.logistics.platform.order_service.domain.repository.OrderRepository;
 import com.logistics.platform.order_service.presentation.global.exception.CustomApiException;
 import com.logistics.platform.order_service.presentation.request.OrderRequestDto;
 import com.logistics.platform.order_service.presentation.response.OrderResponseDto;
+import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -15,6 +16,7 @@ public class OrderService {
   private final OrderRepository orderRepository;
   private final ProductService productService;
 
+  @CircuitBreaker(name = "OrderService", fallbackMethod = "handlecreateOrderFailue")
   public OrderResponseDto createOrder(OrderRequestDto orderRequestDto) {
 
     // productId 검증
@@ -44,5 +46,9 @@ public class OrderService {
     orderRepository.save(order);
 
     return new OrderResponseDto(order);
+  }
+
+  public OrderResponseDto handlecreateOrderFailue(OrderRequestDto orderRequestDto, Throwable t) {
+    return new OrderResponseDto(t.getMessage());
   }
 }

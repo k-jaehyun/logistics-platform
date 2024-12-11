@@ -24,7 +24,11 @@ public class OrderController {
 
     OrderResponseDto orderResponseDto = orderService.createOrder(orderRequestDto);
 
-    return new ResponseDto<>(ResponseDto.SUCCESS, "주문이 생성되었습니다.", orderResponseDto);
+    if (orderResponseDto.getMessage() == null) {
+      return new ResponseDto<>(ResponseDto.SUCCESS, "주문이 생성되었습니다.", orderResponseDto);
+    } else {
+      return new ResponseDto<>(ResponseDto.FAILURE, orderResponseDto.getMessage());
+    }
   }
 
 
