@@ -15,7 +15,12 @@ public class HubModifyRequest {
   private String hubName;
 
   @NotEmpty
+  private String roadAddress;
+
+  @NotEmpty
   @Pattern(regexp = "\\d{5}", message = "주소는 5자리 숫자 우편번호 형식이어야 합니다.")
-  private String address;
+  private String postalCode;
+
+  private Boolean isHubTypeReceiver;
 
 }
