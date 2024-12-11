@@ -1,7 +1,6 @@
 package com.logistics.platform.hub_service.domain.repository;
 
 import com.logistics.platform.hub_service.domain.model.Hub;
-import com.logistics.platform.hub_service.presentation.response.HubResponse;
 import java.util.UUID;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
