@@ -15,6 +15,8 @@ public class JwtUtil {
     @Value("${service.jwt.access-expiration}")
     private Long accessExpiration;
 
+    public static final String AUTHORIZATION_ROLE = "role";
+
     private final SecretKey secretKey;
 
     public JwtUtil(@Value("${service.jwt.secret-key}") String secretKey) {
@@ -25,7 +27,7 @@ public class JwtUtil {
 
         return Jwts.builder()
             .subject(username)
-            .claim("role", role)
+            .claim(AUTHORIZATION_ROLE, role)
             .issuedAt(new Date(System.currentTimeMillis()))
             .expiration(new Date(System.currentTimeMillis() + accessExpiration))
             .signWith(secretKey)
