@@ -12,6 +12,7 @@ import jakarta.persistence.TemporalType;
 import java.time.LocalDateTime;
 import java.util.UUID;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.CreatedBy;
@@ -85,5 +86,23 @@ public class Order {
   @Column(nullable = false)
   private Boolean isDeleted = false;
 
+  @Builder
+  public Order(
+      UUID productId,
+      UUID supplyCompayId,
+      UUID receiveCompanyId,
+      Long productQuantity,
+      Long totalPrice,
+      String orderRequest,
+      String createdBy
+  ) {
+    this.productId = productId;
+    this.supplyCompayId = supplyCompayId;
+    this.receiveCompanyId = receiveCompanyId;
+    this.productQuantity = productQuantity;
+    this.totalPrice = totalPrice;
+    this.orderRequest = orderRequest;
+    this.createdBy = createdBy;
+  }
 
 }
