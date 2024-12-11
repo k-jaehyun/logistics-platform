@@ -93,7 +93,6 @@ dependencies {
 	// Geocoding
 	implementation group: 'com.google.maps', name: 'google-maps-services', version: '2.2.0'
 
-
 }
 
 tasks.named('test') {
