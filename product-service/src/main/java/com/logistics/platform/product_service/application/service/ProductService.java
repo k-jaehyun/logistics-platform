@@ -51,7 +51,7 @@ public class ProductService {
     Product product = productRepository.findById(productId)
         .orElseThrow(() -> new CustomApiException("존재하지 않는 productId 입니다."));
 
-    if(product.getIsDeleted()) {
+    if (product.getIsDeleted()) {
       throw new CustomApiException("이미 삭제된 상품입니다.");
     }
 
@@ -74,7 +74,7 @@ public class ProductService {
     Product product = productRepository.findById(productId)
         .orElseThrow(() -> new CustomApiException("존재하지 않는 productId입니다."));
 
-    if(product.getIsDeleted()) {
+    if (product.getIsDeleted()) {
       throw new CustomApiException("이미 삭제된 상품입니다.");
     }
 
@@ -89,12 +89,22 @@ public class ProductService {
     Product product = productRepository.findById(productId)
         .orElseThrow(() -> new CustomApiException("존재하지 않는 productId입니다."));
 
-    if(product.getIsDeleted()) {
+    if (product.getIsDeleted()) {
       throw new CustomApiException("이미 삭제된 상품입니다.");
     }
 
     product.delete();
 
     return new ProductResponseDto(product);
+  }
+
+  public Boolean validateProductId(UUID productId) {
+    return productRepository.findById(productId)
+        .map(product -> !product.getIsDeleted())  // Optional이 비어 있지 않다면, map 안의 람다식 실행
+        .orElse(false);
+  }
+
+  public Long getProductPriceById(UUID productId) {
+    return productRepository.findById(productId).orElseThrow().getPrice();
   }
 }

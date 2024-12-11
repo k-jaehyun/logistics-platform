@@ -86,4 +86,18 @@ public class ProductController {
     );
   }
 
+  @GetMapping("/{productId}/validation")
+  public Boolean validateProductId(
+      @PathVariable UUID productId
+  ) {
+    return productService.validateProductId(productId);
+  }
+
+  @GetMapping("/{productId}/price")
+  public Long getProductPriceById(
+      @PathVariable UUID productId
+  ) {
+    return productService.getProductPriceById(productId);
+  }
+
 }
