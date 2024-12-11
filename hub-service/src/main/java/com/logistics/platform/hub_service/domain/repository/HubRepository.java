@@ -14,4 +14,6 @@ public interface HubRepository extends JpaRepository<Hub, UUID> {
   Hub findByHubNameAndIsDeletedFalse(String hubName);
 
   Page<Hub> findAllByHubNameContainingAndIsDeletedFalse(String hubName, Pageable pageable);
+
+  Hub findByHubIdAndIsDeletedFalse(UUID hubId);
 }

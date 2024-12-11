@@ -9,6 +9,7 @@ import com.logistics.platform.hub_service.presentation.response.AddressResponse;
 import com.logistics.platform.hub_service.presentation.response.HubResponse;
 import com.logistics.platform.hub_service.presentation.util.GeoUtils;
 import java.io.IOException;
+import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -48,6 +49,14 @@ public class HubService {
 
     Hub savedHub = hubRepository.save(hub);
     return new HubResponse(savedHub);
+  }
+
+  public HubResponse getHub(UUID hubId) {
+    Hub hub = hubRepository.findByHubIdAndIsDeletedFalse(hubId);
+    if (hub == null) {
+      throw new CustomApiException("해당 hubId가 존재하지 않습니다.");
+    }
+    return new HubResponse(hub);
   }
 
   public Page<HubResponse> searchHubs(String keyword, Pageable pageable) {
