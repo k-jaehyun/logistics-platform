@@ -1,6 +1,7 @@
 package com.logistics.platform.auth_service.application.service;
 
 import com.logistics.platform.auth_service.application.dto.SignupResDto;
+import com.logistics.platform.auth_service.common.exception.CustomApiException;
 import com.logistics.platform.auth_service.domain.model.Role;
 import com.logistics.platform.auth_service.domain.model.User;
 import com.logistics.platform.auth_service.domain.repository.UserRepository;
@@ -19,7 +20,7 @@ public class AuthService {
     public SignupResDto signup(SignupReqDto reqDto) {
         userRepository.findByUsername(reqDto.getUsername())
             .ifPresent(user -> {
-                throw new IllegalArgumentException("이미 사용 중인 사용자 이름입니다");
+                throw new CustomApiException("이미 사용 중인 사용자 이름입니다");
             });
 
         Role role = validateRole(reqDto.getRole());
@@ -41,7 +42,7 @@ public class AuthService {
         try {
             return Role.valueOf(role.toUpperCase());
         } catch (IllegalArgumentException e) {
-            throw new IllegalArgumentException("유효하지 않은 role 입니다");
+            throw new CustomApiException("유효하지 않은 role 입니다");
         }
     }
 
