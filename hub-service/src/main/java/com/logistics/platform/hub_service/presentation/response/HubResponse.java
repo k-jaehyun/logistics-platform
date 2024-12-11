@@ -9,6 +9,8 @@ public class HubResponse {
 
   private UUID hubId;
 
+  private Long hubManagerId;
+
   private String hubName;
 
   private String address;
@@ -21,10 +23,11 @@ public class HubResponse {
 
   public HubResponse(Hub hub) {
     this.hubId = hub.getHubId();
+    this.hubManagerId = hub.getHubManagerId();
     this.hubName = hub.getHubName();
     this.address = hub.getAddress();
     this.latitude = hub.getLatitude();
     this.longitude = hub.getLongitude();
-    this.isDeleted = hub.isDeleted();
+    this.isDeleted = hub.getIsDeleted();
   }
 }

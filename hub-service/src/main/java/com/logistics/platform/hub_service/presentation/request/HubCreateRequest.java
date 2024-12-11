@@ -1,11 +1,15 @@
 package com.logistics.platform.hub_service.presentation.request;
 
 import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import lombok.Getter;
 
 @Getter
 public class HubCreateRequest {
+
+  @NotNull
+  private Long hubManagerId;
 
   @NotEmpty
   private String hubName;

@@ -11,6 +11,8 @@ import com.logistics.platform.hub_service.presentation.util.GeoUtils;
 import java.io.IOException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -34,15 +36,22 @@ public class HubService {
         hubCreateRequest.getAddress());
 
     Hub hub = Hub.builder()
+        .hubManagerId(hubCreateRequest.getHubManagerId())
         .hubName(hubCreateRequest.getHubName())
         .address(hubCreateRequest.getAddress())
         .longitude(latLngByAddress.getLongitude())
         .latitude(latLngByAddress.getLatitude())
         .location(GeoUtils.toPoint(latLngByAddress.getLongitude(), latLngByAddress.getLatitude()))
+        .createdBy("임시 생성자")
         .isDeleted(false)
         .build();
 
     Hub savedHub = hubRepository.save(hub);
     return new HubResponse(savedHub);
+  }
+
+  public Page<HubResponse> searchHubs(String keyword, Pageable pageable) {
+    Page<Hub> hubs = hubRepository.findAllByHubNameContainingAndIsDeletedFalse(keyword, pageable);
+    return hubs.map(HubResponse::new);
   }
 }

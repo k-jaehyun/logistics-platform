@@ -2,27 +2,40 @@ package com.logistics.platform.hub_service.domain.model;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EntityListeners;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import jakarta.persistence.Temporal;
+import jakarta.persistence.TemporalType;
+import java.time.LocalDateTime;
 import java.util.UUID;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.locationtech.jts.geom.Point;
+import org.springframework.data.annotation.CreatedBy;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedBy;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
 @Entity
+@EntityListeners(AuditingEntityListener.class)
 @Table(name = "p_hub")
 public class Hub {
 
   @Id
   @GeneratedValue(generator = "UUID")
   private UUID hubId;
+
+  @Column(nullable = false)
+  private Long hubManagerId;
 
   @Column(nullable = false)
   private String hubName;
@@ -39,9 +52,31 @@ public class Hub {
   @Column(columnDefinition = "geometry(Point, 4326)", nullable = false)
   private Point location;
 
-  // todo 생성일 ~ 삭제자
+  @CreatedDate
+  @Column(updatable = false, nullable = false)
+  @Temporal(TemporalType.TIMESTAMP)
+  private LocalDateTime createdAt;
+
+  @CreatedBy
+  @Column(updatable = false, nullable = false, length = 100)
+  private String createdBy;
+
+  @LastModifiedDate
+  @Column
+  @Temporal(TemporalType.TIMESTAMP)
+  private LocalDateTime updatedAt;
+
+  @LastModifiedBy
+  @Column(length = 100)
+  private String updatedBy;
+
+  @Column
+  private LocalDateTime deletedAt;
+
+  @Column
+  private String deletedBy;
 
   @Column(nullable = false)
-  private boolean isDeleted;
+  private Boolean isDeleted = false;
 
 }
