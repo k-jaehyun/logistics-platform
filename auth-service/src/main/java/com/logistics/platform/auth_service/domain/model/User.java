@@ -1,5 +1,6 @@
 package com.logistics.platform.auth_service.domain.model;
 
+import com.logistics.platform.auth_service.common.entity.BaseEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -19,8 +20,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @Table(name = "p_user")
 @Entity
-
-public class User {
+public class User extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
