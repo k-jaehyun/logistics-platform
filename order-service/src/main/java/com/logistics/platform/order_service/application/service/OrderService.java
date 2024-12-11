@@ -14,7 +14,7 @@ import org.springframework.stereotype.Service;
 public class OrderService {
 
   private final OrderRepository orderRepository;
-  private final ProductService productService;
+  private final ProductServiceImpl productService;
 
   @CircuitBreaker(name = "OrderService", fallbackMethod = "handlecreateOrderFailue")
   public OrderResponseDto createOrder(OrderRequestDto orderRequestDto) {

@@ -9,6 +9,8 @@ import com.querydsl.core.types.Predicate;
 import java.util.List;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Caching;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PagedModel;
@@ -69,6 +71,7 @@ public class ProductService {
   }
 
   @Transactional
+  @CacheEvict(value = "productPriceCache", key = "#productId")
   public ProductResponseDto updateProduct(UUID productId, ProductRequestDto productRequestDto) {
 
     Product product = productRepository.findById(productId)
@@ -84,6 +87,10 @@ public class ProductService {
   }
 
   @Transactional
+  @Caching(evict = {
+      @CacheEvict(value = "productValidationCache", key = "#productId"),
+      @CacheEvict(value = "productPriceCache", key = "#productId")
+  })
   public ProductResponseDto deleteProduct(UUID productId) {
 
     Product product = productRepository.findById(productId)
