@@ -4,6 +4,7 @@ import com.google.maps.errors.ApiException;
 import com.logistics.platform.hub_service.application.service.HubService;
 import com.logistics.platform.hub_service.presentation.global.ResponseDto;
 import com.logistics.platform.hub_service.presentation.request.HubCreateRequest;
+import com.logistics.platform.hub_service.presentation.request.HubModifyRequest;
 import com.logistics.platform.hub_service.presentation.response.HubResponse;
 import jakarta.validation.Valid;
 import java.io.IOException;
@@ -42,6 +43,13 @@ public class HubController {
   @GetMapping
   public Page<HubResponse> search(String keyword, Pageable pageable) {
     return hubService.searchHubs(keyword, pageable);
+  }
+
+  @PatchMapping("/{hubId}")
+  public ResponseDto<HubResponse> modify(@PathVariable UUID hubId,
+      @RequestBody @Valid HubModifyRequest hubModifyRequest) {
+    HubResponse hubResponse = hubService.modifyHub(hubId, hubModifyRequest);
+    return new ResponseDto<>(ResponseDto.SUCCESS, "허브 수정이 완료되었습니다.", hubResponse);
   }
 
 

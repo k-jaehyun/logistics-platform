@@ -5,6 +5,7 @@ import com.logistics.platform.hub_service.domain.model.Hub;
 import com.logistics.platform.hub_service.domain.repository.HubRepository;
 import com.logistics.platform.hub_service.presentation.global.ex.CustomApiException;
 import com.logistics.platform.hub_service.presentation.request.HubCreateRequest;
+import com.logistics.platform.hub_service.presentation.request.HubModifyRequest;
 import com.logistics.platform.hub_service.presentation.response.AddressResponse;
 import com.logistics.platform.hub_service.presentation.response.HubResponse;
 import com.logistics.platform.hub_service.presentation.util.GeoUtils;
@@ -15,6 +16,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -51,6 +53,7 @@ public class HubService {
     return new HubResponse(savedHub);
   }
 
+  @Transactional(readOnly = true)
   public HubResponse getHub(UUID hubId) {
     Hub hub = hubRepository.findByHubIdAndIsDeletedFalse(hubId);
     if (hub == null) {
@@ -59,8 +62,24 @@ public class HubService {
     return new HubResponse(hub);
   }
 
+  @Transactional(readOnly = true)
   public Page<HubResponse> searchHubs(String keyword, Pageable pageable) {
     Page<Hub> hubs = hubRepository.findAllByHubNameContainingAndIsDeletedFalse(keyword, pageable);
     return hubs.map(HubResponse::new);
+  }
+
+  @Transactional
+  public HubResponse modifyHub(UUID hubId, HubModifyRequest hubModifyRequest) {
+
+    Hub exsitHub = hubRepository.findByHubNameAndIsDeletedFalse(
+        hubModifyRequest.getHubName());
+    if (exsitHub != null && exsitHub.getHubName().equals(hubModifyRequest.getHubName())) {
+      throw new CustomApiException("해당 허브 이름이 이미 존재합니다.");
+    }
+
+    Hub hub = hubRepository.findByHubIdAndIsDeletedFalse(hubId);
+    hub.changeHub(hubModifyRequest);
+    Hub savedHub = hubRepository.save(hub);
+    return new HubResponse(savedHub);
   }
 }

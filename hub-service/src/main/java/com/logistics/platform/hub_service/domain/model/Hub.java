@@ -1,5 +1,6 @@
 package com.logistics.platform.hub_service.domain.model;
 
+import com.logistics.platform.hub_service.presentation.request.HubModifyRequest;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EntityListeners;
@@ -71,6 +72,7 @@ public class Hub {
   private String updatedBy;
 
   @Column
+  @Temporal(TemporalType.TIMESTAMP)
   private LocalDateTime deletedAt;
 
   @Column
@@ -79,4 +81,10 @@ public class Hub {
   @Column(nullable = false)
   private Boolean isDeleted = false;
 
+  public void changeHub(HubModifyRequest hubModifyRequest) {
+    this.hubManagerId = hubModifyRequest.getHubManagerId();
+    this.hubName = hubModifyRequest.getHubName();
+    this.address = hubModifyRequest.getAddress();
+    // todo 나중에 수정자 업데이트 추가
+  }
 }
