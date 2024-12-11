@@ -14,5 +14,8 @@ public interface CompanyRepository extends JpaRepository<Company, UUID> {
 
   Company findByCompanyNameAndIsDeletedFalse(String companyName);
 
+  Page<Company> findAllByIsDeletedFalse(Pageable pageable);
+
   Page<Company> findAllByCompanyNameContainingAndIsDeletedFalse(String keyword, Pageable pageable);
+
 }

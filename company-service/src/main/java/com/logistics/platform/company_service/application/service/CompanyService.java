@@ -59,8 +59,13 @@ public class CompanyService {
 
   @Transactional(readOnly = true)
   public Page<CompanyResponse> searchCompanies(String keyword, Pageable pageable) {
-    Page<Company> companies = companyRepository.findAllByCompanyNameContainingAndIsDeletedFalse(
-        keyword, pageable);
+    Page<Company> companies;
+    if (keyword == null || keyword.trim().isEmpty()) {
+      companies = companyRepository.findAllByIsDeletedFalse(pageable);
+    } else {
+      companies = companyRepository.findAllByCompanyNameContainingAndIsDeletedFalse(
+          keyword, pageable);
+    }
     return companies.map(CompanyResponse::new);
   }
 
