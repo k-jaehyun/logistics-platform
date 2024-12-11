@@ -36,9 +36,11 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
 
         try {
             ObjectMapper objectMapper = new ObjectMapper();
-            SigninReqDto reqDto = objectMapper.readValue(request.getInputStream(), SigninReqDto.class);
-            log.info("username {}" , reqDto.getUsername());
-            UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(reqDto.getUsername(), reqDto.getPassword(), null);
+            SigninReqDto reqDto = objectMapper.readValue(request.getInputStream(),
+                SigninReqDto.class);
+            log.info("username {}", reqDto.getUsername());
+            UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
+                reqDto.getUsername(), reqDto.getPassword(), null);
             return authenticationManager.authenticate(authenticationToken);
         } catch (IOException e) {
             throw new AuthenticationServiceException("Authentication failed", e);
@@ -47,7 +49,8 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
     }
 
     @Override
-    protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authResult) {
+    protected void successfulAuthentication(HttpServletRequest request,
+        HttpServletResponse response, FilterChain chain, Authentication authResult) {
         CustomUserDetails customUserDetails = (CustomUserDetails) authResult.getPrincipal();
         String username = customUserDetails.getUsername();
 
@@ -56,6 +59,8 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
         GrantedAuthority auth = iterator.next();
 
         String role = auth.getAuthority();
+        log.info("user role {} ", role);
+        log.info("user role {} ", username);
 
         String token = jwtUtil.createJwt(username, role);
 
@@ -64,7 +69,8 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
     }
 
     @Override
-    protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response, AuthenticationException failed) {
+    protected void unsuccessfulAuthentication(HttpServletRequest request,
+        HttpServletResponse response, AuthenticationException failed) {
         response.setStatus(401);
     }
 
