@@ -8,4 +8,5 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface HubRepository extends JpaRepository<Hub, UUID> {
 
+  Hub findByHubNameAndIsDeletedFalse(String hubName);
 }
