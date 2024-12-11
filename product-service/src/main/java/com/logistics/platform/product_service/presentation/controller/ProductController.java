@@ -82,7 +82,7 @@ public class ProductController {
 
     return new ResponseDto<>(
         ResponseDto.SUCCESS,
-        productResponseDto.getProductName() + ": 상품이 생성되었습니다."
+        productResponseDto.getProductName() + ": 상품이 삭제되었습니다."
     );
   }
 
