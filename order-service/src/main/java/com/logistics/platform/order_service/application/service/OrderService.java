@@ -42,9 +42,9 @@ public class OrderService {
     productService.adjustProductQuantity(product.getProductId(),
         -orderRequestDto.getProductQuantity());
 
-    // supplyCompanyId 검증
+    // TODO supplyCompanyId 검증
 
-    // receiveCompanyId 검증
+    // TODO receiveCompanyId 검증
 
     Order order = Order.builder()
         .productId(orderRequestDto.getProductId())
@@ -108,7 +108,10 @@ public class OrderService {
       if (product.getCount() < orderRequestDto.getProductQuantity() - order.getProductQuantity()) {
         throw new CustomApiException("추가 주문시 재고보다 주문 수량이 많습니다.");
       }
-      // TODO 이전 주문과 비교하여 재고 차감
+
+      // 이전 주문과 비교하여 재고 증감
+      productService.adjustProductQuantity(product.getProductId(),
+          product.getCount() - orderRequestDto.getProductQuantity());
     }
 
     // TODO 수정자 추가
@@ -133,7 +136,8 @@ public class OrderService {
       throw new CustomApiException("This order has already been deleted.");
     }
 
-    // TODO 재고 수량 복구
+    // 재고 수량 복구
+    productService.adjustProductQuantity(order.getProductId(), order.getProductQuantity());
 
     // TODO 삭제자 추가
     order.delete();
