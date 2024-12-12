@@ -2,6 +2,7 @@ package com.logistics.platform.order_service.presentation.response;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.logistics.platform.order_service.domain.model.Order;
+import com.querydsl.core.annotations.QueryProjection;
 import java.util.UUID;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -27,6 +28,7 @@ public class OrderResponseDto {
 
   private String message;
 
+  @QueryProjection
   public OrderResponseDto(Order order) {
     this.orderID = order.getId();
     this.productId = order.getProductId();
