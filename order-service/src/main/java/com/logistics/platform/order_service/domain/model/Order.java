@@ -105,4 +105,25 @@ public class Order {
     this.createdBy = createdBy;
   }
 
+  public void update(UUID productId, UUID supplyCompanyId, UUID receiveCompanyId,
+      Long productQuantity, String orderRequest, Long totalPrice) {
+    if (productId != null) {
+      this.productId = productId;
+    }
+    if (supplyCompanyId != null) {
+      this.supplyCompayId = supplyCompanyId;
+    }
+    if (receiveCompanyId != null) {
+      this.receiveCompanyId = receiveCompanyId;
+    }
+    if (productQuantity != null) {
+      this.productQuantity = productQuantity;
+    }
+    if (orderRequest != null) {
+      this.orderRequest = orderRequest;
+    }
+    if(totalPrice != null) {
+      this.totalPrice = totalPrice;
+    }
+  }
 }
