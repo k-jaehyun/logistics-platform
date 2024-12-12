@@ -122,8 +122,14 @@ public class Order {
     if (orderRequest != null) {
       this.orderRequest = orderRequest;
     }
-    if(totalPrice != null) {
+    if (totalPrice != null) {
       this.totalPrice = totalPrice;
     }
+  }
+
+  public void delete() {
+    this.isDeleted = true;
+    this.deletedAt = LocalDateTime.now();
+    // TODO 삭제자 추가
   }
 }

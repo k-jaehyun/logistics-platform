@@ -123,6 +123,22 @@ public class OrderService {
     return new OrderResponseDto(order);
   }
 
+  @Transactional
+  public OrderResponseDto deleteOrder(UUID orderId) {
+    Order order = orderRepository.findById(orderId)
+        .orElseThrow(() -> new CustomApiException("This Order ID does not exist."));
+
+    if (order.getIsDeleted()) {
+      throw new CustomApiException("This order has already been deleted.");
+    }
+
+    // TODO 재고 수량 복구
+
+    // TODO 삭제자 추가
+    order.delete();
+
+    return new OrderResponseDto(order);
+  }
 
   public OrderResponseDto handleOrderFailue(OrderRequestDto orderRequestDto, Throwable t) {
     return new OrderResponseDto(t.getMessage());

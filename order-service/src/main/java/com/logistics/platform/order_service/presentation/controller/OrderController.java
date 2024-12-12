@@ -28,7 +28,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/orders")
-public class OrderController { // TODO 권한 검증
+public class OrderController { // TODO 권한 검증, 실패시 처리 로직
 
   private final OrderService orderService;
 
@@ -76,6 +76,17 @@ public class OrderController { // TODO 권한 검증
     OrderResponseDto orderResponseDto = orderService.updateOrder(orderId, orderRequestDto);
 
     return new ResponseDto<>(ResponseDto.SUCCESS, "주문이 수정되었습니다.", orderResponseDto);
+  }
+
+  @DeleteMapping("/{orderId}")
+  public ResponseDto<?> deleteOrder(
+      @PathVariable UUID orderId
+  ) {
+
+    OrderResponseDto orderResponseDto = orderService.deleteOrder(orderId);
+
+    return new ResponseDto<>(ResponseDto.SUCCESS,
+        "OrderId " + orderResponseDto.getOrderID() + " has been deleted.");
   }
 
 
