@@ -1,6 +1,7 @@
 package com.logistics.platform.hub_service.domain.repository;
 
 import com.logistics.platform.hub_service.domain.model.Hub;
+import java.util.Optional;
 import java.util.UUID;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -14,7 +15,7 @@ public interface HubRepository extends JpaRepository<Hub, UUID> {
 
   Page<Hub> findAllByHubNameContainingAndIsDeletedFalse(String hubName, Pageable pageable);
 
-  Hub findByHubIdAndIsDeletedFalse(UUID hubId);
+  Optional<Hub> findByHubIdAndIsDeletedFalse(UUID hubId);
 
   Page<Hub> findAllByIsDeletedFalse(Pageable pageable);
 }

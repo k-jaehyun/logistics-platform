@@ -1,6 +1,7 @@
 package com.logistics.platform.hub_service.application.service;
 
 import com.google.maps.errors.ApiException;
+import com.logistics.platform.hub_service.application.service.google.GeocodingService;
 import com.logistics.platform.hub_service.domain.model.Hub;
 import com.logistics.platform.hub_service.domain.model.HubType;
 import com.logistics.platform.hub_service.domain.repository.HubRepository;
@@ -65,10 +66,9 @@ public class HubService {
   @Cacheable(cacheNames = "hubCache", cacheManager = "cacheManager")
   public HubResponse getHub(UUID hubId) {
     log.info("캐시 작동 확인");
-    Hub hub = hubRepository.findByHubIdAndIsDeletedFalse(hubId);
-    if (hub == null) {
-      throw new CustomApiException("해당 hubId가 존재하지 않습니다.");
-    }
+    Hub hub = hubRepository.findByHubIdAndIsDeletedFalse(hubId).orElseThrow(
+        () -> new CustomApiException("해당 hubId가 존재하지 않습니다."));
+
     return new HubResponse(hub);
   }
 
@@ -92,7 +92,8 @@ public class HubService {
       throw new CustomApiException("해당 허브 이름이 이미 존재합니다.");
     }
 
-    Hub hub = hubRepository.findByHubIdAndIsDeletedFalse(hubId);
+    Hub hub = hubRepository.findByHubIdAndIsDeletedFalse(hubId).orElseThrow(
+        () -> new CustomApiException("해당 hubId가 존재하지 않습니다."));
     hub.changeHub(hubModifyRequest);
     Hub savedHub = hubRepository.save(hub);
     return new HubResponse(savedHub);
@@ -100,7 +101,8 @@ public class HubService {
 
   @Transactional
   public void deleteHub(UUID hubId) {
-    Hub hub = hubRepository.findByHubIdAndIsDeletedFalse(hubId);
+    Hub hub = hubRepository.findByHubIdAndIsDeletedFalse(hubId).orElseThrow(
+        () -> new CustomApiException("해당 hubId가 존재하지 않습니다."));
     hub.deleteHub();
   }
 }
