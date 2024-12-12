@@ -10,7 +10,6 @@ import java.util.List;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.CacheEvict;
-import org.springframework.cache.annotation.Caching;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PagedModel;
@@ -70,7 +69,7 @@ public class ProductService {
   }
 
   @Transactional
-  @CacheEvict(value = "productPriceCache", key = "#productId")
+  @CacheEvict(value = "getProductCache", key = "#productId")
   public ProductResponseDto updateProduct(UUID productId, ProductRequestDto productRequestDto) {
 
     Product product = productRepository.findById(productId)
@@ -86,10 +85,7 @@ public class ProductService {
   }
 
   @Transactional
-  @Caching(evict = {
-      @CacheEvict(value = "productValidationCache", key = "#productId"),
-      @CacheEvict(value = "productPriceCache", key = "#productId")
-  })
+  @CacheEvict(value = "getProductCache", key = "#productId")
   public ProductResponseDto deleteProduct(UUID productId) {
 
     Product product = productRepository.findById(productId)
@@ -104,13 +100,4 @@ public class ProductService {
     return new ProductResponseDto(product);
   }
 
-  public Boolean validateProductId(UUID productId) {
-    return productRepository.findById(productId)
-        .map(product -> !product.getIsDeleted())  // Optional이 비어 있지 않다면, map 안의 람다식 실행
-        .orElse(false);
-  }
-
-  public Long getProductPriceById(UUID productId) {
-    return productRepository.findById(productId).orElseThrow().getPrice();
-  }
 }

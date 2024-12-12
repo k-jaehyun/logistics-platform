@@ -86,18 +86,10 @@ public class ProductController { // TODO 권한 검증 추가
     );
   }
 
-  @GetMapping("/{productId}/validation")
-  public Boolean validateProductId(
-      @PathVariable UUID productId
-  ) {
-    return productService.validateProductId(productId);
-  }
-
-  @GetMapping("/{productId}/price")
-  public Long getProductPriceById(
-      @PathVariable UUID productId
-  ) {
-    return productService.getProductPriceById(productId);
+  @GetMapping("/{productId}/info")
+  public ProductResponseDto getProductDto(@PathVariable UUID productId) {
+    ProductResponseDto productResponseDto = productService.getProduct(productId);
+    return productResponseDto;
   }
 
 }
