@@ -14,6 +14,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PagedModel;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -23,13 +24,15 @@ public class OrderService {
   private final ProductServiceImpl productService;
 
   // TODO CircuitBreaker 위치 고민해보기
-  @CircuitBreaker(name = "OrderService", fallbackMethod = "handlecreateOrderFailue")
+  @CircuitBreaker(name = "OrderService", fallbackMethod = "handleOrderFailue")
   public OrderResponseDto createOrder(OrderRequestDto orderRequestDto) {
 
     // productId 검증
     if (!productService.validateProductId(orderRequestDto.getProductId())) {
       throw new CustomApiException("This Product ID does not exist.");
     }
+
+    // TODO 재고 확인
 
     // product price 반환
     Long totalPrice =
@@ -57,11 +60,6 @@ public class OrderService {
     return new OrderResponseDto(order);
   }
 
-  public OrderResponseDto handlecreateOrderFailue(OrderRequestDto orderRequestDto, Throwable t) {
-    return new OrderResponseDto(t.getMessage());
-  }
-
-
   public OrderResponseDto getOrder(UUID orderId) {
 
     // TODO 본인 주문만 조회되도록 수정
@@ -69,7 +67,7 @@ public class OrderService {
         .orElseThrow(() -> new CustomApiException("This Order ID does not exist."));
 
     if (order.getIsDeleted()) {
-      throw new CustomApiException("This Order was deleted.");
+      throw new CustomApiException("This order has been deleted.");
     }
 
     return new OrderResponseDto(order);
@@ -83,5 +81,45 @@ public class OrderService {
         pageable);
 
     return new PagedModel<>(orderResponseDtoPage);
+  }
+
+  @Transactional
+  @CircuitBreaker(name = "OrderService", fallbackMethod = "handleOrderFailue")
+  public OrderResponseDto updateOrder(UUID orderId, OrderRequestDto orderRequestDto) {
+
+    // TODO 본인 주문만 수정 가능하도록
+    Order order = orderRepository.findById(orderId)
+        .orElseThrow(() -> new CustomApiException("This Order ID does not exist."));
+
+    if (order.getIsDeleted()) {
+      throw new CustomApiException("This order has been deleted.");
+    }
+
+    // TODO 이미 배송중이라면 수정 불가
+
+    // TODO 재고 확인
+
+    Long totalPrice = null;
+    if (orderRequestDto.getProductId() != null) {
+      totalPrice = productService.getPriceByProductId(orderRequestDto.getProductId())
+          * order.getProductQuantity();
+    }
+
+    // TODO 수정자 추가
+    order.update(
+        orderRequestDto.getProductId(),
+        orderRequestDto.getSupplyCompanyId(),
+        orderRequestDto.getReceiveCompanyId(),
+        orderRequestDto.getProductQuantity(),
+        orderRequestDto.getOrderRequest(),
+        totalPrice
+    );
+
+    return new OrderResponseDto(order);
+  }
+
+
+  public OrderResponseDto handleOrderFailue(OrderRequestDto orderRequestDto, Throwable t) {
+    return new OrderResponseDto(t.getMessage());
   }
 }

@@ -16,6 +16,7 @@ import org.springframework.data.querydsl.binding.QuerydslPredicate;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.data.web.PagedModel;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -63,6 +64,17 @@ public class OrderController { // TODO 권한 검증
         = orderService.getOrdersPage(uuidList, predicate, pageable);
 
     return new ResponseDto<>(ResponseDto.SUCCESS, "주문 목록이 조회되었습니다.", orderResponseDtoPage);
+  }
+
+  @PatchMapping("/{orderId}")
+  public ResponseDto<OrderResponseDto> updateOrder(
+      @PathVariable UUID orderId,
+      @RequestBody OrderRequestDto orderRequestDto
+  ) {
+
+    OrderResponseDto orderResponseDto = orderService.updateOrder(orderId, orderRequestDto);
+
+    return new ResponseDto<>(ResponseDto.SUCCESS, "주문이 수정되었습니다.", orderResponseDto);
   }
 
 
