@@ -119,4 +119,9 @@ public class Product {
     this.deletedAt = LocalDateTime.now();
     // 삭제자 추가
   }
+
+  public Product adjustCount(Long quantity) {
+    this.count += quantity;
+    return this;
+  }
 }

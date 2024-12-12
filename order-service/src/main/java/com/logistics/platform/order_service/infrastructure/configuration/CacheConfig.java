@@ -1,5 +1,6 @@
 package com.logistics.platform.order_service.infrastructure.configuration;
 
+import com.logistics.platform.order_service.application.dto.ProductResponseDto;
 import java.time.Duration;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.EnableCaching;
@@ -25,8 +26,7 @@ public class CacheConfig {
     return RedisCacheManager
         .builder(redisConnectionFactory)
 //        .cacheDefaults(configuration)  // 기본 설정 제외
-        .withCacheConfiguration("productValidationCache", getCacheConfiguration(Boolean.class))
-        .withCacheConfiguration("productPriceCache", getCacheConfiguration(Long.class))
+        .withCacheConfiguration("getProductCache", getCacheConfiguration(ProductResponseDto.class))
         .build();
   }
 
