@@ -16,6 +16,7 @@ public class OrderService {
   private final OrderRepository orderRepository;
   private final ProductServiceImpl productService;
 
+  // TODO CircuitBreaker 위치 고민해보기
   @CircuitBreaker(name = "OrderService", fallbackMethod = "handlecreateOrderFailue")
   public OrderResponseDto createOrder(OrderRequestDto orderRequestDto) {
 
@@ -40,8 +41,10 @@ public class OrderService {
         .productQuantity(orderRequestDto.getProductQuantity())
         .totalPrice(totalPrice)
         .orderRequest(orderRequestDto.getOrderRequest())
-        .createdBy("createdBy")
+        .createdBy("createdBy") // TODO 생성자 추가
         .build();
+
+    // TODO 배송 생성 추가
 
     orderRepository.save(order);
 
