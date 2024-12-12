@@ -1,5 +1,6 @@
 package com.logistics.platform.order_service.application.service;
 
+import com.logistics.platform.order_service.application.dto.ProductResponseDto;
 import com.logistics.platform.order_service.domain.model.Order;
 import com.logistics.platform.order_service.domain.repository.OrderRepository;
 import com.logistics.platform.order_service.presentation.global.exception.CustomApiException;
@@ -27,17 +28,18 @@ public class OrderService {
   @CircuitBreaker(name = "OrderService", fallbackMethod = "handleOrderFailue")
   public OrderResponseDto createOrder(OrderRequestDto orderRequestDto) {
 
-    // productId 검증
-    if (!productService.validateProductId(orderRequestDto.getProductId())) {
-      throw new CustomApiException("This Product ID does not exist.");
+    // ProductDto 형태로 응답을 받아 요청을 최소화
+    ProductResponseDto product = productService.getProductDtoByProductId(
+        orderRequestDto.getProductId());
+
+    Long totalPrice = product.getPrice() * orderRequestDto.getProductQuantity();
+
+    // 재고 확인
+    if (product.getCount() < orderRequestDto.getProductQuantity()) {
+      throw new CustomApiException("재고보다 주문 수량이 많습니다.");
     }
 
-    // TODO 재고 확인
-
-    // product price 반환
-    Long totalPrice =
-        productService.getPriceByProductId(orderRequestDto.getProductId())
-            * orderRequestDto.getProductQuantity();
+    // TODO 주문 수량만큼 재고 차감
 
     // supplyCompanyId 검증
 
@@ -97,12 +99,15 @@ public class OrderService {
 
     // TODO 이미 배송중이라면 수정 불가
 
-    // TODO 재고 확인
-
     Long totalPrice = null;
-    if (orderRequestDto.getProductId() != null) {
-      totalPrice = productService.getPriceByProductId(orderRequestDto.getProductId())
-          * order.getProductQuantity();
+    if (orderRequestDto.getProductQuantity() != null) {
+      ProductResponseDto product = productService.getProductDtoByProductId(
+          orderRequestDto.getProductId());
+      totalPrice = product.getPrice() * orderRequestDto.getProductQuantity();
+      if (product.getCount() < orderRequestDto.getProductQuantity() - order.getProductQuantity()) {
+        throw new CustomApiException("추가 주문시 재고보다 주문 수량이 많습니다.");
+      }
+      // TODO 이전 주문과 비교하여 재고 차감
     }
 
     // TODO 수정자 추가
