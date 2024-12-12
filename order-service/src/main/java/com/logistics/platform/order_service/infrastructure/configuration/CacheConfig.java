@@ -2,7 +2,6 @@ package com.logistics.platform.order_service.infrastructure.configuration;
 
 import com.logistics.platform.order_service.application.dto.ProductResponseDto;
 import java.time.Duration;
-import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -15,7 +14,6 @@ import org.springframework.data.redis.serializer.RedisSerializationContext;
 
 @Configuration
 @EnableCaching
-@RequiredArgsConstructor
 public class CacheConfig {
 
   @Bean
