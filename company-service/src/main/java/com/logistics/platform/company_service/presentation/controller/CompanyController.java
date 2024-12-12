@@ -29,7 +29,6 @@ public class CompanyController {
   @PostMapping
   public ResponseDto<CompanyResponse> create(
       @RequestBody @Valid CompanyCreateRequest companyCreateRequest) {
-
     CompanyResponse companyResponse = companyService.createCompany(companyCreateRequest);
     return new ResponseDto<>(ResponseDto.SUCCESS, "업체가 생성되었습니다.", companyResponse);
   }
@@ -57,6 +56,5 @@ public class CompanyController {
     companyService.deleteCompany(companyId);
     return new ResponseDto<>(ResponseDto.SUCCESS, "업체 삭제가 완료되었습니다.");
   }
-
 
 }
