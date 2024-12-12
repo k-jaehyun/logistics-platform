@@ -1,10 +1,8 @@
 package com.logistics.platform.deliverymanagerservice.domain.model;
 
 import com.logistics.platform.deliverymanagerservice.presentation.request.DeliveryManagerRequestDto;
-import com.logistics.platform.deliverymanagerservice.presentation.request.DeliveryManagerUpdateRequestDto;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.EntityListeners;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
@@ -16,7 +14,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 @Entity
 @Getter
@@ -46,7 +43,7 @@ public class DeliveryManager extends AuditingFields {
   private Long deliveryOrderNumber;
 
   @Column(nullable = false)
-  private Boolean isDeleted;
+  private Boolean isDeleted = false;  // Boolean타입 기본값 null이라 false로 지정해주기
 
   @Builder
   public DeliveryManager(Long userId, UUID hubId, UUID slackId, DeliveryType deliveryType, Long deliveryOrderNumber, Boolean isDeleted){
@@ -58,11 +55,11 @@ public class DeliveryManager extends AuditingFields {
     this.isDeleted = isDeleted;
   }
 
-  public void updateDeliveryManager(DeliveryManagerUpdateRequestDto deliveryManagerUpdateRequestDto) {
-    this.userId = deliveryManagerUpdateRequestDto.getUserId();
-    this.hubId = deliveryManagerUpdateRequestDto.getHubId();
-    this.slackId = deliveryManagerUpdateRequestDto.getSlackId();
-    this.deliveryType = deliveryManagerUpdateRequestDto.getDeliveryType();
+  public void updateDeliveryManager(DeliveryManagerRequestDto deliveryManagerRequestDto) {
+    this.userId = deliveryManagerRequestDto.getUserId();
+    this.hubId = deliveryManagerRequestDto.getHubId();
+    this.slackId = deliveryManagerRequestDto.getSlackId();
+    this.deliveryType = deliveryManagerRequestDto.getDeliveryType();
   }
 
   public void deleteDeliveryManager(String deletedBy) {

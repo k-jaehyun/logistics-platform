@@ -3,7 +3,6 @@ package com.logistics.platform.deliverymanagerservice.presentation.controller;
 import com.logistics.platform.deliverymanagerservice.application.service.DeliveryManagerService;
 import com.logistics.platform.deliverymanagerservice.presentation.global.ResponseDto;
 import com.logistics.platform.deliverymanagerservice.presentation.request.DeliveryManagerRequestDto;
-import com.logistics.platform.deliverymanagerservice.presentation.request.DeliveryManagerUpdateRequestDto;
 import com.logistics.platform.deliverymanagerservice.presentation.response.DeliveryManagerResponseDto;
 import com.querydsl.core.types.Predicate;
 import java.util.List;
@@ -66,7 +65,7 @@ public class DeliveryManagerController {
   @PatchMapping("/{deliveryManagerId}")
   public ResponseDto<DeliveryManagerResponseDto> updateDeliveryManager(
       @PathVariable UUID deliveryManagerId,
-      @RequestBody DeliveryManagerUpdateRequestDto deliveryManagerUpdateRequestDto) {
+      @RequestBody DeliveryManagerRequestDto deliveryManagerUpdateRequestDto) {
 
     DeliveryManagerResponseDto deliveryManagerResponseDto = deliveryManagerService.updateDeliveryManager(deliveryManagerId, deliveryManagerUpdateRequestDto);
 
