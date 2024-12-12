@@ -65,9 +65,9 @@ public class DeliveryManagerController {
   @PatchMapping("/{deliveryManagerId}")
   public ResponseDto<DeliveryManagerResponseDto> updateDeliveryManager(
       @PathVariable UUID deliveryManagerId,
-      @RequestBody DeliveryManagerRequestDto deliveryManagerUpdateRequestDto) {
+      @RequestBody DeliveryManagerRequestDto deliveryManagerRequestDto) {
 
-    DeliveryManagerResponseDto deliveryManagerResponseDto = deliveryManagerService.updateDeliveryManager(deliveryManagerId, deliveryManagerUpdateRequestDto);
+    DeliveryManagerResponseDto deliveryManagerResponseDto = deliveryManagerService.updateDeliveryManager(deliveryManagerId, deliveryManagerRequestDto);
 
     return new ResponseDto<>(ResponseDto.SUCCESS, "배송담당자가 수정되었습니다.", deliveryManagerResponseDto);
   }
