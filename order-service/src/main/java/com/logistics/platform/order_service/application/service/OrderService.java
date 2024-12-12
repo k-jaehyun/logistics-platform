@@ -22,10 +22,9 @@ import org.springframework.transaction.annotation.Transactional;
 public class OrderService {
 
   private final OrderRepository orderRepository;
-  private final ProductServiceImpl productService;
+  private final ProductService productService;
 
-  // TODO CircuitBreaker 위치 고민해보기
-  @CircuitBreaker(name = "OrderService", fallbackMethod = "handleOrderFailue")
+  @CircuitBreaker(name = "OrderService", fallbackMethod = "handleOrderFailure")
   public OrderResponseDto createOrder(OrderRequestDto orderRequestDto) {
 
     // ProductDto 형태로 응답을 받아 요청을 최소화
@@ -39,7 +38,9 @@ public class OrderService {
       throw new CustomApiException("재고보다 주문 수량이 많습니다.");
     }
 
-    // TODO 주문 수량만큼 재고 차감
+    // 주문 수량만큼 재고 차감
+    productService.adjustProductQuantity(product.getProductId(),
+        -orderRequestDto.getProductQuantity());
 
     // supplyCompanyId 검증
 
@@ -86,7 +87,7 @@ public class OrderService {
   }
 
   @Transactional
-  @CircuitBreaker(name = "OrderService", fallbackMethod = "handleOrderFailue")
+  @CircuitBreaker(name = "OrderService", fallbackMethod = "handleOrderFailure")
   public OrderResponseDto updateOrder(UUID orderId, OrderRequestDto orderRequestDto) {
 
     // TODO 본인 주문만 수정 가능하도록
@@ -140,7 +141,7 @@ public class OrderService {
     return new OrderResponseDto(order);
   }
 
-  public OrderResponseDto handleOrderFailue(OrderRequestDto orderRequestDto, Throwable t) {
+  public OrderResponseDto handleOrderFailure(OrderRequestDto orderRequestDto, Throwable t) {
     return new OrderResponseDto(t.getMessage());
   }
 }

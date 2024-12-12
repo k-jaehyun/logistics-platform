@@ -92,4 +92,11 @@ public class ProductController { // TODO 권한 검증 추가
     return productResponseDto;
   }
 
+  @PostMapping("/{productId}/quantity/adjustment")
+  public void adjustProductQuantity(
+      @PathVariable(value = "productId") UUID productId,
+      @RequestParam(value = "quantity") Long quantity) {
+
+    productService.adjustProductQuantity(productId, quantity);
+  }
 }

@@ -100,4 +100,17 @@ public class ProductService {
     return new ProductResponseDto(product);
   }
 
+  @Transactional
+  @CacheEvict(value = "getProductCache", key = "#productId")
+  public void adjustProductQuantity(UUID productId, Long quantity) {
+    Product product = productRepository.findById(productId)
+        .orElseThrow(() -> new CustomApiException("존재하지 않는 productId입니다."));
+
+    if (product.getIsDeleted()) {
+      throw new CustomApiException("이미 삭제된 상품입니다.");
+    }
+
+    productRepository.save(product.adjustCount(quantity));
+  }
+
 }
