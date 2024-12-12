@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 @FeignClient(name = "product-service")
 public interface ProductClient extends ProductService {
 
-  // TODO caching, circuitBreaker
   @GetMapping("/api/products/{productId}/validation")
   Boolean validateProductId(@PathVariable(value = "productId") UUID productId);
 

@@ -42,7 +42,7 @@ public class Order {
   @Column(nullable = false)
   private UUID receiveCompanyId;
 
-  // Order가 생성된 이후 Delivery가 생성되기 때문에 큐를 이용한 구현이 필요해보임
+  // TODO Order가 생성된 이후 Delivery가 생성되기 때문에 Feign이나 큐를 이용한 구현이 필요
 //  @Column(nullable = false)
 //  private UUID deliveryId;
 
