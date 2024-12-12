@@ -64,6 +64,7 @@ public class HubRouteService {
     return new HubRouteResponse(savedHubRoute);
   }
 
+  @Transactional(readOnly = true)
   public HubRouteResponse getHubRoute(String classification) {
     HubRoute hubRoute = hubRouteRepository.findByClassificationAndIsDeletedFalse(classification)
         .orElseThrow(
