@@ -6,6 +6,8 @@ import com.logistics.platform.hub_service.presentation.request.HubRouteCreateReq
 import com.logistics.platform.hub_service.presentation.response.HubRouteResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -21,5 +23,11 @@ public class HubRouteController {
   public ResponseDto<HubRouteResponse> create(@RequestBody @Valid HubRouteCreateRequest hubRouteCreateRequest) {
     HubRouteResponse hubRouteResponse = hubRouteService.createHubRoute(hubRouteCreateRequest);
     return new ResponseDto<>(ResponseDto.SUCCESS, "허브 배송 경로가 생성되었습니다.", hubRouteResponse);
+  }
+
+  @GetMapping("/{classification}")
+  public ResponseDto<HubRouteResponse> get(@PathVariable String classification) {
+    HubRouteResponse hubRouteResponse = hubRouteService.getHubRoute(classification);
+    return new ResponseDto<>(ResponseDto.SUCCESS, "허브 배송 경로 조회가 완료되었습니다.", hubRouteResponse);
   }
 }
