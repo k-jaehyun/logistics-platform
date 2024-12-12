@@ -1,6 +1,5 @@
 package com.logistics.platform.hub_service.application.service.kakao;
 
-import com.logistics.platform.hub_service.application.service.kakao.KakaoDirectionParser;
 import com.logistics.platform.hub_service.application.service.kakao.KakaoDirectionParser.DirectionInfo;
 import com.logistics.platform.hub_service.presentation.global.ex.CustomApiException;
 import java.util.List;
@@ -56,7 +55,8 @@ public class KakaoMobilityService {
 
       DirectionInfo directionInfo = kakaoDirectionParser.parseDirection(responseBody);
 
-      return List.of(String.valueOf(directionInfo.getDuration()), String.valueOf(directionInfo.getDistance()));
+      return List.of(String.valueOf(directionInfo.getDuration()),
+          String.valueOf(directionInfo.getDistance()));
 
     } else {
       throw new CustomApiException("경로를 찾는데 실패했습니다. 잠시 후에 다시 시도해주세요.");

@@ -7,6 +7,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class KakaoDirectionParser {
+
   public DirectionInfo parseDirection(String responseBody) {
     JSONObject jsonResponse = new JSONObject(responseBody);
 
@@ -15,8 +16,10 @@ public class KakaoDirectionParser {
         .getJSONObject(0) // 제일 첫 번째 요소 사용해야 함.
         .getJSONObject("summary");
 
-    double distance = Double.parseDouble(String.format("%.2f", summary.getInt("distance") / 1000.0)); // km
-    double duration = Double.parseDouble(String.format("%.2f", summary.getInt("duration") / 3600.0)); // hour
+    double distance = Double.parseDouble(
+        String.format("%.2f", summary.getInt("distance") / 1000.0)); // km
+    double duration = Double.parseDouble(
+        String.format("%.2f", summary.getInt("duration") / 3600.0)); // hour
 
     // DirectionInfo 객체에 저장하여 반환
     return new DirectionInfo(distance, duration);

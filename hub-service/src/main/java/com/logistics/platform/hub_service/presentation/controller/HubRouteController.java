@@ -17,10 +17,12 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/hubRoutes")
 @RequiredArgsConstructor
 public class HubRouteController {
+
   private final HubRouteService hubRouteService;
 
   @PostMapping
-  public ResponseDto<HubRouteResponse> create(@RequestBody @Valid HubRouteCreateRequest hubRouteCreateRequest) {
+  public ResponseDto<HubRouteResponse> create(
+      @RequestBody @Valid HubRouteCreateRequest hubRouteCreateRequest) {
     HubRouteResponse hubRouteResponse = hubRouteService.createHubRoute(hubRouteCreateRequest);
     return new ResponseDto<>(ResponseDto.SUCCESS, "허브 배송 경로가 생성되었습니다.", hubRouteResponse);
   }
