@@ -1,100 +1,98 @@
 plugins {
-	id 'java'
-	id 'org.springframework.boot' version '3.1.0'
-	id 'io.spring.dependency-management' version '1.1.6'
+    id 'java'
+    id 'org.springframework.boot' version '3.1.0'
+    id 'io.spring.dependency-management' version '1.1.6'
 }
 
 dependencyManagement {
-	imports {
-		mavenBom "org.springframework.cloud:spring-cloud-dependencies:2022.0.5"
-	}
+    imports {
+        mavenBom "org.springframework.cloud:spring-cloud-dependencies:2022.0.5"
+    }
 }
 
 group = 'com.logistics.platform'
 version = '0.0.1-SNAPSHOT'
 
 java {
-	toolchain {
-		languageVersion = JavaLanguageVersion.of(17)
-	}
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(17)
+    }
 }
 
 configurations {
-	compileOnly {
-		extendsFrom annotationProcessor
-	}
+    compileOnly {
+        extendsFrom annotationProcessor
+    }
 }
 
 repositories {
-	mavenCentral()
+    mavenCentral()
 }
 
 dependencies {
 
-	// PostgreSQL
-	runtimeOnly 'org.postgresql:postgresql'
+    // Point - hibernate-spatial
+    implementation 'org.hibernate:hibernate-spatial:6.2.2.Final'
 
-	// Redis Session Clustering
-	implementation 'org.springframework.session:spring-session-data-redis'
+    // Geocoding
+    implementation group: 'com.google.maps', name: 'google-maps-services', version: '2.2.0'
 
-	// Jedis
-	implementation 'redis.clients:jedis:5.2.0'
+    // PostgreSQL
+    runtimeOnly 'org.postgresql:postgresql'
 
-	// QueryDSL 적용을 위한 의존성 (SpringBoot3.0 부터는 jakarta 사용)
-	implementation 'com.querydsl:querydsl-jpa:5.0.0:jakarta'
-	// QueryDSL APT 의존성 (annotation processing을 위한 의존성)
-	annotationProcessor 'com.querydsl:querydsl-apt:5.0.0:jakarta'
-	// Jakarta API 의존성
-	annotationProcessor "jakarta.annotation:jakarta.annotation-api"
-	annotationProcessor "jakarta.persistence:jakarta.persistence-api"
+    // Redis Session Clustering
+    implementation 'org.springframework.session:spring-session-data-redis'
 
-	// Eureka client
-	implementation 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-client'
+    // Jedis
+    implementation 'redis.clients:jedis:5.2.0'
 
-	// FeignClient, Ribbon
-	implementation 'org.springframework.cloud:spring-cloud-starter-openfeign'
+    // QueryDSL 적용을 위한 의존성 (SpringBoot3.0 부터는 jakarta 사용)
+    implementation 'com.querydsl:querydsl-jpa:5.0.0:jakarta'
+    // QueryDSL APT 의존성 (annotation processing을 위한 의존성)
+    annotationProcessor 'com.querydsl:querydsl-apt:5.0.0:jakarta'
+    // Jakarta API 의존성
+    annotationProcessor "jakarta.annotation:jakarta.annotation-api"
+    annotationProcessor "jakarta.persistence:jakarta.persistence-api"
 
-	// config client
-	implementation 'org.springframework.cloud:spring-cloud-starter-config'
+    // Eureka client
+    implementation 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-client'
 
-	// Zipkin
-	implementation 'io.micrometer:micrometer-tracing-bridge-brave'
-	implementation 'io.github.openfeign:feign-micrometer'
-	implementation 'io.zipkin.reporter2:zipkin-reporter-brave'
+    // FeignClient, Ribbon
+    implementation 'org.springframework.cloud:spring-cloud-starter-openfeign'
 
-	// Resilience4j
-	implementation 'io.github.resilience4j:resilience4j-spring-boot3:2.2.0'
-	implementation 'org.springframework.boot:spring-boot-starter-aop'
-	runtimeOnly 'io.micrometer:micrometer-registry-prometheus'
+    // config client
+    implementation 'org.springframework.cloud:spring-cloud-starter-config'
 
-	// Spring Boot Actuator
-	implementation 'org.springframework.boot:spring-boot-starter-actuator'
+    // Zipkin
+    implementation 'io.micrometer:micrometer-tracing-bridge-brave'
+    implementation 'io.github.openfeign:feign-micrometer'
+    implementation 'io.zipkin.reporter2:zipkin-reporter-brave'
 
-	// Lombok
-	compileOnly 'org.projectlombok:lombok'
-	annotationProcessor 'org.projectlombok:lombok'
+    // Resilience4j
+    implementation 'io.github.resilience4j:resilience4j-spring-boot3:2.2.0'
+    implementation 'org.springframework.boot:spring-boot-starter-aop'
+    runtimeOnly 'io.micrometer:micrometer-registry-prometheus'
 
-	// Valid
-	implementation 'org.springframework.boot:spring-boot-starter-validation'
+    // Spring Boot Actuator
+    implementation 'org.springframework.boot:spring-boot-starter-actuator'
 
-	// JPA
-	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    // Lombok
+    compileOnly 'org.projectlombok:lombok'
+    annotationProcessor 'org.projectlombok:lombok'
 
-	implementation 'org.springframework.boot:spring-boot-starter-web'
-	testImplementation 'org.springframework.boot:spring-boot-starter-test'
-	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+    // Valid
+    implementation 'org.springframework.boot:spring-boot-starter-validation'
 
-	// Point
-	implementation 'org.postgresql:postgresql'
+    // JPA
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 
-	// Point - hibernate-spatial
-	implementation 'org.hibernate:hibernate-spatial:6.2.2.Final'
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 
-	// Geocoding
-	implementation group: 'com.google.maps', name: 'google-maps-services', version: '2.2.0'
 
 }
 
 tasks.named('test') {
-	useJUnitPlatform()
+    useJUnitPlatform()
 }
