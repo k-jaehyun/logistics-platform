@@ -1,4 +1,4 @@
-package com.logistics.platform.hub_service.application.service;
+package com.logistics.platform.hub_service.application.service.google;
 
 import com.google.maps.GeoApiContext;
 import com.google.maps.GeocodingApi;
@@ -15,7 +15,7 @@ public class GeocodingService {
   private String googleMapsApiKey;
 
   @Value("${google.maps.api.key}")
-  public void SetGoogleMapsApiKey(String googleMapsApiKey) {
+  public void setGoogleMapsApiKey(String googleMapsApiKey) {
     this.googleMapsApiKey = googleMapsApiKey;
   }
 
