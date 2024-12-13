@@ -2,14 +2,13 @@ package com.logistics.platform.company_service.presentation.global.ex;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.logistics.platform.company_service.presentation.global.ResponseDto;
 import feign.Response;
 import feign.codec.ErrorDecoder;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 
-@Slf4j
 public class FeignErrorDecoder implements ErrorDecoder {
 
   private final ObjectMapper objectMapper = new ObjectMapper();
@@ -36,12 +35,7 @@ public class FeignErrorDecoder implements ErrorDecoder {
       throw new RuntimeException("JSON 파싱 중 문제가 발생했습니다.", e);
     }
 
-    // 상태 코드에 따른 예외 처리
-    if (response.status() == HttpStatus.BAD_REQUEST.value()) {
-      return new CustomApiException(errorMessage);
-    }
-
-    return new CustomApiException("오류가 발생했습니다. 잠시 후 다시 시도해주세요.");
+    return new CustomApiException(errorMessage);
   }
 }
 
