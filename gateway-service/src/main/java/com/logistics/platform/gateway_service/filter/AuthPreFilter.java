@@ -1,8 +1,6 @@
 package com.logistics.platform.gateway_service.filter;
 
 import com.logistics.platform.gateway_service.jwt.JwtUtil;
-import io.jsonwebtoken.ExpiredJwtException;
-import io.jsonwebtoken.MalformedJwtException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cloud.gateway.filter.GatewayFilterChain;
