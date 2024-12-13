@@ -1,6 +1,8 @@
 package com.logistics.platform.gateway_service.filter;
 
 import com.logistics.platform.gateway_service.jwt.JwtUtil;
+import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.MalformedJwtException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cloud.gateway.filter.GatewayFilterChain;
@@ -38,19 +40,24 @@ public class AuthPreFilter implements GlobalFilter {
             return exchange.getResponse().setComplete();
         }
 
-        String userName = jwtUtil.extractUsername(token);
-        String userRole = jwtUtil.extractRole(token);
-        log.info("username {}, role {}", userName, userRole);
-
+        String userName = "";
+        String userRole = "";
+        try {
+            userName = jwtUtil.extractUsername(token);
+            userRole = jwtUtil.extractRole(token);
+            log.info("사용자 이름: {}, 역할: {}", userName, userRole);
+        } catch (Exception e) {
+            exchange.getResponse().setStatusCode(HttpStatus.UNAUTHORIZED);
+            return exchange.getResponse().setComplete();
+        }
         return chain.filter(addHeaders(exchange, userName, userRole));
-
     }
 
-    private ServerWebExchange addHeaders(ServerWebExchange exchange, String encodedUserName, String userRole) {
+    private ServerWebExchange addHeaders(ServerWebExchange exchange, String userName, String userRole) {
 
         return exchange.mutate()
             .request(exchange.getRequest().mutate()
-                .header("X-User-Name", encodedUserName)
+                .header("X-User-Name", userName)
                 .header("X-User-Role", userRole)
                 .build())
             .build();

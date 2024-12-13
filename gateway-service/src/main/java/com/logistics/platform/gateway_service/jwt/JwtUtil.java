@@ -30,7 +30,7 @@ public class JwtUtil {
 
     public String extractToken(ServerHttpRequest request) {
         String authHeader = request.getHeaders().getFirst(AUTHORIZATION_HEADER);
-        if(authHeader != null && authHeader.startsWith(BEARER_PREFIX)) {
+        if (authHeader != null && authHeader.startsWith(BEARER_PREFIX)) {
             return authHeader.substring(7);
         } else {
             return null;
@@ -39,22 +39,11 @@ public class JwtUtil {
 
     public Claims validateToken(String token) {
 
-        try {
-            return Jwts.parser()
-                .setSigningKey(secretKey)
-                .build()
-                .parseClaimsJws(token)
-                .getBody();
-        }catch (ExpiredJwtException e) {
-            throw new RuntimeException("만료된 토큰입니다", e);
-        } catch (MalformedJwtException e) {
-            throw new RuntimeException("잘못된 형식입니다", e);
-        } catch (SignatureException e) {
-            throw new RuntimeException("유효하지 않은 서명입니다", e);
-        } catch (IllegalArgumentException e) {
-            throw new RuntimeException("유효하지 않은 토큰입니다", e);
-        }
-
+        return Jwts.parser()
+            .setSigningKey(secretKey)
+            .build()
+            .parseClaimsJws(token)
+            .getBody();
     }
 
     public String extractUsername(String token) {
