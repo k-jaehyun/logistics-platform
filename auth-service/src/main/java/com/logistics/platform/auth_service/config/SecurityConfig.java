@@ -1,5 +1,7 @@
 package com.logistics.platform.auth_service.config;
 
+import com.logistics.platform.auth_service.application.service.CustomUserDetailsService;
+import com.logistics.platform.auth_service.config.jwt.JwtAuthenticationFilter;
 import com.logistics.platform.auth_service.config.jwt.JwtUtil;
 import com.logistics.platform.auth_service.config.jwt.LoginFilter;
 import lombok.RequiredArgsConstructor;
@@ -22,6 +24,7 @@ public class SecurityConfig {
 
     private final AuthenticationConfiguration authenticationConfiguration;
     private final JwtUtil jwtUtil;
+    private final CustomUserDetailsService customUserDetailsService;
 
     @Bean
     public AuthenticationManager authenticationManager(
@@ -44,6 +47,9 @@ public class SecurityConfig {
 
         http
             .httpBasic((httpBasic) -> httpBasic.disable());
+
+        http
+            .addFilterBefore(new JwtAuthenticationFilter(customUserDetailsService), UsernamePasswordAuthenticationFilter.class);
 
         http
             .authorizeHttpRequests(
