@@ -1,6 +1,8 @@
 package com.logistics.platform.auth_service.application.service;
 
+import com.logistics.platform.auth_service.application.dto.CustomUserDetails;
 import com.logistics.platform.auth_service.application.dto.SignupResDto;
+import com.logistics.platform.auth_service.application.dto.UserResDto;
 import com.logistics.platform.auth_service.common.exception.CustomApiException;
 import com.logistics.platform.auth_service.domain.model.Role;
 import com.logistics.platform.auth_service.domain.model.User;
@@ -38,6 +40,13 @@ public class AuthService {
         return new SignupResDto(userRepository.save(user).getId());
     }
 
+    public UserResDto getUser(Long id) {
+        User user = userRepository.findByIdAndIsDeletedFalse(id)
+            .orElseThrow(() -> new CustomApiException("사용자가 존재하지 않습니다"));
+        return new UserResDto(user.getId(), user.getUsername(), user.getNumber(), user.getEmail(),
+            user.getSlackId(), user.getRole());
+    }
+
     private Role validateRole(String role) {
         try {
             return Role.valueOf(role.toUpperCase());
@@ -45,5 +54,6 @@ public class AuthService {
             throw new CustomApiException("유효하지 않은 role 입니다");
         }
     }
+
 
 }
