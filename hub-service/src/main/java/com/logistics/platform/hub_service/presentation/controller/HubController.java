@@ -42,6 +42,12 @@ public class HubController {
     return new ResponseDto<>(ResponseDto.SUCCESS, "허브 단건 조회가 완료되었습니다.", hubResponse);
   }
 
+  // HubClient 용
+  @GetMapping("/{hubId}/info")
+  public HubResponse getByHubClient(@PathVariable UUID hubId) {
+    return hubService.getHub(hubId);
+  }
+
   @GetMapping
   public Page<HubResponse> search(
       @RequestParam(name = "keyword", required = false, defaultValue = "") String keyword,
