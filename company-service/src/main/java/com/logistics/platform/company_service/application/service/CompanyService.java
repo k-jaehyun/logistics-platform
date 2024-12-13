@@ -26,24 +26,19 @@ public class CompanyService {
 
   public CompanyResponse createCompany(CompanyCreateRequest companyCreateRequest) {
 
-    //todo 허브 존재 여부 검증 추가
-
-    // 먼저 허브랑 연동 됐는지 확인
-    HubResponseDto hubDtoByHubId = hubService.getHubDtoByHubId(companyCreateRequest.getHubId());
-    log.info("hubDto = "+ hubDtoByHubId);
+    // todo 허브 존재 여부 검증
+    HubResponseDto hubDto = hubService.getHubDtoByHubId(companyCreateRequest.getHubId());
 
     if (companyRepository.findByCompanyNameAndIsDeletedFalse(
         companyCreateRequest.getCompanyName()).isPresent()) {
       throw new CustomApiException("해당 업체 이름이 이미 존재합니다.");
     }
-    ;
 
     CompanyType companyTypeSet =
         !companyCreateRequest.getIsCompanyTypeReceiver() ? CompanyType.MANUFACTURER
             : CompanyType.RECEIVER;
     Company company = Company.builder()
         .hubId(companyCreateRequest.getHubId())
-
         .companyManagerId(companyCreateRequest.getCompanyManagerId())
         .companyName(companyCreateRequest.getCompanyName())
         .phoneNumber(companyCreateRequest.getPhoneNumber())
