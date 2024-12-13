@@ -1,5 +1,6 @@
 package com.logistics.platform.slack_service.domain.model;
 
+import com.logistics.platform.slack_service.presentation.request.SlackRequestDto;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EntityListeners;
@@ -66,5 +67,14 @@ public class Slack {
     this.receiverSlackId = receiverSlackId;
     this.content = content;
     this.createdBy = userName;
+  }
+
+  public void update(SlackRequestDto slackRequestDto) {
+    if (slackRequestDto.getReceiverSlackId() != null) {
+      this.receiverSlackId = slackRequestDto.getReceiverSlackId();
+    }
+    if (slackRequestDto.getContent() != null) {
+      this.content = slackRequestDto.getContent();
+    }
   }
 }

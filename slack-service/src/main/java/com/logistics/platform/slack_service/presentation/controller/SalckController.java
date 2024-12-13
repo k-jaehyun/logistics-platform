@@ -15,6 +15,7 @@ import org.springframework.data.querydsl.binding.QuerydslPredicate;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.data.web.PagedModel;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -60,11 +61,22 @@ public class SalckController {
       @RequestHeader(value = "X-User-Role") String role
   ) {
 
-    PagedModel<SlackResponseDto> orderResponseDtoPage
+    PagedModel<SlackResponseDto> slackResponseDtoPage
         = slackService.getSlacksPage(uuidList, predicate, pageable, role);
 
-    return new ResponseDto<>(ResponseDto.SUCCESS, "메세지 목록이 조회되었습니다.", orderResponseDtoPage);
+    return new ResponseDto<>(ResponseDto.SUCCESS, "메세지 목록이 조회되었습니다.", slackResponseDtoPage);
   }
 
+  @PatchMapping("/{slackId}")
+  public ResponseDto<SlackResponseDto> updateMessage(
+      @RequestBody SlackRequestDto slackRequestDto,
+      @PathVariable UUID slackId,
+      @RequestHeader(value = "X-User-Role") String role
+  ) {
+
+    SlackResponseDto slackResponseDto = slackService.updateMessage(slackRequestDto, slackId, role);
+
+    return new ResponseDto<>(ResponseDto.SUCCESS, "메세지가 수정되었습니다.", slackResponseDto);
+  }
 
 }

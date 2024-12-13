@@ -13,6 +13,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PagedModel;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -63,5 +64,21 @@ public class SlackService {
         pageable);
 
     return new PagedModel<>(slackResponseDtoPage);
+  }
+
+  @Transactional
+  public SlackResponseDto updateMessage(SlackRequestDto slackRequestDto, UUID slackId,
+      String role) {
+
+    if (!role.equals("ROLE_MASTER")) { // TODO Auth 서버에서 권한 검증
+      throw new CustomApiException("Master 권한만 조회 할 수 있습니다.");
+    }
+
+    Slack slack = slackRepository.findById(slackId)
+        .orElseThrow(() -> new CustomApiException("Check Slack ID. No exist."));
+
+    slack.update(slackRequestDto);
+
+    return new SlackResponseDto(slack);
   }
 }
