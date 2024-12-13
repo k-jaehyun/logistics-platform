@@ -1,5 +1,7 @@
 package com.logistics.platform.slack_service.application.service.slack;
 
+import com.logistics.platform.slack_service.application.service.auth.AuthService;
+import com.logistics.platform.slack_service.application.service.message.MessageService;
 import com.logistics.platform.slack_service.common.exception.CustomApiException;
 import com.logistics.platform.slack_service.domain.model.Slack;
 import com.logistics.platform.slack_service.domain.repository.SlackRepository;
@@ -21,6 +23,7 @@ public class SlackService {
 
   private final SlackRepository slackRepository;
   private final AuthService authService;
+  private final MessageService messageService;
 
   public SlackResponseDto createMessage(SlackRequestDto slackRequestDto, String username) {
 
@@ -33,7 +36,8 @@ public class SlackService {
         username
     );
 
-    // TODO 실제 앱 연동
+    messageService.sendMessageToUser(slackRequestDto.getReceiverSlackId(),
+        slackRequestDto.getContent());
 
     slackRepository.save(slack);
 
@@ -80,6 +84,9 @@ public class SlackService {
         .orElseThrow(() -> new CustomApiException("Check Slack ID. No exist."));
 
     slack.update(slackRequestDto, userName);
+
+    messageService.sendMessageToUser(slack.getReceiverSlackId(),
+        "<수정된 메세지>\n" + slack.getContent());
 
     return new SlackResponseDto(slack);
   }
