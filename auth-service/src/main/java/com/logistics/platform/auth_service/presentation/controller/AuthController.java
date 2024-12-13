@@ -20,7 +20,7 @@ public class AuthController {
 
     @PostMapping("/signup")
     public ResponseDto<SignupResDto> signup(@RequestBody @Valid SignupReqDto reqDto) {
-        return new ResponseDto<>(1, "회원가입되었습니다.", authService.signup(reqDto));
+        return new ResponseDto<>(ResponseDto.SUCCESS, "회원가입되었습니다.", authService.signup(reqDto));
     }
 
 }
