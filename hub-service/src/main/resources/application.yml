@@ -1,5 +1,5 @@
 server:
-  port: 0  # 임시 포트, 이후 Config 서버 설정으로 덮어씌움
+  port: 19097  # 임시 포트, 이후 Config 서버 설정으로 덮어씌움
 
 spring:
   application:
@@ -17,15 +17,34 @@ spring:
     username: ${DB_USERNAME}
     password: ${DB_PASSWORD}
     driver-class-name: org.postgresql.Driver
+
+  data:
+    redis:
+      host: localhost
+      port: 6379
+      username: default
+      password: systempass
+
   jpa:
     properties:
       hibernate:
-        dialect: org.hibernate.dialect.PostgreSQLDialect
+        dialect: org.hibernate.spatial.dialect.postgis.PostgisPG95Dialect
     hibernate:
-      ddl-auto: update
+      ddl-auto: update # 변경하면 안됩니다..허브 정보 날라가면 슬플 것 같아요
 
 # Eureka server 연결 (호스트 이름: localhost, 포트: 19090)
 eureka:
   client:
     service-url:
       defaultZone: http://localhost:19090/eureka/
+
+google:
+  maps:
+    api:
+      key: ${GOOGLE_API_KEY}
+
+kakao:
+  api:
+    key: ${KAKAO_API_KEY}
+
+

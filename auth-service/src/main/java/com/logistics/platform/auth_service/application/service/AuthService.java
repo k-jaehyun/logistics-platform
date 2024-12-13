@@ -18,7 +18,7 @@ public class AuthService {
     private final PasswordEncoder passwordEncoder;
 
     public SignupResDto signup(SignupReqDto reqDto) {
-        userRepository.findByUsername(reqDto.getUsername())
+        userRepository.findByUsernameAndIsDeletedFalse(reqDto.getUsername())
             .ifPresent(user -> {
                 throw new CustomApiException("이미 사용 중인 사용자 이름입니다");
             });
