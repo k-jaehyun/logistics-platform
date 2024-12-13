@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -40,7 +41,9 @@ public class CompanyController {
   }
 
   @GetMapping
-  public Page<CompanyResponse> search(String keyword, Pageable pageable) {
+  public Page<CompanyResponse> search(
+      @RequestParam(name = "keyword", required = false, defaultValue = "") String keyword,
+      Pageable pageable) {
     return companyService.searchCompanies(keyword, pageable);
   }
 

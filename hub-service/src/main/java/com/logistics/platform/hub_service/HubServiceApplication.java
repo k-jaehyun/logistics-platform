@@ -12,5 +12,4 @@ public class HubServiceApplication {
 		SpringApplication.run(HubServiceApplication.class, args);
 
 	}
-
 }

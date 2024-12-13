@@ -11,9 +11,9 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface HubRepository extends JpaRepository<Hub, UUID> {
 
-  Hub findByHubNameAndIsDeletedFalse(String hubName);
+  Optional<Hub> findByHubNameAndIsDeletedFalse(String hubName);
 
-  Page<Hub> findAllByHubNameContainingAndIsDeletedFalse(String hubName, Pageable pageable);
+  Page<Hub> findAllByHubNameContainsIgnoreCaseAndIsDeletedFalse(String hubName, Pageable pageable);
 
   Optional<Hub> findByHubIdAndIsDeletedFalse(UUID hubId);
 

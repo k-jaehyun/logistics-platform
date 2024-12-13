@@ -32,9 +32,8 @@ public class HubService {
   public HubResponse createHub(HubCreateRequest hubCreateRequest)
       throws IOException, InterruptedException, ApiException {
 
-    Hub exsitHub = hubRepository.findByHubNameAndIsDeletedFalse(
-        hubCreateRequest.getHubName());
-    if (exsitHub != null && exsitHub.getHubName().equals(hubCreateRequest.getHubName())) {
+    if (hubRepository.findByHubNameAndIsDeletedFalse(
+        hubCreateRequest.getHubName()).isPresent()) {
       throw new CustomApiException("해당 허브 이름이 이미 존재합니다.");
     }
 
@@ -68,7 +67,6 @@ public class HubService {
     log.info("캐시 작동 확인");
     Hub hub = hubRepository.findByHubIdAndIsDeletedFalse(hubId).orElseThrow(
         () -> new CustomApiException("해당 hubId가 존재하지 않습니다."));
-
     return new HubResponse(hub);
   }
 
@@ -78,7 +76,7 @@ public class HubService {
     if (keyword == null || keyword.trim().isEmpty()) {
       hubs = hubRepository.findAllByIsDeletedFalse(pageable);
     } else {
-      hubs = hubRepository.findAllByHubNameContainingAndIsDeletedFalse(keyword, pageable);
+      hubs = hubRepository.findAllByHubNameContainsIgnoreCaseAndIsDeletedFalse(keyword, pageable);
     }
     return hubs.map(HubResponse::new);
   }
@@ -86,14 +84,14 @@ public class HubService {
   @Transactional
   public HubResponse modifyHub(UUID hubId, HubModifyRequest hubModifyRequest) {
 
-    Hub exsitHub = hubRepository.findByHubNameAndIsDeletedFalse(
-        hubModifyRequest.getHubName());
-    if (exsitHub != null && exsitHub.getHubName().equals(hubModifyRequest.getHubName())) {
+    if (hubRepository.findByHubNameAndIsDeletedFalse(
+        hubModifyRequest.getHubName()).isPresent()) {
       throw new CustomApiException("해당 허브 이름이 이미 존재합니다.");
     }
 
     Hub hub = hubRepository.findByHubIdAndIsDeletedFalse(hubId).orElseThrow(
         () -> new CustomApiException("해당 hubId가 존재하지 않습니다."));
+
     hub.changeHub(hubModifyRequest);
     Hub savedHub = hubRepository.save(hub);
     return new HubResponse(savedHub);
