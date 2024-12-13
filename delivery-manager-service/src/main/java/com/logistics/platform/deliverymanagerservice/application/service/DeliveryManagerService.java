@@ -43,15 +43,7 @@ public class DeliveryManagerService {
 
     return new DeliveryManagerResponseDto(savedDeliveryManager);
   }
-  // 배송타입 검증
-  public void validateDeliveryType(DeliveryType deliveryType) {
-    if (deliveryType == null) {
-      throw new CustomApiException("배송 유형이 비어있습니다.");
-    }
-    if (deliveryType != DeliveryType.HUB && deliveryType != DeliveryType.COMPANY) {
-      throw new CustomApiException("유효하지 않은 배송 유형입니다.");
-    }
-  }
+  // 피드백 참고하여 검증로직 아래로 옮김
 
 
   // 2. 배송담당자 수정
@@ -114,6 +106,17 @@ public class DeliveryManagerService {
     deliveryManager.deleteDeliveryManager(deletedBy);  // 삭제자 나중에 헤더에서
 
     return new DeliveryManagerResponseDto(deliveryManager);
+  }
+
+
+  // 배송타입 검증
+  public void validateDeliveryType(DeliveryType deliveryType) {
+    if (deliveryType == null) {
+      throw new CustomApiException("배송 유형이 비어있습니다.");
+    }
+    if (deliveryType != DeliveryType.HUB && deliveryType != DeliveryType.COMPANY) {
+      throw new CustomApiException("유효하지 않은 배송 유형입니다.");
+    }
   }
 
 }

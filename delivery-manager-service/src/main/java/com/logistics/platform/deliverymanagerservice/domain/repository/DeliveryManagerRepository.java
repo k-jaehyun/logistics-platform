@@ -5,13 +5,13 @@ import com.logistics.platform.deliverymanagerservice.domain.model.QDeliveryManag
 import com.logistics.platform.deliverymanagerservice.infrastructure.repository.DeliveryManagerRepositoryCustom;
 import com.logistics.platform.deliverymanagerservice.presentation.response.DeliveryManagerResponseDto;
 import com.querydsl.core.BooleanBuilder;
+import com.querydsl.core.types.Predicate;
 import com.querydsl.core.types.dsl.StringPath;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
-import java.util.function.Predicate;
 import org.antlr.v4.runtime.misc.NotNull;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
