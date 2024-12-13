@@ -23,19 +23,18 @@ public class CompanyService {
   public CompanyResponse createCompany(CompanyCreateRequest companyCreateRequest) {
 
     //todo 허브 존재 여부 검증 추가
-
-    Company existCompany = companyRepository.findByCompanyNameAndIsDeletedFalse(
-        companyCreateRequest.getCompanyName());
-    if (existCompany != null && existCompany.getCompanyName()
-        .equals(companyCreateRequest.getCompanyName())) {
+    if (companyRepository.findByCompanyNameAndIsDeletedFalse(
+        companyCreateRequest.getCompanyName()).isPresent()) {
       throw new CustomApiException("해당 업체 이름이 이미 존재합니다.");
     }
+    ;
 
     CompanyType companyTypeSet =
         !companyCreateRequest.getIsCompanyTypeReceiver() ? CompanyType.MANUFACTURER
             : CompanyType.RECEIVER;
     Company company = Company.builder()
         .hubId(companyCreateRequest.getHubId())
+
         .companyManagerId(companyCreateRequest.getCompanyManagerId())
         .companyName(companyCreateRequest.getCompanyName())
         .phoneNumber(companyCreateRequest.getPhoneNumber())
@@ -50,10 +49,9 @@ public class CompanyService {
 
   @Transactional(readOnly = true)
   public CompanyResponse getCompany(UUID companyId) {
-    Company company = companyRepository.findByCompanyIdAndIsDeletedFalse(companyId);
-    if (company == null) {
-      throw new CustomApiException("해당 companyId가 존재하지 않습니다.");
-    }
+    Company company = companyRepository.findByCompanyIdAndIsDeletedFalse(companyId).orElseThrow(
+        () -> new CustomApiException("해당 companyId가 존재하지 않습니다."));
+
     return new CompanyResponse(company);
   }
 
@@ -63,7 +61,7 @@ public class CompanyService {
     if (keyword == null || keyword.trim().isEmpty()) {
       companies = companyRepository.findAllByIsDeletedFalse(pageable);
     } else {
-      companies = companyRepository.findAllByCompanyNameContainingAndIsDeletedFalse(
+      companies = companyRepository.findAllByCompanyNameContainsIgnoreCaseAndIsDeletedFalse(
           keyword, pageable);
     }
     return companies.map(CompanyResponse::new);
@@ -71,7 +69,8 @@ public class CompanyService {
 
   @Transactional
   public CompanyResponse modifyCompany(UUID companyId, CompanyModifyRequest companyModifyRequest) {
-    Company company = companyRepository.findByCompanyIdAndIsDeletedFalse(companyId);
+    Company company = companyRepository.findByCompanyIdAndIsDeletedFalse(companyId).orElseThrow(
+        () -> new CustomApiException("해당 companyId가 존재하지 않습니다."));
     company.changeCompany(companyModifyRequest);
     Company savedCompany = companyRepository.save(company);
     return new CompanyResponse(savedCompany);
@@ -79,7 +78,8 @@ public class CompanyService {
 
   @Transactional
   public void deleteCompany(UUID companyId) {
-    Company company = companyRepository.findByCompanyIdAndIsDeletedFalse(companyId);
+    Company company = companyRepository.findByCompanyIdAndIsDeletedFalse(companyId).orElseThrow(
+        () -> new CustomApiException("해당 companyId가 존재하지 않습니다."));
     company.deleteCompany();
   }
 
