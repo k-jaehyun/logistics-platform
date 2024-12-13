@@ -21,9 +21,9 @@ public class HubResponse implements Serializable {
 
   private String postalCode;
 
-  private double latitude;
+  private Double latitude;
 
-  private double longitude;
+  private Double longitude;
 
 
   public HubResponse(Hub hub) {

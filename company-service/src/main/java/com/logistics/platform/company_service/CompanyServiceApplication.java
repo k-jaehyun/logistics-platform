@@ -17,7 +17,7 @@ public class CompanyServiceApplication {
   }
 
   @Bean
-  public FeignErrorDecoder getFeignErrorDecoder(){
+  public FeignErrorDecoder getFeignErrorDecoder() {
     return new FeignErrorDecoder();
   }
 

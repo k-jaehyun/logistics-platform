@@ -26,7 +26,6 @@ public class CompanyService {
 
   public CompanyResponse createCompany(CompanyCreateRequest companyCreateRequest) {
 
-    // todo 허브 존재 여부 검증
     HubResponseDto hubDto = hubService.getHubDtoByHubId(companyCreateRequest.getHubId());
 
     if (companyRepository.findByCompanyNameAndIsDeletedFalse(
@@ -42,7 +41,7 @@ public class CompanyService {
         .companyManagerId(companyCreateRequest.getCompanyManagerId())
         .companyName(companyCreateRequest.getCompanyName())
         .phoneNumber(companyCreateRequest.getPhoneNumber())
-        .address(companyCreateRequest.getAddress())
+        .roadAddress(companyCreateRequest.getRoadAddress())
         .companyType(companyTypeSet)
         .createdBy("임시 생성자")
         .isDeleted(false)

@@ -10,8 +10,8 @@ import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 @EnableFeignClients
 public class HubServiceApplication {
 
-		public static void main(String[] args) {
-		SpringApplication.run(HubServiceApplication.class, args);
+  public static void main(String[] args) {
+    SpringApplication.run(HubServiceApplication.class, args);
 
-	}
+  }
 }

@@ -13,9 +13,9 @@ public class HubRouteResponse {
 
   private UUID endHubId;
 
-  private double estimatedDuration;
+  private Double estimatedDuration;
 
-  private double estimatedDistance;
+  private Double estimatedDistance;
 
   private String classification;
 

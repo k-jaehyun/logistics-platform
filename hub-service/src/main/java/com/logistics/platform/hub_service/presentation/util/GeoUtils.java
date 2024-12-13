@@ -9,7 +9,7 @@ import org.locationtech.jts.geom.Point;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class GeoUtils {
 
-  public static Point toPoint(double lng, double lat) {
+  public static Point toPoint(Double lng, Double lat) {
     return new GeometryFactory().createPoint(new Coordinate(lng, lat));
   }
 }

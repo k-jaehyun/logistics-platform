@@ -49,7 +49,7 @@ public class Company {
   private String phoneNumber;
 
   @Column(nullable = false)
-  private String address;
+  private String roadAddress;
 
   @Column(nullable = false)
   @Enumerated(EnumType.STRING)
@@ -84,9 +84,10 @@ public class Company {
     this.hubId = companyModifyRequest.getHubId();
     this.companyName = companyModifyRequest.getCompanyName();
     this.phoneNumber = companyModifyRequest.getPhoneNumber();
-    this.address = companyModifyRequest.getAddress();
-    this.companyType = !companyModifyRequest.getIsCompanyTypeReceiver() ? CompanyType.MANUFACTURER
-        : CompanyType.RECEIVER;
+    this.roadAddress = companyModifyRequest.getRoadAddress();
+        this.companyType =
+        !companyModifyRequest.getIsCompanyTypeReceiver() ? CompanyType.MANUFACTURER
+            : CompanyType.RECEIVER;
     // todo 나중에 수정자 업데이트 추가
   }
 

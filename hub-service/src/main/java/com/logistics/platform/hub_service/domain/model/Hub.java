@@ -54,10 +54,10 @@ public class Hub {
   private String postalCode;
 
   @Column(nullable = false)
-  private double latitude;
+  private Double latitude;
 
   @Column(nullable = false)
-  private double longitude;
+  private Double longitude;
 
   @Column(columnDefinition = "geometry(Point, 4326)", nullable = false)
   private Point location;

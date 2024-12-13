@@ -23,8 +23,7 @@ public class CompanyCreateRequest {
   private String phoneNumber;
 
   @NotEmpty
-  private String address;
-
+  private String roadAddress;
   @NotNull
   private Boolean isCompanyTypeReceiver; // false = 생산 업체, true = 수령 업체
 

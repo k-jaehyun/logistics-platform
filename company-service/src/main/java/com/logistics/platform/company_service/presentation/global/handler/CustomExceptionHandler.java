@@ -2,7 +2,6 @@ package com.logistics.platform.company_service.presentation.global.handler;
 
 import com.logistics.platform.company_service.presentation.global.ResponseDto;
 import com.logistics.platform.company_service.presentation.global.ex.CustomApiException;
-import feign.FeignException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;

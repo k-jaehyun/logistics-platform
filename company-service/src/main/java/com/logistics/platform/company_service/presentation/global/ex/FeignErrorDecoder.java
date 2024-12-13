@@ -2,12 +2,10 @@ package com.logistics.platform.company_service.presentation.global.ex;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.logistics.platform.company_service.presentation.global.ResponseDto;
 import feign.Response;
 import feign.codec.ErrorDecoder;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
-import org.springframework.http.HttpStatus;
 
 public class FeignErrorDecoder implements ErrorDecoder {
 
