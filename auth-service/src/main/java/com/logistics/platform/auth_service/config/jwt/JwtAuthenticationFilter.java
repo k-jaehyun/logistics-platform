@@ -34,8 +34,10 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
             if(!role.equals(userDetails.getRole())) {
                 log.info("userDetails role {}", userDetails.getRole());
+                response.setContentType("application/json; charset=UTF-8"); // UTF-8 설정
+                response.setCharacterEncoding("UTF-8"); // 추가 설정
                 response.setStatus(HttpStatus.FORBIDDEN.value()); // 403 상태 코드
-                response.getWriter().write("Role 정보가 일치하지 않습니다");
+                response.getWriter().write("{\"code\": -1, \"message\": \"Role 정보가 일치하지 않습니다\", \"data\": null}");
                 return;
             }
 
