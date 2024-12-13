@@ -4,6 +4,8 @@ import com.logistics.platform.hub_service.presentation.request.HubModifyRequest;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EntityListeners;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
@@ -42,7 +44,14 @@ public class Hub {
   private String hubName;
 
   @Column(nullable = false)
-  private String address;
+  @Enumerated(EnumType.STRING)
+  private HubType hubType;
+
+  @Column(nullable = false)
+  private String roadAddress;
+
+  @Column(nullable = false)
+  private String postalCode;
 
   @Column(nullable = false)
   private double latitude;
@@ -84,7 +93,10 @@ public class Hub {
   public void changeHub(HubModifyRequest hubModifyRequest) {
     this.hubManagerId = hubModifyRequest.getHubManagerId();
     this.hubName = hubModifyRequest.getHubName();
-    this.address = hubModifyRequest.getAddress();
+    this.hubType = !hubModifyRequest.getIsHubTypeReceiver() ? HubType.localHub
+        : HubType.centralHub;
+    this.roadAddress = hubModifyRequest.getRoadAddress();
+    this.postalCode = hubModifyRequest.getPostalCode();
     // todo 나중에 수정자 업데이트 추가
   }
 
