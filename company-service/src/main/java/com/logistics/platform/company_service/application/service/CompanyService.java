@@ -10,12 +10,14 @@ import com.logistics.platform.company_service.presentation.request.CompanyModify
 import com.logistics.platform.company_service.presentation.response.CompanyResponse;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
+@Slf4j
 @RequiredArgsConstructor
 public class CompanyService {
 
@@ -25,8 +27,10 @@ public class CompanyService {
   public CompanyResponse createCompany(CompanyCreateRequest companyCreateRequest) {
 
     //todo 허브 존재 여부 검증 추가
-    UUID existHubId = companyCreateRequest.getHubId();
 
+    // 먼저 허브랑 연동 됐는지 확인
+    HubResponseDto hubDtoByHubId = hubService.getHubDtoByHubId(companyCreateRequest.getHubId());
+    log.info("hubDto = "+ hubDtoByHubId);
 
     if (companyRepository.findByCompanyNameAndIsDeletedFalse(
         companyCreateRequest.getCompanyName()).isPresent()) {

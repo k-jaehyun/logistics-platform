@@ -6,10 +6,10 @@ import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
-@FeignClient(name = "hub-service")
+@FeignClient(name = "hub-service", path = "/api/hubs")
 public interface HubClient {
 
-  @GetMapping("/api/hubs/{hubId}/info")
-  HubResponseDto getHubResponseDto(@PathVariable UUID hubId);
+  @GetMapping("/{hubId}/info")
+  HubResponseDto getHubResponseDto(@PathVariable("hubId") UUID hubId);
 
 }
