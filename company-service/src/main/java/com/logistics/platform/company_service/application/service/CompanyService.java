@@ -1,5 +1,6 @@
 package com.logistics.platform.company_service.application.service;
 
+import com.logistics.platform.company_service.application.dto.HubResponseDto;
 import com.logistics.platform.company_service.domain.model.Company;
 import com.logistics.platform.company_service.domain.model.CompanyType;
 import com.logistics.platform.company_service.domain.repository.CompanyRepository;
@@ -19,10 +20,14 @@ import org.springframework.transaction.annotation.Transactional;
 public class CompanyService {
 
   private final CompanyRepository companyRepository;
+  private final HubService hubService;
 
   public CompanyResponse createCompany(CompanyCreateRequest companyCreateRequest) {
 
     //todo 허브 존재 여부 검증 추가
+    UUID existHubId = companyCreateRequest.getHubId();
+
+
     if (companyRepository.findByCompanyNameAndIsDeletedFalse(
         companyCreateRequest.getCompanyName()).isPresent()) {
       throw new CustomApiException("해당 업체 이름이 이미 존재합니다.");

@@ -1,4 +1,4 @@
-package com.logistics.platform.hub_service.infrastructure;
+package com.logistics.platform.hub_service.infrastructure.config;
 
 import com.logistics.platform.hub_service.presentation.response.HubResponse;
 import org.springframework.context.annotation.Bean;
