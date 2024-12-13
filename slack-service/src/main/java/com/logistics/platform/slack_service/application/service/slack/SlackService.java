@@ -40,6 +40,7 @@ public class SlackService {
     return new SlackResponseDto(slack);
   }
 
+  @Transactional(readOnly = true)
   public SlackResponseDto getMessage(UUID slackId, String role) {
 
     if (!role.equals("ROLE_MASTER")) { // TODO Auth 서버에서 권한 검증
@@ -52,6 +53,7 @@ public class SlackService {
     return new SlackResponseDto(slack);
   }
 
+  @Transactional(readOnly = true)
   public PagedModel<SlackResponseDto> getSlacksPage(List<UUID> uuidList, Predicate predicate,
       Pageable pageable,
       String role) {
@@ -68,7 +70,7 @@ public class SlackService {
 
   @Transactional
   public SlackResponseDto updateMessage(SlackRequestDto slackRequestDto, UUID slackId,
-      String role) {
+      String role, String userName) {
 
     if (!role.equals("ROLE_MASTER")) { // TODO Auth 서버에서 권한 검증
       throw new CustomApiException("Master 권한만 조회 할 수 있습니다.");
@@ -77,8 +79,21 @@ public class SlackService {
     Slack slack = slackRepository.findById(slackId)
         .orElseThrow(() -> new CustomApiException("Check Slack ID. No exist."));
 
-    slack.update(slackRequestDto);
+    slack.update(slackRequestDto, userName);
 
     return new SlackResponseDto(slack);
+  }
+
+  @Transactional
+  public void deleteMessage(UUID slackId, String role, String userName) {
+
+    if (!role.equals("ROLE_MASTER")) { // TODO Auth 서버에서 권한 검증
+      throw new CustomApiException("Master 권한만 조회 할 수 있습니다.");
+    }
+
+    Slack slack = slackRepository.findById(slackId)
+        .orElseThrow(() -> new CustomApiException("Check Slack ID. No exist."));
+
+    slack.delete(userName);
   }
 }

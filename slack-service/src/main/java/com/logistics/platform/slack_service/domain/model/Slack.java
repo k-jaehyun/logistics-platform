@@ -69,12 +69,19 @@ public class Slack {
     this.createdBy = userName;
   }
 
-  public void update(SlackRequestDto slackRequestDto) {
+  public void update(SlackRequestDto slackRequestDto, String userName) {
     if (slackRequestDto.getReceiverSlackId() != null) {
       this.receiverSlackId = slackRequestDto.getReceiverSlackId();
     }
     if (slackRequestDto.getContent() != null) {
       this.content = slackRequestDto.getContent();
     }
+    this.updatedBy = userName;
+  }
+
+  public void delete(String userName) {
+    this.isDeleted = true;
+    this.deletedBy = userName;
+    this.deletedAt = LocalDateTime.now();
   }
 }

@@ -14,6 +14,7 @@ import org.springframework.data.domain.Sort.Direction;
 import org.springframework.data.querydsl.binding.QuerydslPredicate;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.data.web.PagedModel;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -71,12 +72,26 @@ public class SalckController {
   public ResponseDto<SlackResponseDto> updateMessage(
       @RequestBody SlackRequestDto slackRequestDto,
       @PathVariable UUID slackId,
-      @RequestHeader(value = "X-User-Role") String role
+      @RequestHeader(value = "X-User-Role") String role,
+      @RequestHeader(value = "X-User-Name") String userName
   ) {
 
-    SlackResponseDto slackResponseDto = slackService.updateMessage(slackRequestDto, slackId, role);
+    SlackResponseDto slackResponseDto = slackService.updateMessage(slackRequestDto, slackId, role,
+        userName);
 
     return new ResponseDto<>(ResponseDto.SUCCESS, "메세지가 수정되었습니다.", slackResponseDto);
+  }
+
+  @DeleteMapping("/{slackID}")
+  public ResponseDto<SlackResponseDto> deleteMessage(
+      @PathVariable UUID slackId,
+      @RequestHeader(value = "X-User-Role") String role,
+      @RequestHeader(value = "X-User-Name") String userName
+  ) {
+
+    slackService.deleteMessage(slackId, role, userName);
+
+    return new ResponseDto<>(ResponseDto.SUCCESS, "메세지가 삭제되었습니다.");
   }
 
 }
