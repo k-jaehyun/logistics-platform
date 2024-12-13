@@ -1,6 +1,6 @@
 package com.logistics.platform.slack_service.application.service.slack;
 
-import com.logistics.platform.slack_service.presentation.client.AuthClient;
+import com.logistics.platform.slack_service.infrastructure.client.AuthClient;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
