@@ -46,4 +46,11 @@ public class AuthService {
         }
     }
 
+    public String getSlackIdByUsername(String username) {
+        User user = userRepository.findByUsername(username).orElse(null);
+        if (user != null) {
+            return user.getSlackId();
+        }
+        return null;
+    }
 }

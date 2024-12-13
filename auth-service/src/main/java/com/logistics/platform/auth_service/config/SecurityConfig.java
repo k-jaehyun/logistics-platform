@@ -54,6 +54,7 @@ public class SecurityConfig {
         http
             .authorizeHttpRequests(
                 (auth) -> auth.requestMatchers("/api/auth/signup", "/api/auth/signin").permitAll()
+                    .requestMatchers("/api/auth/slack/slackId").permitAll()
                     .anyRequest().authenticated());
 
         http
