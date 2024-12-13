@@ -1,4 +1,4 @@
-package com.logistics.platform.slack_service.application.service.slack;
+package com.logistics.platform.slack_service.application.service.auth;
 
 import com.logistics.platform.slack_service.infrastructure.client.AuthClient;
 import lombok.RequiredArgsConstructor;
