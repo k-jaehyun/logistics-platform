@@ -9,6 +9,7 @@ import com.querydsl.core.types.Predicate;
 import java.util.List;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PagedModel;
@@ -24,18 +25,17 @@ public class ProductService {
 
   public ProductResponseDto createProduct(ProductRequestDto productRequestDto) {
 
-    // companyId 검증
+    // TODO companyId 검증
 
-    // hubId 검증
+    // TODO hubId 검증
 
     // 상품명 중복 가능
 
-    // createdBy 추가 방법 의논 (gateway에서 인증 후 헤더로 값 전달?)
     Product product = Product.builder()
         .productName(productRequestDto.getProductName())
         .price(productRequestDto.getPrice())
         .count(productRequestDto.getCount())
-        .createdBy("생성자")
+        .createdBy("생성자") // TODO 생성자 추가
         .companyId(productRequestDto.getCompanyId())
         .hubId(productRequestDto.getHubId())
         .build();
@@ -45,20 +45,20 @@ public class ProductService {
     return new ProductResponseDto(product);
   }
 
-  @Transactional(readOnly = true)
+  @Transactional(readOnly = true) // TODO Caching
   public ProductResponseDto getProduct(UUID productId) {
 
     Product product = productRepository.findById(productId)
         .orElseThrow(() -> new CustomApiException("존재하지 않는 productId 입니다."));
 
-    if(product.getIsDeleted()) {
+    if (product.getIsDeleted()) {
       throw new CustomApiException("이미 삭제된 상품입니다.");
     }
 
     return new ProductResponseDto(product);
   }
 
-  @Transactional(readOnly = true)
+  @Transactional(readOnly = true) // TODO Caching
   public PagedModel<ProductResponseDto> getProductsPage(
       List<UUID> uuidList, Predicate predicate, Pageable pageable) {
 
@@ -69,32 +69,48 @@ public class ProductService {
   }
 
   @Transactional
+  @CacheEvict(value = "getProductCache", key = "#productId")
   public ProductResponseDto updateProduct(UUID productId, ProductRequestDto productRequestDto) {
 
     Product product = productRepository.findById(productId)
         .orElseThrow(() -> new CustomApiException("존재하지 않는 productId입니다."));
 
-    if(product.getIsDeleted()) {
+    if (product.getIsDeleted()) {
       throw new CustomApiException("이미 삭제된 상품입니다.");
     }
 
-    product.update(productRequestDto);
+    product.update(productRequestDto); // TODO 수정자 추가
 
     return new ProductResponseDto(product);
   }
 
   @Transactional
+  @CacheEvict(value = "getProductCache", key = "#productId")
   public ProductResponseDto deleteProduct(UUID productId) {
 
     Product product = productRepository.findById(productId)
         .orElseThrow(() -> new CustomApiException("존재하지 않는 productId입니다."));
 
-    if(product.getIsDeleted()) {
+    if (product.getIsDeleted()) {
       throw new CustomApiException("이미 삭제된 상품입니다.");
     }
 
-    product.delete();
+    product.delete(); // TODO 삭제자 추가
 
     return new ProductResponseDto(product);
   }
+
+  @Transactional
+  @CacheEvict(value = "getProductCache", key = "#productId")
+  public void adjustProductQuantity(UUID productId, Long quantity) {
+    Product product = productRepository.findById(productId)
+        .orElseThrow(() -> new CustomApiException("존재하지 않는 productId입니다."));
+
+    if (product.getIsDeleted()) {
+      throw new CustomApiException("이미 삭제된 상품입니다.");
+    }
+
+    productRepository.save(product.adjustCount(quantity));
+  }
+
 }

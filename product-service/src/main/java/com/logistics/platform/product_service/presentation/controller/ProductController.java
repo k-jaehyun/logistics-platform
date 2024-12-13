@@ -28,7 +28,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/products")
-public class ProductController {
+public class ProductController { // TODO 권한 검증 추가
 
   private final ProductService productService;
 
@@ -82,8 +82,21 @@ public class ProductController {
 
     return new ResponseDto<>(
         ResponseDto.SUCCESS,
-        productResponseDto.getProductName() + ": 상품이 생성되었습니다."
+        productResponseDto.getProductName() + ": 상품이 삭제되었습니다."
     );
   }
 
+  @GetMapping("/{productId}/info")
+  public ProductResponseDto getProductDto(@PathVariable UUID productId) {
+    ProductResponseDto productResponseDto = productService.getProduct(productId);
+    return productResponseDto;
+  }
+
+  @PostMapping("/{productId}/quantity/adjustment")
+  public void adjustProductQuantity(
+      @PathVariable(value = "productId") UUID productId,
+      @RequestParam(value = "quantity") Long quantity) {
+
+    productService.adjustProductQuantity(productId, quantity);
+  }
 }

@@ -1,6 +1,5 @@
-package com.logistics.platform.product_service.domain.model;
+package com.logistics.platform.order_service.domain.model;
 
-import com.logistics.platform.product_service.presentation.request.ProductRequestDto;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EntityListeners;
@@ -27,22 +26,38 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 @AllArgsConstructor
 @NoArgsConstructor
 @EntityListeners(AuditingEntityListener.class)
-@Table(name = "p_product")
-public class Product {
+@Table(name = "p_order")
+public class Order {
 
   @Id
   @GeneratedValue(strategy = GenerationType.UUID)
   private UUID id;
 
   @Column(nullable = false)
-  private String productName;
+  private UUID productId;
 
   @Column(nullable = false)
-  private Long price;
+  private UUID supplyCompayId;
+
+  @Column(nullable = false)
+  private UUID receiveCompanyId;
+
+  // TODO Order가 생성된 이후 Delivery가 생성되기 때문에 Feign이나 큐를 이용한 구현이 필요
+//  @Column(nullable = false)
+//  private UUID deliveryId;
+
+  @Column(nullable = false)
+  private Long productQuantity;
+
+  @Column(nullable = false)
+  private Long totalPrice;
 
   @Column
-  private Long count = 0L;
+  private String orderRequest;
 
+  /**
+   * 공통 부분 - 추후 상속으로 구현
+   */
   @CreatedDate
   @Column(updatable = false, nullable = false)
   @Temporal(TemporalType.TIMESTAMP)
@@ -71,57 +86,50 @@ public class Product {
   @Column(nullable = false)
   private Boolean isDeleted = false;
 
-  // 업체 ID
-  @Column(nullable = false)
-  private UUID companyId;
-
-  // 관리허브 ID
-  @Column(nullable = false)
-  private UUID hubId;
-
   @Builder
-  public Product(
-      String productName, Long price, Long count, String createdBy, UUID companyId, UUID hubId
+  public Order(
+      UUID productId,
+      UUID supplyCompayId,
+      UUID receiveCompanyId,
+      Long productQuantity,
+      Long totalPrice,
+      String orderRequest,
+      String createdBy
   ) {
-    this.productName = productName;
-    this.price = price;
-    if (count != null) {
-      this.count = count;
-    }
+    this.productId = productId;
+    this.supplyCompayId = supplyCompayId;
+    this.receiveCompanyId = receiveCompanyId;
+    this.productQuantity = productQuantity;
+    this.totalPrice = totalPrice;
+    this.orderRequest = orderRequest;
     this.createdBy = createdBy;
-    this.companyId = companyId;
-    this.hubId = hubId;
   }
 
-
-  public void update(ProductRequestDto productRequestDto) {
-    if (productRequestDto.getProductName() != null) {
-      this.productName = productRequestDto.getProductName();
+  public void update(UUID productId, UUID supplyCompanyId, UUID receiveCompanyId,
+      Long productQuantity, String orderRequest, Long totalPrice) {
+    if (productId != null) {
+      this.productId = productId;
     }
-    if (productRequestDto.getPrice() != null) {
-      this.price = productRequestDto.getPrice();
+    if (supplyCompanyId != null) {
+      this.supplyCompayId = supplyCompanyId;
     }
-    if (productRequestDto.getCount() != null) {
-      this.count = productRequestDto.getCount();
+    if (receiveCompanyId != null) {
+      this.receiveCompanyId = receiveCompanyId;
     }
-    if (productRequestDto.getCompanyId() != null) {
-      this.companyId = productRequestDto.getCompanyId();
+    if (productQuantity != null) {
+      this.productQuantity = productQuantity;
     }
-    if (productRequestDto.getHubId() != null) {
-      this.hubId = productRequestDto.getHubId();
+    if (orderRequest != null) {
+      this.orderRequest = orderRequest;
     }
-    // 수정자 추가
-
+    if (totalPrice != null) {
+      this.totalPrice = totalPrice;
+    }
   }
 
   public void delete() {
     this.isDeleted = true;
     this.deletedAt = LocalDateTime.now();
-    // 삭제자 추가
-  }
-
-  public Product adjustCount(Long quantity) {
-    this.count += quantity;
-    return this;
+    // TODO 삭제자 추가
   }
 }
