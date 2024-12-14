@@ -15,11 +15,13 @@ public class ProductServiceImpl implements ProductService {
 
   @Override
   @Cacheable(value = "getProductCache", key = "#productId")
-  public ProductResponseDto getProductDtoByProductId(UUID productId) {
-    return productClient.getProductDtoByProductId(productId);
+  // TODO product 정보를 가져온 것은 수정하기 위함이라서 캐시가 필요 없을듯
+  public ProductResponseDto getProductDtoByProductId(UUID productId, String userName, String userRole) {
+    return productClient.getProductDtoByProductId(productId, userName, userRole);
   }
 
   @Override
   public void adjustProductQuantity(UUID productId, Long productQuantity) {
+    productClient.adjustProductQuantity(productId, productQuantity);
   }
 }

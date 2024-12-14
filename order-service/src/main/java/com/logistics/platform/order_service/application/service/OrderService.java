@@ -25,11 +25,12 @@ public class OrderService {
   private final ProductService productService;
 
   @CircuitBreaker(name = "OrderService", fallbackMethod = "handleOrderFailure")
-  public OrderResponseDto createOrder(OrderRequestDto orderRequestDto) {
+  public OrderResponseDto createOrder(OrderRequestDto orderRequestDto, String userName,
+      String userRole) {
 
     // ProductDto 형태로 응답을 받아 요청을 최소화
     ProductResponseDto product = productService.getProductDtoByProductId(
-        orderRequestDto.getProductId());
+        orderRequestDto.getProductId(), userName, userRole);
 
     Long totalPrice = product.getPrice() * orderRequestDto.getProductQuantity();
 
@@ -53,7 +54,7 @@ public class OrderService {
         .productQuantity(orderRequestDto.getProductQuantity())
         .totalPrice(totalPrice)
         .orderRequest(orderRequestDto.getOrderRequest())
-        .createdBy("createdBy") // TODO 생성자 추가
+        .createdBy(userName)
         .build();
 
     // TODO 배송 생성 추가
@@ -63,7 +64,7 @@ public class OrderService {
     return new OrderResponseDto(order);
   }
 
-  public OrderResponseDto getOrder(UUID orderId) {
+  public OrderResponseDto getOrder(UUID orderId, String userName, String userRole) {
 
     // TODO 본인 주문만 조회되도록 수정
     Order order = orderRepository.findById(orderId)
@@ -77,7 +78,8 @@ public class OrderService {
   }
 
   public PagedModel<OrderResponseDto> getOrdersPage(
-      List<UUID> uuidList, Predicate predicate, Pageable pageable) {
+      List<UUID> uuidList, Predicate predicate, Pageable pageable, String userName,
+      String userRole) {
 
     // TODO 본인 주문만 조회되도록 수정
     Page<OrderResponseDto> orderResponseDtoPage = orderRepository.findAllToPage(uuidList, predicate,
@@ -88,7 +90,8 @@ public class OrderService {
 
   @Transactional
   @CircuitBreaker(name = "OrderService", fallbackMethod = "handleOrderFailure")
-  public OrderResponseDto updateOrder(UUID orderId, OrderRequestDto orderRequestDto) {
+  public OrderResponseDto updateOrder(UUID orderId, OrderRequestDto orderRequestDto,
+      String userName, String userRole) {
 
     // TODO 본인 주문만 수정 가능하도록
     Order order = orderRepository.findById(orderId)
@@ -103,7 +106,7 @@ public class OrderService {
     Long totalPrice = null;
     if (orderRequestDto.getProductQuantity() != null) {
       ProductResponseDto product = productService.getProductDtoByProductId(
-          orderRequestDto.getProductId());
+          orderRequestDto.getProductId(), userName, userRole);
       totalPrice = product.getPrice() * orderRequestDto.getProductQuantity();
       if (product.getCount() < orderRequestDto.getProductQuantity() - order.getProductQuantity()) {
         throw new CustomApiException("추가 주문시 재고보다 주문 수량이 많습니다.");
@@ -114,21 +117,21 @@ public class OrderService {
           product.getCount() - orderRequestDto.getProductQuantity());
     }
 
-    // TODO 수정자 추가
     order.update(
         orderRequestDto.getProductId(),
         orderRequestDto.getSupplyCompanyId(),
         orderRequestDto.getReceiveCompanyId(),
         orderRequestDto.getProductQuantity(),
         orderRequestDto.getOrderRequest(),
-        totalPrice
+        totalPrice,
+        userName
     );
 
     return new OrderResponseDto(order);
   }
 
   @Transactional
-  public OrderResponseDto deleteOrder(UUID orderId) {
+  public OrderResponseDto deleteOrder(UUID orderId, String userName, String userRole) {
     Order order = orderRepository.findById(orderId)
         .orElseThrow(() -> new CustomApiException("This Order ID does not exist."));
 
@@ -139,13 +142,13 @@ public class OrderService {
     // 재고 수량 복구
     productService.adjustProductQuantity(order.getProductId(), order.getProductQuantity());
 
-    // TODO 삭제자 추가
-    order.delete();
+    order.delete(userName);
 
     return new OrderResponseDto(order);
   }
 
-  public OrderResponseDto handleOrderFailure(OrderRequestDto orderRequestDto, Throwable t) {
+  public OrderResponseDto handleOrderFailure(OrderRequestDto orderRequestDto, String userName,
+      String userRole, Throwable t) {
     return new OrderResponseDto(t.getMessage());
   }
 }

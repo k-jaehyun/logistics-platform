@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -34,9 +35,13 @@ public class OrderController { // TODO 권한 검증, 실패시 처리 로직
 
   @PostMapping
   public ResponseDto<OrderResponseDto> createOrder(
-      @Valid @RequestBody OrderRequestDto orderRequestDto) {
+      @Valid @RequestBody OrderRequestDto orderRequestDto,
+      @RequestHeader(value = "X-User-Name") String userName,
+      @RequestHeader(value = "X-User-Role") String userRole
+  ) {
 
-    OrderResponseDto orderResponseDto = orderService.createOrder(orderRequestDto);
+    OrderResponseDto orderResponseDto = orderService.createOrder(orderRequestDto, userName,
+        userRole);
 
     if (orderResponseDto.getMessage() == null) {
       return new ResponseDto<>(ResponseDto.SUCCESS, "주문이 생성되었습니다.", orderResponseDto);
@@ -47,10 +52,12 @@ public class OrderController { // TODO 권한 검증, 실패시 처리 로직
 
   @GetMapping("/{orderId}")
   public ResponseDto<OrderResponseDto> getOrder(
-      @PathVariable UUID orderId
+      @PathVariable UUID orderId,
+      @RequestHeader(value = "X-User-Name") String userName,
+      @RequestHeader(value = "X-User-Role") String userRole
   ) {
 
-    OrderResponseDto orderResponseDto = orderService.getOrder(orderId);
+    OrderResponseDto orderResponseDto = orderService.getOrder(orderId, userName, userRole);
 
     return new ResponseDto<>(ResponseDto.SUCCESS, "주문이 조회되었습니다.", orderResponseDto);
   }
@@ -59,10 +66,13 @@ public class OrderController { // TODO 권한 검증, 실패시 처리 로직
   public ResponseDto<PagedModel<?>> getOrdersPage(
       @RequestParam(required = false) List<UUID> uuidList,
       @QuerydslPredicate(root = Order.class) Predicate predicate,
-      @PageableDefault(direction = Direction.DESC, sort = "createdAt") Pageable pageable) {
+      @PageableDefault(direction = Direction.DESC, sort = "createdAt") Pageable pageable,
+      @RequestHeader(value = "X-User-Name") String userName,
+      @RequestHeader(value = "X-User-Role") String userRole
+  ) {
 
     PagedModel<OrderResponseDto> orderResponseDtoPage
-        = orderService.getOrdersPage(uuidList, predicate, pageable);
+        = orderService.getOrdersPage(uuidList, predicate, pageable, userName, userRole);
 
     return new ResponseDto<>(ResponseDto.SUCCESS, "주문 목록이 조회되었습니다.", orderResponseDtoPage);
   }
@@ -70,20 +80,25 @@ public class OrderController { // TODO 권한 검증, 실패시 처리 로직
   @PatchMapping("/{orderId}")
   public ResponseDto<OrderResponseDto> updateOrder(
       @PathVariable UUID orderId,
-      @RequestBody OrderRequestDto orderRequestDto
+      @RequestBody OrderRequestDto orderRequestDto,
+      @RequestHeader(value = "X-User-Name") String userName,
+      @RequestHeader(value = "X-User-Role") String userRole
   ) {
 
-    OrderResponseDto orderResponseDto = orderService.updateOrder(orderId, orderRequestDto);
+    OrderResponseDto orderResponseDto = orderService.updateOrder(orderId, orderRequestDto, userName,
+        userRole);
 
     return new ResponseDto<>(ResponseDto.SUCCESS, "주문이 수정되었습니다.", orderResponseDto);
   }
 
   @DeleteMapping("/{orderId}")
   public ResponseDto<?> deleteOrder(
-      @PathVariable UUID orderId
+      @PathVariable UUID orderId,
+      @RequestHeader(value = "X-User-Name") String userName,
+      @RequestHeader(value = "X-User-Role") String userRole
   ) {
 
-    OrderResponseDto orderResponseDto = orderService.deleteOrder(orderId);
+    OrderResponseDto orderResponseDto = orderService.deleteOrder(orderId, userName, userRole);
 
     return new ResponseDto<>(ResponseDto.SUCCESS,
         "OrderId " + orderResponseDto.getOrderID() + " has been deleted.");

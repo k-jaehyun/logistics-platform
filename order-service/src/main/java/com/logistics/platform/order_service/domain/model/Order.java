@@ -106,7 +106,7 @@ public class Order {
   }
 
   public void update(UUID productId, UUID supplyCompanyId, UUID receiveCompanyId,
-      Long productQuantity, String orderRequest, Long totalPrice) {
+      Long productQuantity, String orderRequest, Long totalPrice, String userName) {
     if (productId != null) {
       this.productId = productId;
     }
@@ -125,11 +125,12 @@ public class Order {
     if (totalPrice != null) {
       this.totalPrice = totalPrice;
     }
+    this.updatedBy = userName;
   }
 
-  public void delete() {
+  public void delete(String userName) {
     this.isDeleted = true;
     this.deletedAt = LocalDateTime.now();
-    // TODO 삭제자 추가
+    this.deletedBy = userName;
   }
 }
