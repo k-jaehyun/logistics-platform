@@ -42,6 +42,9 @@ public class Slack {
   @Column(nullable = false)
   private String content;
 
+  @Column(nullable = false)
+  private String sendTs; // slack 앱의 Timestamp
+
   @CreatedDate
   @Column(updatable = false)
   private LocalDateTime createdAt;
@@ -62,11 +65,13 @@ public class Slack {
   @Column(nullable = false)
   private Boolean isDeleted = false;
 
-  public Slack(String senderSlackId, String receiverSlackId, String content, String userName) {
+  public Slack(String senderSlackId, String receiverSlackId, String content, String userName,
+      String sendTs) {
     this.senderSlackId = senderSlackId;
     this.receiverSlackId = receiverSlackId;
     this.content = content;
     this.createdBy = userName;
+    this.sendTs = sendTs;
   }
 
   public void update(SlackRequestDto slackRequestDto, String userName) {

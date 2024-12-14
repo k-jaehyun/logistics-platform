@@ -1,13 +1,17 @@
 package com.logistics.platform.slack_service.application.service.message;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.logistics.platform.slack_service.common.exception.CustomApiException;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
-import org.springframework.http.ResponseEntity;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 
 @Service
 public class MessageServiceImpl implements MessageService {
@@ -22,7 +26,7 @@ public class MessageServiceImpl implements MessageService {
   }
 
   @Override
-  public void sendMessageToUser(String userSlackId, String message) {
+  public String sendMessageToUser(String userSlackId, String message) {
     String url = "https://slack.com/api/chat.postMessage";
 
     HttpHeaders headers = new HttpHeaders();
@@ -36,10 +40,25 @@ public class MessageServiceImpl implements MessageService {
     );
 
     HttpEntity<String> request = new HttpEntity<>(payload, headers);
-    ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.POST, request, String.class);
+    ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.POST, request,
+        String.class);
 
     if (!response.getStatusCode().is2xxSuccessful()) {
-      throw new RuntimeException("Failed to send message: " + response.getBody());
+      throw new CustomApiException("Failed to send message: " + response.getBody());
+    }
+
+    if (response.getStatusCode().is2xxSuccessful() && response.getBody() != null) {
+      try {
+        // JSON 파싱하여 ts 값 가져오기
+        ObjectMapper objectMapper = new ObjectMapper();
+        JsonNode responseJson = objectMapper.readTree(response.getBody());
+        String ts = responseJson.get("ts").asText();
+        return ts; // 메시지의 타임스탬프 반환
+      } catch (JsonProcessingException e) {
+        throw new CustomApiException("Failed to parse Slack API response", e);
+      }
+    } else {
+      throw new CustomApiException("Failed to send message: " + response.getBody());
     }
   }
 

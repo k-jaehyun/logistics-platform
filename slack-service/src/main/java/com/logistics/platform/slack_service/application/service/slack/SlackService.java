@@ -29,15 +29,16 @@ public class SlackService {
 
     String senderSlackId = authService.getSlackIdByUsername(username);
 
+    String sendTs = messageService.sendMessageToUser(slackRequestDto.getReceiverSlackId(),
+        slackRequestDto.getContent());
+
     Slack slack = new Slack(
         senderSlackId,
         slackRequestDto.getReceiverSlackId(),
         slackRequestDto.getContent(),
-        username
+        username,
+        sendTs
     );
-
-    messageService.sendMessageToUser(slackRequestDto.getReceiverSlackId(),
-        slackRequestDto.getContent());
 
     slackRepository.save(slack);
 
