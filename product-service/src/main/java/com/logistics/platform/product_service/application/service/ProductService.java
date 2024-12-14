@@ -23,7 +23,7 @@ public class ProductService {
   private final ProductRepository productRepository;
 
 
-  public ProductResponseDto createProduct(ProductRequestDto productRequestDto) {
+  public ProductResponseDto createProduct(ProductRequestDto productRequestDto, String userName) {
 
     // TODO companyId 검증
 
@@ -35,7 +35,7 @@ public class ProductService {
         .productName(productRequestDto.getProductName())
         .price(productRequestDto.getPrice())
         .count(productRequestDto.getCount())
-        .createdBy("생성자") // TODO 생성자 추가
+        .createdBy(userName)
         .companyId(productRequestDto.getCompanyId())
         .hubId(productRequestDto.getHubId())
         .build();
@@ -70,7 +70,8 @@ public class ProductService {
 
   @Transactional
   @CacheEvict(value = "getProductCache", key = "#productId")
-  public ProductResponseDto updateProduct(UUID productId, ProductRequestDto productRequestDto) {
+  public ProductResponseDto updateProduct(UUID productId, ProductRequestDto productRequestDto,
+      String userName) {
 
     Product product = productRepository.findById(productId)
         .orElseThrow(() -> new CustomApiException("존재하지 않는 productId입니다."));
@@ -79,14 +80,14 @@ public class ProductService {
       throw new CustomApiException("이미 삭제된 상품입니다.");
     }
 
-    product.update(productRequestDto); // TODO 수정자 추가
+    product.update(productRequestDto, userName);
 
     return new ProductResponseDto(product);
   }
 
   @Transactional
   @CacheEvict(value = "getProductCache", key = "#productId")
-  public ProductResponseDto deleteProduct(UUID productId) {
+  public ProductResponseDto deleteProduct(UUID productId, String userName) {
 
     Product product = productRepository.findById(productId)
         .orElseThrow(() -> new CustomApiException("존재하지 않는 productId입니다."));
@@ -95,7 +96,7 @@ public class ProductService {
       throw new CustomApiException("이미 삭제된 상품입니다.");
     }
 
-    product.delete(); // TODO 삭제자 추가
+    product.delete(userName);
 
     return new ProductResponseDto(product);
   }

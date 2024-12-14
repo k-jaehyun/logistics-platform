@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -28,21 +29,36 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/products")
-public class ProductController { // TODO 권한 검증 추가
+public class ProductController {
 
   private final ProductService productService;
 
   @PostMapping
   public ResponseDto<ProductResponseDto> createProduct(
-      @Valid @RequestBody ProductRequestDto productRequestDto) {
+      @Valid @RequestBody ProductRequestDto productRequestDto,
+      @RequestHeader(value = "X-User-Name") String userName,
+      @RequestHeader(value = "X-User-Role") String userRole) {
 
-    ProductResponseDto productResponseDto = productService.createProduct(productRequestDto);
+    // TODO 권한 확인 (마스터, 담당 허브 관리자, 본인 업체)
+    // 1. 현재도 해당 권한이 유효한지 --> filter로 처리? -> auth 무조건 1번 호출 -> 성능?
+    // 2. 업체담당자라면 업체 서비스에서 업체담당자가 맞는지 확인
+    // 3. 담당 허브 관리자라면 담당 허브가 어디인지
+
+    ProductResponseDto productResponseDto = productService.createProduct(productRequestDto, userName);
 
     return new ResponseDto<>(ResponseDto.SUCCESS, "상품이 생성되었습니다.", productResponseDto);
   }
 
   @GetMapping("/{productId}")
-  public ResponseDto<ProductResponseDto> getProduct(@PathVariable UUID productId) {
+  public ResponseDto<ProductResponseDto> getProduct(
+      @PathVariable UUID productId,
+      @RequestHeader(value = "X-User-Name") String userName,
+      @RequestHeader(value = "X-User-Role") String userRole
+  ) {
+
+    // TODO 허브 관리자는 담당 허브만 조회
+    // 현재도 해당 권한이 유효한지
+    // 담당 허브가 어디인지
 
     ProductResponseDto productResponseDto = productService.getProduct(productId);
 
@@ -53,7 +69,14 @@ public class ProductController { // TODO 권한 검증 추가
   public ResponseDto<PagedModel<ProductResponseDto>> getProductsPage(
       @RequestParam(required = false) List<UUID> uuidList,
       @QuerydslPredicate(root = Product.class) Predicate predicate,
-      @PageableDefault(direction = Direction.DESC, sort = "createdAt") Pageable pageable) {
+      @PageableDefault(direction = Direction.DESC, sort = "createdAt") Pageable pageable,
+      @RequestHeader(value = "X-User-Name") String userName,
+      @RequestHeader(value = "X-User-Role") String userRole
+      ) {
+
+    // TODO 허브 관리자는 담당 허브만 조회
+    // 현재도 해당 권한이 유효한지
+    // 담당 허브가 어디인지
 
     PagedModel<ProductResponseDto> productResponseDtoPage
         = productService.getProductsPage(uuidList, predicate, pageable);
@@ -61,24 +84,35 @@ public class ProductController { // TODO 권한 검증 추가
     return new ResponseDto<>(ResponseDto.SUCCESS, "상품이 목록이 조회되었습니다.", productResponseDtoPage);
   }
 
-  // 수정자 추가 예정
   @PatchMapping("/{productId}")
   public ResponseDto<ProductResponseDto> updateProduct(
       @PathVariable UUID productId,
-      @Valid @RequestBody ProductRequestDto productRequestDto) {
+      @Valid @RequestBody ProductRequestDto productRequestDto,
+      @RequestHeader(value = "X-User-Name") String userName,
+      @RequestHeader(value = "X-User-Role") String userRole
+      ) {
+
+    // TODO 권한 확인 (마스터, 담당 허브 관리자, 본인 업체)
+    // 1. 현재도 해당 권한이 유효한지
+    // 2. 업체담당자라면 업체 서비스에서 업체담당자가 맞는지 확인
+    // 3. 담당 허브 관리자라면 담당 허브가 어디인지
 
     ProductResponseDto productResponseDto
-        = productService.updateProduct(productId, productRequestDto);
+        = productService.updateProduct(productId, productRequestDto, userName);
 
     return new ResponseDto<>(ResponseDto.SUCCESS, "상품이 수정되었습니다.", productResponseDto);
   }
 
-  // 삭제자 추가 예정
   @DeleteMapping("/{productId}")
   public ResponseDto deleteProduct(
-      @PathVariable UUID productId
+      @PathVariable UUID productId,
+      @RequestHeader(value = "X-User-Name") String userName,
+      @RequestHeader(value = "X-User-Role") String userRole
   ) {
-    ProductResponseDto productResponseDto = productService.deleteProduct(productId);
+
+    // TODO 권한 확인 (마스터, 담당 허브 관리자)
+
+    ProductResponseDto productResponseDto = productService.deleteProduct(productId, userName);
 
     return new ResponseDto<>(
         ResponseDto.SUCCESS,
