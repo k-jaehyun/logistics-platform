@@ -66,7 +66,7 @@ public class OrderService {
 
   public OrderResponseDto getOrder(UUID orderId, String userName, String userRole) {
 
-    // TODO 본인 주문만 조회되도록 수정
+    // TODO 마스터는 모두, 본인 주문 or 담당 허브만 조회되도록 수정
     Order order = orderRepository.findById(orderId)
         .orElseThrow(() -> new CustomApiException("This Order ID does not exist."));
 
@@ -81,7 +81,7 @@ public class OrderService {
       List<UUID> uuidList, Predicate predicate, Pageable pageable, String userName,
       String userRole) {
 
-    // TODO 본인 주문만 조회되도록 수정
+    // TODO 마스터는 모두, 본인 주문 or 담당 허브만 조회되도록 수정
     Page<OrderResponseDto> orderResponseDtoPage = orderRepository.findAllToPage(uuidList, predicate,
         pageable);
 
@@ -93,7 +93,7 @@ public class OrderService {
   public OrderResponseDto updateOrder(UUID orderId, OrderRequestDto orderRequestDto,
       String userName, String userRole) {
 
-    // TODO 본인 주문만 수정 가능하도록
+    // TODO 마스터는 모두, 담당 허브만 수정되도록 수정
     Order order = orderRepository.findById(orderId)
         .orElseThrow(() -> new CustomApiException("This Order ID does not exist."));
 
@@ -114,7 +114,7 @@ public class OrderService {
 
       // 이전 주문과 비교하여 재고 증감
       productService.adjustProductQuantity(product.getProductId(),
-          product.getCount() - orderRequestDto.getProductQuantity());
+          order.getProductQuantity() - orderRequestDto.getProductQuantity());
     }
 
     order.update(
@@ -139,8 +139,10 @@ public class OrderService {
       throw new CustomApiException("This order has already been deleted.");
     }
 
+    // TODO 이미 배송중이라면 삭제 불가
+
     // 재고 수량 복구
-    productService.adjustProductQuantity(order.getProductId(), order.getProductQuantity());
+    productService.adjustProductQuantity(order.getProductId(), -order.getProductQuantity());
 
     order.delete(userName);
 

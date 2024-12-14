@@ -57,6 +57,12 @@ public class OrderController { // TODO 권한 검증, 실패시 처리 로직
       @RequestHeader(value = "X-User-Role") String userRole
   ) {
 
+    // TODO 권한 검증
+    // 마스터, 허브 관리자(담당), 배송담당자(본인), 업체담당자(본인)
+    // auth 서비스에 현재 권한이 유지되고 있는지 검증
+    // 허브관리자라면 hub 서비스에 담당 허브가 맞는지
+    // 업체담당자라면 company 서비스에 담당 허브가 맞는지
+
     OrderResponseDto orderResponseDto = orderService.getOrder(orderId, userName, userRole);
 
     return new ResponseDto<>(ResponseDto.SUCCESS, "주문이 조회되었습니다.", orderResponseDto);
@@ -70,6 +76,12 @@ public class OrderController { // TODO 권한 검증, 실패시 처리 로직
       @RequestHeader(value = "X-User-Name") String userName,
       @RequestHeader(value = "X-User-Role") String userRole
   ) {
+
+    // TODO 권한 검증
+    // 마스터, 허브 관리자(담당), 배송담당자(본인), 업체담당자(본인)
+    // auth 서비스에 현재 권한이 유지되고 있는지 검증
+    // 허브관리자라면 hub 서비스에 담당 허브가 맞는지
+    // 업체담당자라면 company 서비스에 담당 허브가 맞는지
 
     PagedModel<OrderResponseDto> orderResponseDtoPage
         = orderService.getOrdersPage(uuidList, predicate, pageable, userName, userRole);
@@ -85,6 +97,11 @@ public class OrderController { // TODO 권한 검증, 실패시 처리 로직
       @RequestHeader(value = "X-User-Role") String userRole
   ) {
 
+    // TODO 권한 검증
+    // 마스터, 허브 관리자(담당)
+    // auth 서비스에 현재 권한이 유지되고 있는지 검증
+    // 허브관리자라면 hub 서비스에 담당 허브가 맞는지
+
     OrderResponseDto orderResponseDto = orderService.updateOrder(orderId, orderRequestDto, userName,
         userRole);
 
@@ -97,6 +114,11 @@ public class OrderController { // TODO 권한 검증, 실패시 처리 로직
       @RequestHeader(value = "X-User-Name") String userName,
       @RequestHeader(value = "X-User-Role") String userRole
   ) {
+
+    // TODO 권한 검증
+    // 마스터, 허브 관리자(담당)
+    // auth 서비스에 현재 권한이 유지되고 있는지 검증
+    // 허브관리자라면 hub 서비스에 담당 허브가 맞는지
 
     OrderResponseDto orderResponseDto = orderService.deleteOrder(orderId, userName, userRole);
 
