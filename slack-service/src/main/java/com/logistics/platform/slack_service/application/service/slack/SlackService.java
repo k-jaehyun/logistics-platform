@@ -86,8 +86,8 @@ public class SlackService {
 
     slack.update(slackRequestDto, userName);
 
-    messageService.sendMessageToUser(slack.getReceiverSlackId(),
-        "<수정된 메세지>\n" + slack.getContent());
+    messageService.updateSendMessage(slack.getReceiverSlackId(), slack.getSendTs(),
+        slackRequestDto.getContent());
 
     return new SlackResponseDto(slack);
   }

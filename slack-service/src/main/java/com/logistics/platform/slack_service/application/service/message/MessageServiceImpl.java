@@ -55,10 +55,34 @@ public class MessageServiceImpl implements MessageService {
         String ts = responseJson.get("ts").asText();
         return ts; // 메시지의 타임스탬프 반환
       } catch (JsonProcessingException e) {
-        throw new CustomApiException("Failed to parse Slack API response", e);
+        throw new CustomApiException("Failed to parse Slack API response: " + e);
       }
     } else {
       throw new CustomApiException("Failed to send message: " + response.getBody());
+    }
+  }
+
+  @Override
+  public void updateSendMessage(String channel, String ts, String newText) {
+    String url = "https://slack.com/api/chat.update";
+
+    HttpHeaders headers = new HttpHeaders();
+    headers.setContentType(MediaType.APPLICATION_JSON);
+    headers.setBearerAuth(botToken);
+
+    String payload = String.format(
+        "{\"channel\": \"%s\", \"ts\": \"%s\", \"text\": \"%s\"}",
+        channel, ts, newText
+    );
+
+    HttpEntity<String> request = new HttpEntity<>(payload, headers);
+
+    RestTemplate restTemplate = new RestTemplate();
+    ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.POST, request,
+        String.class);
+
+    if (!response.getStatusCode().is2xxSuccessful()) {
+      throw new CustomApiException("Failed to update message: " + response.getBody());
     }
   }
 

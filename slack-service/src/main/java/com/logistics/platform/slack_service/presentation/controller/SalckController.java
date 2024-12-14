@@ -1,5 +1,6 @@
 package com.logistics.platform.slack_service.presentation.controller;
 
+import com.logistics.platform.slack_service.application.service.message.MessageService;
 import com.logistics.platform.slack_service.application.service.slack.SlackService;
 import com.logistics.platform.slack_service.common.ResponseDto;
 import com.logistics.platform.slack_service.domain.model.Slack;
@@ -31,6 +32,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class SalckController {
 
   private final SlackService slackService;
+  private final MessageService messageService;
 
   @PostMapping
   public ResponseDto<SlackResponseDto> createMessage(
@@ -92,6 +94,12 @@ public class SalckController {
     slackService.deleteMessage(slackId, role, userName);
 
     return new ResponseDto<>(ResponseDto.SUCCESS, "메세지가 삭제되었습니다.");
+  }
+
+
+  @PostMapping("/send")
+  public void sendMessage(@RequestParam String userSlackId, @RequestParam String message) {
+    messageService.sendMessageToUser(userSlackId, message);
   }
 
 }
