@@ -84,7 +84,7 @@ public class SalckController {
     return new ResponseDto<>(ResponseDto.SUCCESS, "메세지가 수정되었습니다.", slackResponseDto);
   }
 
-  @DeleteMapping("/{slackID}")
+  @DeleteMapping("/{slackId}")
   public ResponseDto<SlackResponseDto> deleteMessage(
       @PathVariable UUID slackId,
       @RequestHeader(value = "X-User-Role") String role,

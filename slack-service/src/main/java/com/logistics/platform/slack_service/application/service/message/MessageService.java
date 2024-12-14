@@ -6,4 +6,6 @@ public interface MessageService {
 
   void updateSendMessage(String channel, String ts, String newText);
 
+  void deleteSendMessage(String channel, String ts);
+
 }

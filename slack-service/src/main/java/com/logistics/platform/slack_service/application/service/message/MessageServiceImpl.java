@@ -67,7 +67,7 @@ public class MessageServiceImpl implements MessageService {
     String url = "https://slack.com/api/chat.update";
 
     HttpHeaders headers = new HttpHeaders();
-    headers.setContentType(MediaType.APPLICATION_JSON);
+    headers.add("Content-Type", "application/json; charset=utf-8");
     headers.setBearerAuth(botToken);
 
     String payload = String.format(
@@ -83,6 +83,29 @@ public class MessageServiceImpl implements MessageService {
 
     if (!response.getStatusCode().is2xxSuccessful()) {
       throw new CustomApiException("Failed to update message: " + response.getBody());
+    }
+  }
+
+  public void deleteSendMessage(String channel, String ts) {
+    String url = "https://slack.com/api/chat.delete";
+
+    HttpHeaders headers = new HttpHeaders();
+    headers.setContentType(MediaType.APPLICATION_JSON);
+    headers.setBearerAuth(botToken);
+
+    String payload = String.format(
+        "{\"channel\": \"%s\", \"ts\": \"%s\"}",
+        channel, ts
+    );
+
+    HttpEntity<String> request = new HttpEntity<>(payload, headers);
+
+    RestTemplate restTemplate = new RestTemplate();
+    ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.POST, request,
+        String.class);
+
+    if (!response.getStatusCode().is2xxSuccessful()) {
+      throw new CustomApiException("Failed to delete message: " + response.getBody());
     }
   }
 

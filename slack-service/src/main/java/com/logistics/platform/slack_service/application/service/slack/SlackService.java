@@ -102,6 +102,8 @@ public class SlackService {
     Slack slack = slackRepository.findById(slackId)
         .orElseThrow(() -> new CustomApiException("Check Slack ID. No exist."));
 
+    messageService.deleteSendMessage(slack.getReceiverSlackId(), slack.getSendTs());
+
     slack.delete(userName);
   }
 }

@@ -25,6 +25,8 @@ public class SlackResponseDto {
 
   private String content;
 
+  private String sendTs;
+
   private LocalDateTime createdAt;
 
   private LocalDateTime updatedAt;
@@ -35,6 +37,7 @@ public class SlackResponseDto {
     this.senderSlackId = slack.getSenderSlackId();
     this.receiverSlackId = slack.getReceiverSlackId();
     this.content = slack.getContent();
+    this.sendTs = slack.getSendTs();
     this.createdAt = slack.getCreatedAt();
     this.updatedAt = slack.getUpdatedAt();
   }
