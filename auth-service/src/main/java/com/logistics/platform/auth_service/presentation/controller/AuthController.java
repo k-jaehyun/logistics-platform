@@ -1,17 +1,15 @@
 package com.logistics.platform.auth_service.presentation.controller;
 
-import com.logistics.platform.auth_service.application.dto.CustomUserDetails;
 import com.logistics.platform.auth_service.application.dto.SignupResDto;
-import com.logistics.platform.auth_service.application.dto.UserResDto;
 import com.logistics.platform.auth_service.application.service.AuthService;
 import com.logistics.platform.auth_service.common.ResponseDto;
 import com.logistics.platform.auth_service.presentation.request.SignupReqDto;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -27,9 +25,10 @@ public class AuthController {
         return new ResponseDto<>(ResponseDto.SUCCESS, "회원가입되었습니다.", authService.signup(reqDto));
     }
 
-    @GetMapping("/validate")
-    public UserResDto userCheck(@AuthenticationPrincipal CustomUserDetails customUserDetails) {
-        return authService.getUser(customUserDetails.getUserId());
+    @GetMapping("/role/validation")
+    public Boolean roleCheck(@RequestHeader("X-User-Name") String userName,
+        @RequestHeader("X-User-Role") String userRole) {
+        return authService.validationRole(userName, userRole);
     }
 
 }

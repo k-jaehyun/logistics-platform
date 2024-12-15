@@ -1,6 +1,5 @@
 package com.logistics.platform.auth_service.application.service;
 
-import com.logistics.platform.auth_service.application.dto.CustomUserDetails;
 import com.logistics.platform.auth_service.application.dto.SignupResDto;
 import com.logistics.platform.auth_service.application.dto.UserResDto;
 import com.logistics.platform.auth_service.common.exception.CustomApiException;
@@ -38,6 +37,16 @@ public class AuthService {
             .build();
 
         return new SignupResDto(userRepository.save(user).getId());
+    }
+
+    public Boolean validationRole(String userName, String userRole) {
+        User user = userRepository.findByUsernameAndIsDeletedFalse(userName)
+            .orElseThrow(() -> new CustomApiException("존재하지 않는 사용자입니다"));
+
+        if (userRole.equals(user.getRole().getRole())) {
+            return true;
+        }
+        return false;
     }
 
     public UserResDto getUser(Long id) {
