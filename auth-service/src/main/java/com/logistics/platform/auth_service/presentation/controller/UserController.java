@@ -53,4 +53,9 @@ public class UserController {
         userService.deleteUser(reqDto, userDetails.getUserId());
         return new ResponseDto<>(ResponseDto.SUCCESS, "탈퇴되었습니다.", null);
     }
+
+    @GetMapping("/info")
+    public UserResDto getUserInfo(@AuthenticationPrincipal CustomUserDetails customUserDetails) {
+        return userService.getUser(customUserDetails.getUserId());
+    }
 }
