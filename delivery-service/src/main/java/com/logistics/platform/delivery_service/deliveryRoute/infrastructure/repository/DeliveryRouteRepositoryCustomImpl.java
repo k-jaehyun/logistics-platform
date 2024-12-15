@@ -1,7 +1,9 @@
 package com.logistics.platform.delivery_service.deliveryRoute.infrastructure.repository;
 
 import com.logistics.platform.delivery_service.deliveryRoute.domain.model.DeliveryRouteStatus;
+import com.logistics.platform.delivery_service.deliveryRoute.domain.model.QDeliveryRoute;
 import com.logistics.platform.delivery_service.deliveryRoute.presentation.response.DeliveryRouteResponseDto;
+import com.logistics.platform.delivery_service.deliveryRoute.presentation.response.QDeliveryRouteResponseDto;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.Order;
 import com.querydsl.core.types.OrderSpecifier;

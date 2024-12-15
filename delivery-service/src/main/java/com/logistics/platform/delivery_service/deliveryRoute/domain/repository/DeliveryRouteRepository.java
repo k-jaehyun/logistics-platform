@@ -1,6 +1,7 @@
 package com.logistics.platform.delivery_service.deliveryRoute.domain.repository;
 
 import com.logistics.platform.delivery_service.deliveryRoute.domain.model.DeliveryRoute;
+import com.logistics.platform.delivery_service.deliveryRoute.domain.model.QDeliveryRoute;
 import com.logistics.platform.delivery_service.deliveryRoute.infrastructure.repository.DeliveryRouteRepositoryCustom;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.dsl.StringPath;
@@ -12,11 +13,12 @@ import java.util.Optional;
 import java.util.UUID;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.querydsl.QuerydslPredicateExecutor;
+import org.springframework.data.querydsl.binding.QuerydslBinderCustomizer;
 import org.springframework.data.querydsl.binding.QuerydslBindings;
 
 public interface DeliveryRouteRepository extends JpaRepository<DeliveryRoute, UUID>,
     DeliveryRouteRepositoryCustom, QuerydslPredicateExecutor<DeliveryRoute>,
-    QuerydslBinderCustomizer<QDeliveryRoute>{
+    QuerydslBinderCustomizer<QDeliveryRoute> {
 
   @Override // Predicate의 조건을 수정: 문자 검색 시 'equals 조건' -> 'contains 조건'
   default void customize(QuerydslBindings querydslBindings, @NotNull QDeliveryRoute qDeliveryRoute) {

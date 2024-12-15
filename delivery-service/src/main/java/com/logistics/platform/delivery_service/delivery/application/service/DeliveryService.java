@@ -1,15 +1,24 @@
 package com.logistics.platform.delivery_service.delivery.application.service;
 
 
+import com.logistics.platform.delivery_service.delivery.application.dto.HubRouteResponseDto;
 import com.logistics.platform.delivery_service.delivery.domain.model.Delivery;
 import com.logistics.platform.delivery_service.delivery.domain.model.DeliveryStatus;
 import com.logistics.platform.delivery_service.delivery.domain.repository.DeliveryRepository;
-import com.logistics.platform.delivery_service.delivery.presentation.global.exception.CustomApiException;
+import com.logistics.platform.delivery_service.delivery.infrastructure.client.HubClient;
+import com.logistics.platform.delivery_service.deliveryRoute.application.service.DeliveryRouteService;
+import com.logistics.platform.delivery_service.deliveryRoute.domain.model.DeliveryRoute;
+import com.logistics.platform.delivery_service.deliveryRoute.domain.model.DeliveryRouteStatus;
+import com.logistics.platform.delivery_service.deliveryRoute.presentation.request.DeliveryRouteRequestDto;
+import com.logistics.platform.delivery_service.deliveryRoute.presentation.response.DeliveryRouteResponseDto;
+import com.logistics.platform.delivery_service.global.global.exception.CustomApiException;
 import com.logistics.platform.delivery_service.delivery.presentation.request.DeliveryRequestDto;
 import com.logistics.platform.delivery_service.delivery.presentation.response.DeliveryResponseDto;
 import com.querydsl.core.types.Predicate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -22,10 +31,11 @@ import org.springframework.transaction.annotation.Transactional;
 public class DeliveryService {
 
   private final DeliveryRepository deliveryRepository;
+  private final DeliveryRouteService deliveryRouteService;
+  private final HubClient hubClient;
 
   // 1. 배송 생성
   public DeliveryResponseDto createDelivery(DeliveryRequestDto deliveryRequestDto) {
-
     Delivery savedDelivery = Delivery.builder()
         .startHubId(deliveryRequestDto.getStartHubId())
         .endHubId(deliveryRequestDto.getEndHubId())
@@ -37,8 +47,13 @@ public class DeliveryService {
         .build();
 
     savedDelivery = deliveryRepository.save(savedDelivery);
-    return new DeliveryResponseDto(savedDelivery);
+
+    // 경로 생성 서비스 호출
+    List<DeliveryRouteResponseDto> createdRoutes = deliveryRouteService.createDeliveryRoutes(savedDelivery);
+
+    return new DeliveryResponseDto(savedDelivery, createdRoutes);
   }
+
 
   // 2. 배송 단건 조회
   @Transactional(readOnly = true)
@@ -52,7 +67,8 @@ public class DeliveryService {
     if (delivery.getDeliveryStatus() == DeliveryStatus.DELIVERY_CANCELLED) {
       throw new CustomApiException("이미 취소된 배송입니다.");
     }
-    return new DeliveryResponseDto(delivery);
+
+    return new DeliveryResponseDto(delivery, mapToResponseDtos(delivery.getDeliveryRoutes()));
   }
 
   // 3. 배송 목록 조회
@@ -81,7 +97,8 @@ public class DeliveryService {
 
     delivery.updateDelivery(deliveryRequestDto);
     deliveryRepository.save(delivery);
-    return new DeliveryResponseDto(delivery);
+
+    return new DeliveryResponseDto(delivery, mapToResponseDtos(delivery.getDeliveryRoutes()));
   }
 
   // 5. 배송 삭제
@@ -95,7 +112,8 @@ public class DeliveryService {
     }
 
     delivery.deleteDelivery(deletedBy);
-    return new DeliveryResponseDto(delivery);
+    delivery.getDeliveryRoutes().forEach(route -> route.deleteDeliveryRoute(deletedBy));
+    return new DeliveryResponseDto(delivery, mapToResponseDtos(delivery.getDeliveryRoutes()));
   }
 
   // 배송 취소
@@ -112,7 +130,14 @@ public class DeliveryService {
     }
 
     delivery.cancelDelivery(cancelledBy);
-    return new DeliveryResponseDto(delivery);
+    return new DeliveryResponseDto(delivery, mapToResponseDtos(delivery.getDeliveryRoutes()));
+  }
+
+  // DTO 변환 메서드
+  private List<DeliveryRouteResponseDto> mapToResponseDtos(List<DeliveryRoute> deliveryRoutes) {
+    return deliveryRoutes.stream()
+        .map(DeliveryRouteResponseDto::new)
+        .collect(Collectors.toList());
   }
 
 }
