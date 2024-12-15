@@ -2,6 +2,8 @@ package com.logistics.platform.delivery_service.delivery.domain.model;
 
 
 import com.logistics.platform.delivery_service.delivery.presentation.request.DeliveryRequestDto;
+import com.logistics.platform.delivery_service.deliveryRoute.domain.model.DeliveryRoute;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -9,7 +11,10 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -38,6 +43,9 @@ public class Delivery extends AuditingFields{
 
   @Column(nullable = false)
   private UUID orderId;
+
+  @OneToMany(mappedBy = "delivery", cascade = CascadeType.ALL, orphanRemoval = true)
+  private List<DeliveryRoute> deliveryRoutes = new ArrayList<>();
 
   @Column(nullable = false)
   @Enumerated(EnumType.STRING)
@@ -95,6 +103,12 @@ public class Delivery extends AuditingFields{
   public void deleteDelivery(String deletedBy) {
     this.deliveryStatus = DeliveryStatus.DELIVERY_DELETED;
     super.delete(deletedBy);
+  }
+
+  // 배송 경로 추가 메서드
+  public void addDeliveryRoute(DeliveryRoute deliveryRoute) {
+    this.deliveryRoutes.add(deliveryRoute);
+    deliveryRoute.setDelivery(this);
   }
 
 }
