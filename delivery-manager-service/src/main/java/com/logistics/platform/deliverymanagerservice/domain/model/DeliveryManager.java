@@ -14,6 +14,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
 @Getter
@@ -39,6 +40,7 @@ public class DeliveryManager extends AuditingFields {
   @Enumerated(EnumType.STRING)
   private DeliveryType deliveryType;
 
+  @Setter
   @Column(nullable = false)
   private Long deliveryOrderNumber;
 
@@ -52,7 +54,7 @@ public class DeliveryManager extends AuditingFields {
     this.slackId = slackId;
     this.deliveryType = deliveryType;
     this.deliveryOrderNumber = deliveryOrderNumber;
-    this.isDeleted = isDeleted;
+    this.isDeleted = false;
   }
 
   public void updateDeliveryManager(DeliveryManagerRequestDto deliveryManagerRequestDto) {
@@ -66,6 +68,10 @@ public class DeliveryManager extends AuditingFields {
     this.isDeleted = true;
     super.delete(deletedBy);
   }
+
+//  public void setDeliveryOrderNumber(Long deliveryOrderNumber) {
+//    this.deliveryOrderNumber = deliveryOrderNumber;
+//  } // @Setter 사용
 
 
 }

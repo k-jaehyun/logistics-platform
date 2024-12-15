@@ -30,7 +30,7 @@ public class AuditingFields {
   @CreatedBy
   @Column(nullable = false, updatable = false)
   @Comment("생성자")
-  private String createdBy;
+  private String createdBy = "감자"; // 임시로 생성자 설정
 
   @LastModifiedDate
   @Column
@@ -41,7 +41,7 @@ public class AuditingFields {
   @LastModifiedBy
   @Column
   @Comment("수정자")
-  private String updatedBy;
+  private String updatedBy = "감자"; // 임시로 수정자 설정
 
 
   @Column
@@ -51,7 +51,7 @@ public class AuditingFields {
 
   @Column
   @Comment("삭제자")
-  private String deletedBy;
+  private String deletedBy = "감자"; // 임시로 삭제자 설정
 
   public void delete(String deletedBy) {
     this.deletedAt = LocalDateTime.now();
