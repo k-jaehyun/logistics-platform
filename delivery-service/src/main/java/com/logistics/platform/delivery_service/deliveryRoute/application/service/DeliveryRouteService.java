@@ -1,7 +1,7 @@
-package com.logistics.platform.delivery_service.deliveryRoute.domain.application.service;
+package com.logistics.platform.delivery_service.deliveryRoute.application.service;
 
 
-import com.logistics.platform.delivery_service.deliveryRoute.domain.application.service.dto.DeliveryManagerResponseDto;
+import com.logistics.platform.delivery_service.deliveryRoute.application.service.dto.DeliveryManagerResponseDto;
 import com.logistics.platform.delivery_service.deliveryRoute.domain.model.DeliveryRoute;
 import com.logistics.platform.delivery_service.deliveryRoute.domain.model.DeliveryRouteStatus;
 import com.logistics.platform.delivery_service.deliveryRoute.domain.repository.DeliveryRouteRepository;
@@ -13,7 +13,6 @@ import com.querydsl.core.types.Predicate;
 import java.util.List;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PagedModel;
