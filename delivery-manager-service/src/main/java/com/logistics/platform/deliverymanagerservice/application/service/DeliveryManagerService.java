@@ -3,6 +3,7 @@ package com.logistics.platform.deliverymanagerservice.application.service;
 import com.logistics.platform.deliverymanagerservice.domain.model.DeliveryManager;
 import com.logistics.platform.deliverymanagerservice.domain.model.DeliveryType;
 import com.logistics.platform.deliverymanagerservice.domain.repository.DeliveryManagerRepository;
+import com.logistics.platform.deliverymanagerservice.infrastructure.client.HubClient;
 import com.logistics.platform.deliverymanagerservice.presentation.global.exception.CustomApiException;
 import com.logistics.platform.deliverymanagerservice.presentation.request.DeliveryManagerRequestDto;
 import com.logistics.platform.deliverymanagerservice.presentation.response.DeliveryManagerResponseDto;
@@ -21,12 +22,19 @@ import org.springframework.transaction.annotation.Transactional;
 public class DeliveryManagerService {
 
   private final DeliveryManagerRepository deliveryManagerRepository;
+  private final HubClient hubClient;
 
   // 1. 배송담당자 생성
   public DeliveryManagerResponseDto createDeliveryManager(DeliveryManagerRequestDto deliveryManagerRequestDto) {
     // 존재하는 User인지 확인
     // 이미 배송담당자로 등록되어있는 User인지 확인
+
     // 존재하는 Hub인지 확인
+    boolean hubExists = hubClient.checkIfHubExists(deliveryManagerRequestDto.getHubId());
+
+    if (!hubExists) {
+      throw new CustomApiException("존재하지 않는 허브ID입니다.");
+    }
 
     // 가장 큰 배송순번 조회
     Long maxOrderNumber = deliveryManagerRepository.findMaxDeliveryOrderNumber().orElse(0L)+ 1;
