@@ -28,6 +28,9 @@ public class DeliveryManagerService {
     // 이미 배송담당자로 등록되어있는 User인지 확인
     // 존재하는 Hub인지 확인
 
+    // 가장 큰 배송순번 조회
+    Long maxOrderNumber = deliveryManagerRepository.findMaxDeliveryOrderNumber().orElse(0L)+ 1;
+
     // 유효한 배송타입인지 확인
     validateDeliveryType(deliveryManagerRequestDto.getDeliveryType());
 
@@ -36,7 +39,7 @@ public class DeliveryManagerService {
         .hubId(deliveryManagerRequestDto.getHubId())
         .slackId(deliveryManagerRequestDto.getSlackId())
         .deliveryType(deliveryManagerRequestDto.getDeliveryType())
-        .deliveryOrderNumber(deliveryManagerRequestDto.getDeliveryOrderNumber())
+        .deliveryOrderNumber(maxOrderNumber) // 자동 증가
         .build();
 
     savedDeliveryManager = deliveryManagerRepository.save(savedDeliveryManager);
@@ -117,6 +120,21 @@ public class DeliveryManagerService {
     if (deliveryType != DeliveryType.HUB && deliveryType != DeliveryType.COMPANY) {
       throw new CustomApiException("유효하지 않은 배송 유형입니다.");
     }
+  }
+
+  @Transactional
+  public DeliveryManagerResponseDto getNextAvailableDeliveryManager() {
+    DeliveryManager nextManager = deliveryManagerRepository.findFirstByIsDeletedFalseOrderByDeliveryOrderNumberAsc();
+
+    if (nextManager == null) {
+      throw new CustomApiException("사용 가능한 배송담당자가 없습니다.");
+    }
+
+    // 라운드로빈 방식: 배송순번 증가
+    nextManager.setDeliveryOrderNumber(nextManager.getDeliveryOrderNumber() + 1);
+    deliveryManagerRepository.save(nextManager);
+
+    return new DeliveryManagerResponseDto(nextManager.getId());
   }
 
 }

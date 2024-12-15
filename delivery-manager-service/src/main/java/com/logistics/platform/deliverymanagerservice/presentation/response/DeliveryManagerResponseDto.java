@@ -32,5 +32,10 @@ public class DeliveryManagerResponseDto {
     this.deliveryOrderNumber = deliveryManager.getDeliveryOrderNumber();
   }
 
+  // UUID 기반 생성자 추가
+  public DeliveryManagerResponseDto(UUID deliveryManagerId) {
+    this.deliveryManagerId = deliveryManagerId;
+  }
+
 
 }
