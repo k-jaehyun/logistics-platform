@@ -11,8 +11,11 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class HubResponseDto {
+public class HubRouteResponseDto {
 
-  private UUID hubId;
+  private UUID startHubId;
+  private UUID endHubId;
+  private Long estimatedDuration;
+  private Long estimatedDistance;
 
 }
