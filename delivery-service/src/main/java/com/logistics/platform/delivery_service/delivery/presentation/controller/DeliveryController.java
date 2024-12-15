@@ -2,7 +2,7 @@ package com.logistics.platform.delivery_service.delivery.presentation.controller
 
 
 import com.logistics.platform.delivery_service.delivery.application.service.DeliveryService;
-import com.logistics.platform.delivery_service.delivery.presentation.global.ResponseDto;
+import com.logistics.platform.delivery_service.global.global.ResponseDto;
 import com.logistics.platform.delivery_service.delivery.presentation.request.DeliveryRequestDto;
 import com.logistics.platform.delivery_service.delivery.presentation.response.DeliveryResponseDto;
 import com.querydsl.core.types.Predicate;

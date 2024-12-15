@@ -1,8 +1,8 @@
-package com.logistics.platform.delivery_service.delivery.presentation.global.handler;
+package com.logistics.platform.delivery_service.global.global.handler;
 
 
-import com.logistics.platform.delivery_service.delivery.presentation.global.ResponseDto;
-import com.logistics.platform.delivery_service.delivery.presentation.global.exception.CustomApiException;
+import com.logistics.platform.delivery_service.global.global.ResponseDto;
+import com.logistics.platform.delivery_service.global.global.exception.CustomApiException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;

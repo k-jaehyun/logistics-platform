@@ -1,4 +1,4 @@
-package com.logistics.platform.delivery_service.delivery.presentation.global;
+package com.logistics.platform.delivery_service.global.global;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
