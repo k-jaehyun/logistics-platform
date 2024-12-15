@@ -2,9 +2,9 @@ package com.logistics.platform.delivery_service.deliveryRoute.presentation.contr
 
 
 import com.logistics.platform.delivery_service.deliveryRoute.application.service.DeliveryRouteService;
-import com.logistics.platform.delivery_service.deliveryRoute.presentation.global.ResponseDto;
 import com.logistics.platform.delivery_service.deliveryRoute.presentation.request.DeliveryRouteRequestDto;
 import com.logistics.platform.delivery_service.deliveryRoute.presentation.response.DeliveryRouteResponseDto;
+import com.logistics.platform.delivery_service.global.global.ResponseDto;
 import com.querydsl.core.types.Predicate;
 import java.util.List;
 import java.util.UUID;
@@ -29,13 +29,15 @@ public class DeliveryRouteController {
 
   private final DeliveryRouteService deliveryRouteService;
 
+  /* 베송생성시 함께 생성됨 그래서 필요한가..?
   // 배송 경로 생성
   @PostMapping
   public ResponseDto<DeliveryRouteResponseDto> createDeliveryRoute(
       @RequestBody DeliveryRouteRequestDto deliveryRouteRequestDto) {
-    DeliveryRouteResponseDto response = deliveryRouteService.createDeliveryRoute(deliveryRouteRequestDto);
+    DeliveryRouteResponseDto response = deliveryRouteService.createDeliveryRoutes(deliveryRouteRequestDto);
     return new ResponseDto<>(ResponseDto.SUCCESS, "배송 경로가 생성되었습니다.", response);
   }
+  **/
 
   // 배송 경로 단건 조회
   @GetMapping("/{deliveryRouteId}")
