@@ -29,7 +29,7 @@ public class DeliveryManager extends AuditingFields {
   @Column(nullable = false)
   private Long userId;
 
-  @Column(nullable = false)
+  @Column
   private UUID hubId;
 
   @Column(nullable = false)

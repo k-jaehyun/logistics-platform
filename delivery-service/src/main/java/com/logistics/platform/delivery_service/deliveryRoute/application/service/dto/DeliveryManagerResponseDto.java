@@ -1,4 +1,4 @@
-package com.logistics.platform.delivery_service.deliveryRoute.domain.application.service.dto;
+package com.logistics.platform.delivery_service.deliveryRoute.application.service.dto;
 
 import java.util.UUID;
 import lombok.AllArgsConstructor;
