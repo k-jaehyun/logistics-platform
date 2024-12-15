@@ -13,5 +13,6 @@ public interface DeliveryManagerRepositoryCustom {
   Page<DeliveryManagerResponseDto> findAll(
       List<UUID> uuidList, Predicate predicate, Pageable pageable);
       Optional<Long> findMaxDeliveryOrderNumber();
+      Optional<Long> findMinDeliveryOrderNumber();
 
 }

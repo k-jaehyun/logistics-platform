@@ -1,5 +1,6 @@
 package com.logistics.platform.deliverymanagerservice.infrastructure.repository;
 
+import com.logistics.platform.deliverymanagerservice.domain.model.DeliveryType;
 import com.logistics.platform.deliverymanagerservice.domain.model.QDeliveryManager;
 import com.logistics.platform.deliverymanagerservice.presentation.response.DeliveryManagerResponseDto;
 import com.logistics.platform.deliverymanagerservice.presentation.response.QDeliveryManagerResponseDto;
@@ -76,10 +77,26 @@ public class DeliveryManagerRepositoryCustomImpl implements DeliveryManagerRepos
     Long maxOrderNumber = queryFactory
         .select(deliveryManager.deliveryOrderNumber.max())
         .from(deliveryManager)
-        // .where(deliveryManager.isDeleted.eq(false))  // 이것때문에 삭제된 것도 영향받음
+        .where(
+            //deliveryManager.isDeleted.eq(false)  // 이것때문에 삭제된 것도 영향받음
+             deliveryManager.deliveryType.eq(DeliveryType.HUB))
         .fetchOne();
 
     return Optional.ofNullable(maxOrderNumber);
+  }
+
+  @Override
+  public Optional<Long> findMinDeliveryOrderNumber() {
+    QDeliveryManager deliveryManager = QDeliveryManager.deliveryManager;
+    Long minOrderNumber = queryFactory
+        .select(deliveryManager.deliveryOrderNumber.max())
+        .from(deliveryManager)
+        .where(
+            //deliveryManager.isDeleted.eq(false)  // 이것때문에 삭제된 것도 영향받음
+            deliveryManager.deliveryType.eq(DeliveryType.HUB))
+        .fetchOne();
+
+    return Optional.ofNullable(minOrderNumber);
   }
 
   // 정렬(Sort) 정보를 기반으로 Querydsl의 OrderSpecifier 객체들을 동적으로 생성

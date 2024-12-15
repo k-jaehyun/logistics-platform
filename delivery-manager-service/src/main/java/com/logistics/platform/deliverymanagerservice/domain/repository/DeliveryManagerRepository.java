@@ -1,6 +1,7 @@
 package com.logistics.platform.deliverymanagerservice.domain.repository;
 
 import com.logistics.platform.deliverymanagerservice.domain.model.DeliveryManager;
+import com.logistics.platform.deliverymanagerservice.domain.model.DeliveryType;
 import com.logistics.platform.deliverymanagerservice.domain.model.QDeliveryManager;
 import com.logistics.platform.deliverymanagerservice.infrastructure.repository.DeliveryManagerRepositoryCustom;
 import com.logistics.platform.deliverymanagerservice.presentation.response.DeliveryManagerResponseDto;
@@ -25,7 +26,7 @@ public interface DeliveryManagerRepository extends JpaRepository<DeliveryManager
     QuerydslBinderCustomizer<QDeliveryManager> {
 
   Page<DeliveryManagerResponseDto> findAll(List<UUID> uuidList, Predicate predicate, Pageable pageable);
-  DeliveryManager findFirstByIsDeletedFalseOrderByDeliveryOrderNumberAsc();
+  DeliveryManager findFirstByIsDeletedFalseOrderByDeliveryOrderNumberAsc(DeliveryType deliveryType);
 
   @Override // Predicate의 조건을 수정: 문자 검색 시 'equals 조건' -> 'contains 조건'
   default void customize(QuerydslBindings querydslBindings, @NotNull QDeliveryManager qDeliveryManager) {

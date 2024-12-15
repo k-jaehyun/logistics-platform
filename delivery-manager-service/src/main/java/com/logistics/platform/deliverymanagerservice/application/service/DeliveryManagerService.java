@@ -132,15 +132,24 @@ public class DeliveryManagerService {
 
   @Transactional
   public DeliveryManagerResponseDto getNextAvailableDeliveryManager() {
-    DeliveryManager nextManager = deliveryManagerRepository.findFirstByIsDeletedFalseOrderByDeliveryOrderNumberAsc();
+    DeliveryManager nextManager = deliveryManagerRepository.findFirstByIsDeletedFalseOrderByDeliveryOrderNumberAsc(DeliveryType.HUB);
 
     if (nextManager == null) {
-      throw new CustomApiException("사용 가능한 배송담당자가 없습니다.");
+      throw new CustomApiException("배정 가능한 배송담당자가 없습니다.");
     }
 
-    // 라운드로빈 방식: 배송순번 증가
-    nextManager.setDeliveryOrderNumber(nextManager.getDeliveryOrderNumber() + 1);
-    deliveryManagerRepository.save(nextManager);
+    // 최소 및 최대 배송 순번 조회
+    Long minOrderNumber = deliveryManagerRepository.findMinDeliveryOrderNumber()
+        .orElseThrow(() -> new CustomApiException("배송 순번 조회 오류"));
+    Long maxOrderNumber = deliveryManagerRepository.findMaxDeliveryOrderNumber()
+        .orElseThrow(() -> new CustomApiException("배송 순번 조회 오류"));
+
+    // 배송 순번 증가 및 순환 로직
+    Long currentOrderNumber = nextManager.getDeliveryOrderNumber();
+    Long nextOrderNumber = (currentOrderNumber >= maxOrderNumber) ? minOrderNumber : currentOrderNumber + 1;
+
+    nextManager.setDeliveryOrderNumber(nextOrderNumber);  // 다음 순번 설정
+    deliveryManagerRepository.save(nextManager);  // 업데이트된 순번 저장
 
     return new DeliveryManagerResponseDto(nextManager.getId());
   }
