@@ -83,7 +83,7 @@ public class AiService {
             "StartDate: %s\n" +
             "Start Hub Address: %s\n" +
             "Central Hub Address: %s\n" +
-            "End Hub Address: %s\n\n" +
+            "End Hub Address: %s\n" +
             "Based on the above information, %s",
         request.getUserName(),
         request.getProductName(),
