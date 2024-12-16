@@ -47,11 +47,17 @@ public class OrderRepositoryImpl implements OrderRepositoryCustom {
     size = (size == 30 || size == 50) ? size : 10;
     pageable = PageRequest.of(pageable.getPageNumber(), size, pageable.getSort());
 
+    // 입력값이 없다면 생성일순, 수정일순을 기준으로 정렬
+    Sort sort = pageable.getSort().isSorted() ? pageable.getSort() : Sort.by(
+        Sort.Order.desc("createdAt"),
+        Sort.Order.desc("updatedAt")
+    );
+
     List<OrderResponseDto> results = queryFactory
         .select(new QOrderResponseDto(order))
         .from(order)
         .where(builder)
-        .orderBy(getDynamicSort(pageable.getSort(), order.getType(), order.getMetadata()))
+        .orderBy(getDynamicSort(sort, order.getType(), order.getMetadata()))
         .offset(pageable.getOffset())
         .limit(pageable.getPageSize())
         .fetch();

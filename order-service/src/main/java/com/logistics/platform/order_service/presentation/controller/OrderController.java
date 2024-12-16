@@ -11,9 +11,7 @@ import java.util.List;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort.Direction;
 import org.springframework.data.querydsl.binding.QuerydslPredicate;
-import org.springframework.data.web.PageableDefault;
 import org.springframework.data.web.PagedModel;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -72,7 +70,7 @@ public class OrderController { // TODO 권한 검증, 실패시 처리 로직
   public ResponseDto<PagedModel<?>> getOrdersPage(
       @RequestParam(required = false) List<UUID> uuidList,
       @QuerydslPredicate(root = Order.class) Predicate predicate,
-      @PageableDefault(direction = Direction.DESC, sort = "createdAt") Pageable pageable,
+      Pageable pageable,
       @RequestHeader(value = "X-User-Name") String userName,
       @RequestHeader(value = "X-User-Role") String userRole
   ) {
