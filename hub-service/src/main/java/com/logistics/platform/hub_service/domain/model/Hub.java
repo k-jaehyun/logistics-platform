@@ -98,6 +98,7 @@ public class Hub {
     this.hubName = hubModifyRequest.getHubName();
     this.hubType = !hubModifyRequest.getIsHubTypeReceiver() ? HubType.localHub
         : HubType.centralHub;
+    this.centerPostalCode = hubModifyRequest.getCenterPostalCode();
     this.roadAddress = hubModifyRequest.getRoadAddress();
     this.postalCode = hubModifyRequest.getPostalCode();
     // todo 나중에 수정자 업데이트 추가

@@ -39,32 +39,27 @@ public class HubRouteService {
         .orElseThrow(
             () -> new CustomApiException("해당 우편번호를 가진 중앙허브가 존재하지 않습니다."));
     // 2) 출발 허브 - 중앙허브, 중앙허브 - 도착허브 거리 계산 후 합산해서 저장
-    List<Double> estimatedDuration = new ArrayList<>();
-    List<Double> estimatedDistance = new ArrayList<>();
+    List<HubRouteCreateResponse> savedHubRouteList = new ArrayList<>();
+
     // 출발 허브 - 중앙 허브 경로 계산
     List<String> firstDirections = kakaoMobilityService.getDirections(
         startHub.getLongitude() + "," + startHub.getLatitude(),
         centralHub.getLongitude() + "," + centralHub.getLatitude());
-    estimatedDuration.add(Double.valueOf(firstDirections.get(0)));
-    estimatedDistance.add(Double.valueOf(firstDirections.get(1)));
     // 중앙 허브 - 도착 허브 경로 계산
     List<String> secondDirections = kakaoMobilityService.getDirections(
         centralHub.getLongitude() + "," + centralHub.getLatitude(),
         endHub.getLongitude() + "," + endHub.getLatitude());
-    estimatedDuration.add(Double.valueOf(secondDirections.get(0)));
-    estimatedDistance.add(Double.valueOf(secondDirections.get(1)));
 
     HubRoute hubRoute = HubRoute.builder()
         .startHubId(startHub.getHubId())
         .endHubId(endHub.getHubId())
-        .estimatedDuration(estimatedDuration)
-        .estimatedDistance(estimatedDistance)
+        .estimatedDuration(Double.parseDouble(firstDirections.get(0)) + Double.parseDouble(secondDirections.get(0)))
+        .estimatedDistance(Double.parseDouble(firstDirections.get(1)) + Double.parseDouble(secondDirections.get(1)))
         .createdBy("임시 생성자")
         .isDeleted(false)
         .build();
     HubRoute savedHubRoute = hubRouteRepository.save(hubRoute);
 
-    List<HubRouteCreateResponse> savedHubRouteList = new ArrayList<>();
     savedHubRouteList.add(new HubRouteCreateResponse(savedHubRoute));
 
     return savedHubRouteList;

@@ -51,6 +51,7 @@ public class HubService {
         .hubManagerId(hubCreateRequest.getHubManagerId())
         .hubName(hubCreateRequest.getHubName())
         .hubType(hubTypeSet)
+        .centerPostalCode(hubCreateRequest.getCenterPostalCode())
         .roadAddress(hubCreateRequest.getRoadAddress())
         .postalCode(hubCreateRequest.getPostalCode())
         .longitude(latLngByAddress.getLongitude())

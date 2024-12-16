@@ -41,13 +41,11 @@ public class HubRoute {
   @Column(nullable = false)
   private UUID endHubId;
 
-  @ElementCollection
-  @Column(name = "estimated_duration")
-  private List<Double> estimatedDuration;
+  @Column(nullable = false)
+  private Double estimatedDuration;
 
-  @ElementCollection
-  @Column(name = "estimated_distance")
-  private List<Double> estimatedDistance;
+  @Column(nullable = false)
+  private Double estimatedDistance;
 
   @CreatedDate
   @Column(updatable = false, nullable = false)

@@ -14,9 +14,9 @@ public class HubRouteResponse {
 
   private UUID endHubId;
 
-  private List<Double> estimatedDuration;
+  private Double estimatedDuration;
 
-  private List<Double> estimatedDistance;
+  private Double estimatedDistance;
 
   public HubRouteResponse(HubRoute hubRoute) {
     this.hubRouteId = hubRoute.getHubRouteId();
