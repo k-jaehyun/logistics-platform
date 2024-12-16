@@ -8,6 +8,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 @Repository
@@ -22,6 +23,8 @@ public interface HubRepository extends JpaRepository<Hub, UUID> {
   Page<Hub> findAllByIsDeletedFalse(Pageable pageable);
 
   @Query("select h.hubId from Hub h where h.hubManagerId = :hubManagerId AND h.isDeleted = false")
-  List<UUID> findByHubManagerIdAndIsDeletedFalse(Long hubManagerId);
+  List<UUID> findByHubManagerIdAndIsDeletedFalse(@Param("hubManagerId") Long hubManagerId);
+
+  Optional<Hub> findByPostalCodeAndIsDeletedFalse(String centerPostalCode);
 
 }

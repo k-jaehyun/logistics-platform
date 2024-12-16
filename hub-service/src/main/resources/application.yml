@@ -30,7 +30,7 @@ spring:
       hibernate:
         dialect: org.hibernate.spatial.dialect.postgis.PostgisPG95Dialect
     hibernate:
-      ddl-auto: update # 변경하면 안됩니다..허브 정보 날라가면 슬플 것 같아요
+      ddl-auto: update
 
 # Eureka server 연결 (호스트 이름: localhost, 포트: 19090)
 eureka:

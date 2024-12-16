@@ -9,5 +9,4 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface HubRouteRepository extends JpaRepository<HubRoute, UUID> {
 
-  Optional<HubRoute> findByClassificationAndIsDeletedFalse(String classification);
 }

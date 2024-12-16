@@ -48,6 +48,9 @@ public class Hub {
   private HubType hubType;
 
   @Column(nullable = false)
+  private String centerPostalCode;
+
+  @Column(nullable = false)
   private String roadAddress;
 
   @Column(nullable = false)

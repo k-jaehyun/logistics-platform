@@ -11,6 +11,8 @@ public class KakaoDirectionParser {
   public DirectionInfo parseDirection(String responseBody) {
     JSONObject jsonResponse = new JSONObject(responseBody);
 
+
+
     // routes 배열에서 summary 객체를 추출
     JSONObject summary = jsonResponse.getJSONArray("routes")
         .getJSONObject(0) // 제일 첫 번째 요소 사용해야 함.
