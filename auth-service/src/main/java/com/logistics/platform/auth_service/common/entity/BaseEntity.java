@@ -23,7 +23,7 @@ public abstract class BaseEntity {
     @LastModifiedDate
     private LocalDateTime updatedAt;
 
-    private LocalDateTime deletedAt;
+    protected LocalDateTime deletedAt;
 
     @CreatedBy
     private String createdBy;
@@ -31,6 +31,6 @@ public abstract class BaseEntity {
     @LastModifiedBy
     private String updatedBy;
 
-    private String deletedBy;
+    protected String deletedBy;
 
 }
