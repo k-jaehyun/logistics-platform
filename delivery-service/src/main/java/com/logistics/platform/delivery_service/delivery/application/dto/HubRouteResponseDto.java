@@ -15,7 +15,8 @@ public class HubRouteResponseDto {
 
   private UUID startHubId;
   private UUID endHubId;
-  private Long estimatedDuration;
-  private Long estimatedDistance;
+  private Double estimatedDuration;
+  private Double estimatedDistance;
 
 }
+

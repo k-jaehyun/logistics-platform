@@ -10,5 +10,6 @@ public interface HubClient {
 
   @GetMapping("/api/hubs/{hubId}/exists")
   boolean checkIfHubExists(@PathVariable("hubId") UUID hubId);
+  // 허브서비스 필요
 
 }
