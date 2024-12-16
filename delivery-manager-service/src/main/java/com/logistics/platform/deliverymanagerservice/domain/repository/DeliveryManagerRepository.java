@@ -26,7 +26,7 @@ public interface DeliveryManagerRepository extends JpaRepository<DeliveryManager
     QuerydslBinderCustomizer<QDeliveryManager> {
 
   Page<DeliveryManagerResponseDto> findAll(List<UUID> uuidList, Predicate predicate, Pageable pageable);
-  DeliveryManager findFirstByIsDeletedFalseOrderByDeliveryOrderNumberAsc(DeliveryType deliveryType);
+  DeliveryManager findFirstByIsDeletedFalseAndDeliveryTypeOrderByDeliveryOrderNumberAsc(DeliveryType deliveryType);
 
   @Override // Predicate의 조건을 수정: 문자 검색 시 'equals 조건' -> 'contains 조건'
   default void customize(QuerydslBindings querydslBindings, @NotNull QDeliveryManager qDeliveryManager) {

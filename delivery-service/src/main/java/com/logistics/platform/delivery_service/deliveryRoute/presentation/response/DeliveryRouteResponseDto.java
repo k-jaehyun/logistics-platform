@@ -30,7 +30,7 @@ public class DeliveryRouteResponseDto {
   @QueryProjection
   public DeliveryRouteResponseDto(DeliveryRoute deliveryRoute) {
     this.id = deliveryRoute.getId();
-    this.deliveryId = deliveryRoute.getDeliveryId();
+    this.deliveryId = deliveryRoute.getDelivery().getId();
     this.startHubId = deliveryRoute.getStartHubId();
     this.endHubId = deliveryRoute.getEndHubId();
     this.deliveryManagerId = deliveryRoute.getDeliveryManagerId();

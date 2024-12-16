@@ -1,19 +1,30 @@
 package com.logistics.platform.delivery_service.delivery.infrastructure.repository;
 
+
+
+import static com.logistics.platform.delivery_service.deliveryRoute.domain.model.QDeliveryRoute.deliveryRoute;
+
+import com.logistics.platform.delivery_service.delivery.domain.model.Delivery;
 import com.logistics.platform.delivery_service.delivery.domain.model.QDelivery;
 import com.logistics.platform.delivery_service.delivery.presentation.response.DeliveryResponseDto;
 import com.logistics.platform.delivery_service.delivery.presentation.response.QDeliveryResponseDto;
+import com.logistics.platform.delivery_service.deliveryRoute.presentation.response.DeliveryRouteResponseDto;
 import com.querydsl.core.BooleanBuilder;
+import com.querydsl.core.types.ExpressionUtils;
 import com.querydsl.core.types.Order;
 import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.PathMetadata;
 import com.querydsl.core.types.Predicate;
+import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.PathBuilder;
+import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
+import java.util.stream.Collectors;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
@@ -45,14 +56,47 @@ public class DeliveryRepositoryCustomImpl implements DeliveryRepositoryCustom{
     size = (size == 30 || size == 50) ? size : 10;
     pageable = PageRequest.of(pageable.getPageNumber(), size, pageable.getSort());
 
-    List<DeliveryResponseDto> results = queryFactory
-        .select(new QDeliveryResponseDto(delivery))
-        .from(delivery)
+    // 첫 번째 쿼리: 배송 조회
+    List<Delivery> deliveries = queryFactory
+        .selectFrom(delivery)
         .where(builder)
         .orderBy(getDynamicSort(pageable.getSort(), delivery.getType(), delivery.getMetadata()))
         .offset(pageable.getOffset())
         .limit(pageable.getPageSize())
         .fetch();
+
+    // 배송 ID 목록 생성
+    List<UUID> deliveryIds = deliveries.stream()
+        .map(Delivery::getId)
+        .toList();
+
+    // 두 번째 쿼리: 배송 경로 조회
+    List<DeliveryRouteResponseDto> routes = queryFactory
+        .select(Projections.constructor(
+            DeliveryRouteResponseDto.class,
+            deliveryRoute.id,
+            deliveryRoute.startHubId,
+            deliveryRoute.endHubId,
+            deliveryRoute.deliveryManagerId,
+            deliveryRoute.estimatedDuration,
+            deliveryRoute.estimatedDistance,
+            deliveryRoute.actualDuration,
+            deliveryRoute.actualDistance,
+            deliveryRoute.status,
+            deliveryRoute.sequence
+        ))
+        .from(deliveryRoute)
+        .where(deliveryRoute.delivery.id.in(deliveryIds))
+        .fetch();
+
+    // 배송 ID별 경로 매핑
+    Map<UUID, List<DeliveryRouteResponseDto>> routeMap = routes.stream()
+        .collect(Collectors.groupingBy(DeliveryRouteResponseDto::getDeliveryId));
+
+    // 배송 DTO 생성
+    List<DeliveryResponseDto> results = deliveries.stream()
+        .map(d -> new DeliveryResponseDto(d, routeMap.getOrDefault(d.getId(), new ArrayList<>())))
+        .collect(Collectors.toList());
 
     Long total = queryFactory
         .select(delivery.count())

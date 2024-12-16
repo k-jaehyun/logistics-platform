@@ -132,7 +132,7 @@ public class DeliveryManagerService {
 
   @Transactional
   public DeliveryManagerResponseDto getNextAvailableDeliveryManager() {
-    DeliveryManager nextManager = deliveryManagerRepository.findFirstByIsDeletedFalseOrderByDeliveryOrderNumberAsc(DeliveryType.HUB);
+    DeliveryManager nextManager = deliveryManagerRepository.findFirstByIsDeletedFalseAndDeliveryTypeOrderByDeliveryOrderNumberAsc(DeliveryType.HUB);
 
     if (nextManager == null) {
       throw new CustomApiException("배정 가능한 배송담당자가 없습니다.");
