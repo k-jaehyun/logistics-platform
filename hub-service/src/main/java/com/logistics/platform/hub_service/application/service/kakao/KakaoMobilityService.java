@@ -50,8 +50,6 @@ public class KakaoMobilityService {
         String.class
     );
 
-    log.info("response = "+ response);
-
     if (response.getStatusCode() == HttpStatus.OK) {
       String responseBody = response.getBody();
 

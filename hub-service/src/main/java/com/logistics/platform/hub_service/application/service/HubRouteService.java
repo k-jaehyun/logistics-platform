@@ -8,7 +8,6 @@ import com.logistics.platform.hub_service.domain.repository.HubRouteRepository;
 import com.logistics.platform.hub_service.presentation.global.ex.CustomApiException;
 import com.logistics.platform.hub_service.presentation.request.HubRouteCreateRequest;
 import com.logistics.platform.hub_service.presentation.response.HubRouteCreateResponse;
-import com.logistics.platform.hub_service.presentation.response.HubRouteResponse;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -70,12 +69,4 @@ public class HubRouteService {
 
     return savedHubRouteList;
   }
-
-//  @Transactional(readOnly = true)
-//  public HubRouteResponse getHubRoute(String classification) {
-//    HubRoute hubRoute = hubRouteRepository.findByClassificationAndIsDeletedFalse(classification)
-//        .orElseThrow(
-//            () -> new CustomApiException("해당 경로의 허브 배송 경로 정보가 존재하지 않습니다."));
-//    return new HubRouteResponse(hubRoute);
-//  }
 }

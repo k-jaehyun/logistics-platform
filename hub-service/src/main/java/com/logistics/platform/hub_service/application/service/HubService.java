@@ -12,7 +12,6 @@ import com.logistics.platform.hub_service.presentation.response.AddressResponse;
 import com.logistics.platform.hub_service.presentation.response.HubResponse;
 import com.logistics.platform.hub_service.presentation.util.GeoUtils;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
