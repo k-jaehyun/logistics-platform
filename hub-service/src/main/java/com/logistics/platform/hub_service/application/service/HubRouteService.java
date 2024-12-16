@@ -35,6 +35,7 @@ public class HubRouteService {
     log.info("endHub = " + endHub.getLatitude() + "," + endHub.getLongitude());
 
     // 경도, 위도로 거리, 시간 구하기
+
     List<String> directions = kakaoMobilityService.getDirections(
         startHub.getLongitude() + "," + startHub.getLatitude(),
         endHub.getLongitude() + "," + endHub.getLatitude());

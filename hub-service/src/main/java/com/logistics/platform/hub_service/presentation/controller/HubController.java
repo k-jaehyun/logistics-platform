@@ -8,6 +8,7 @@ import com.logistics.platform.hub_service.presentation.request.HubModifyRequest;
 import com.logistics.platform.hub_service.presentation.response.HubResponse;
 import jakarta.validation.Valid;
 import java.io.IOException;
+import java.util.List;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -66,6 +67,12 @@ public class HubController {
   public ResponseDto<HubResponse> delete(@PathVariable UUID hubId) {
     hubService.deleteHub(hubId);
     return new ResponseDto<>(ResponseDto.SUCCESS, "허브 삭제가 완료되었습니다.");
+  }
+
+  @GetMapping("/{hubManagerId}/hubIds")
+  public ResponseDto<List<UUID>> getHubIds(@PathVariable Long hubManagerId) {
+    List<UUID> hubIdByHubManagerIds = hubService.findHubIdByHubManagerId(hubManagerId);
+    return new ResponseDto<>(ResponseDto.SUCCESS, "담당 허브Id 조회가 완료되었습니다.", hubIdByHubManagerIds);
   }
 
 

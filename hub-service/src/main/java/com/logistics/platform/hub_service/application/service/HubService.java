@@ -12,6 +12,8 @@ import com.logistics.platform.hub_service.presentation.response.AddressResponse;
 import com.logistics.platform.hub_service.presentation.response.HubResponse;
 import com.logistics.platform.hub_service.presentation.util.GeoUtils;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -101,5 +103,10 @@ public class HubService {
     Hub hub = hubRepository.findByHubIdAndIsDeletedFalse(hubId).orElseThrow(
         () -> new CustomApiException("해당 hubId가 존재하지 않습니다."));
     hub.deleteHub();
+  }
+
+  @Transactional(readOnly = true)
+  public List<UUID> findHubIdByHubManagerId(Long hubManagerId) {
+    return hubRepository.findByHubManagerIdAndIsDeletedFalse(hubManagerId);
   }
 }
