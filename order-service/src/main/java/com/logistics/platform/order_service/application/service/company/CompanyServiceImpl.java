@@ -1,4 +1,4 @@
-package com.logistics.platform.order_service.application.service;
+package com.logistics.platform.order_service.application.service.company;
 
 import com.logistics.platform.order_service.infrastructure.client.CompanyClient;
 import java.util.UUID;

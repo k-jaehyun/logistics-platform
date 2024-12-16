@@ -1,4 +1,4 @@
-package com.logistics.platform.order_service.application.service;
+package com.logistics.platform.order_service.application.service.product;
 
 import com.logistics.platform.order_service.application.dto.ProductResponseDto;
 import com.logistics.platform.order_service.infrastructure.client.ProductClient;

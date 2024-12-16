@@ -1,4 +1,4 @@
-package com.logistics.platform.order_service.application.service;
+package com.logistics.platform.order_service.application.service.delivery;
 
 import com.logistics.platform.order_service.infrastructure.client.DeliveryClient;
 import com.logistics.platform.order_service.infrastructure.request.DeliveryRequestDto;

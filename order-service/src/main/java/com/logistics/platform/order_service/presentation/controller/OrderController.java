@@ -1,6 +1,6 @@
 package com.logistics.platform.order_service.presentation.controller;
 
-import com.logistics.platform.order_service.application.service.OrderService;
+import com.logistics.platform.order_service.application.service.order.OrderService;
 import com.logistics.platform.order_service.domain.model.Order;
 import com.logistics.platform.order_service.presentation.global.ResponseDto;
 import com.logistics.platform.order_service.presentation.request.OrderRequestDto;

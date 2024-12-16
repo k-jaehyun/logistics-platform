@@ -1,4 +1,4 @@
-package com.logistics.platform.order_service.application.service;
+package com.logistics.platform.order_service.application.service.user;
 
 import com.logistics.platform.order_service.application.dto.UserDto;
 import com.logistics.platform.order_service.infrastructure.client.UserClient;

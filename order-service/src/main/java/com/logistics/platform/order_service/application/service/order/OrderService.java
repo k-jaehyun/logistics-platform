@@ -1,7 +1,11 @@
-package com.logistics.platform.order_service.application.service;
+package com.logistics.platform.order_service.application.service.order;
 
 import com.logistics.platform.order_service.application.dto.ProductResponseDto;
 import com.logistics.platform.order_service.application.dto.UserDto;
+import com.logistics.platform.order_service.application.service.delivery.DeliveryService;
+import com.logistics.platform.order_service.application.service.user.UserSerivce;
+import com.logistics.platform.order_service.application.service.company.CompanyService;
+import com.logistics.platform.order_service.application.service.product.ProductService;
 import com.logistics.platform.order_service.domain.model.Order;
 import com.logistics.platform.order_service.domain.repository.OrderRepository;
 import com.logistics.platform.order_service.presentation.global.exception.CustomApiException;
