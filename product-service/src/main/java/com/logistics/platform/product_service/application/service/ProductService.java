@@ -9,7 +9,6 @@ import com.querydsl.core.types.Predicate;
 import java.util.List;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
-import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PagedModel;
@@ -24,10 +23,6 @@ public class ProductService {
 
 
   public ProductResponseDto createProduct(ProductRequestDto productRequestDto, String userName) {
-
-    // TODO companyId 검증
-
-    // TODO hubId 검증
 
     // 상품명 중복 가능
 
@@ -45,7 +40,7 @@ public class ProductService {
     return new ProductResponseDto(product);
   }
 
-  @Transactional(readOnly = true) // TODO Caching
+  @Transactional(readOnly = true)
   public ProductResponseDto getProduct(UUID productId) {
 
     Product product = productRepository.findById(productId)
@@ -58,7 +53,7 @@ public class ProductService {
     return new ProductResponseDto(product);
   }
 
-  @Transactional(readOnly = true) // TODO Caching
+  @Transactional(readOnly = true)
   public PagedModel<ProductResponseDto> getProductsPage(
       List<UUID> uuidList, Predicate predicate, Pageable pageable) {
 
@@ -69,7 +64,6 @@ public class ProductService {
   }
 
   @Transactional
-  @CacheEvict(value = "getProductCache", key = "#productId")
   public ProductResponseDto updateProduct(UUID productId, ProductRequestDto productRequestDto,
       String userName) {
 
@@ -86,7 +80,6 @@ public class ProductService {
   }
 
   @Transactional
-  @CacheEvict(value = "getProductCache", key = "#productId")
   public ProductResponseDto deleteProduct(UUID productId, String userName) {
 
     Product product = productRepository.findById(productId)
@@ -102,7 +95,6 @@ public class ProductService {
   }
 
   @Transactional
-  @CacheEvict(value = "getProductCache", key = "#productId")
   public void adjustProductQuantity(UUID productId, Long quantity) {
     Product product = productRepository.findById(productId)
         .orElseThrow(() -> new CustomApiException("존재하지 않는 productId입니다."));
