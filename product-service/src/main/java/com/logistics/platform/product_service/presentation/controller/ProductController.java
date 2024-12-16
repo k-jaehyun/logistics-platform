@@ -11,9 +11,7 @@ import java.util.List;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort.Direction;
 import org.springframework.data.querydsl.binding.QuerydslPredicate;
-import org.springframework.data.web.PageableDefault;
 import org.springframework.data.web.PagedModel;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -44,7 +42,8 @@ public class ProductController {
     // 2. 업체담당자라면 업체 서비스에서 업체담당자가 맞는지 확인
     // 3. 담당 허브 관리자라면 담당 허브가 어디인지
 
-    ProductResponseDto productResponseDto = productService.createProduct(productRequestDto, userName);
+    ProductResponseDto productResponseDto = productService.createProduct(productRequestDto,
+        userName);
 
     return new ResponseDto<>(ResponseDto.SUCCESS, "상품이 생성되었습니다.", productResponseDto);
   }
@@ -69,10 +68,10 @@ public class ProductController {
   public ResponseDto<PagedModel<ProductResponseDto>> getProductsPage(
       @RequestParam(required = false) List<UUID> uuidList,
       @QuerydslPredicate(root = Product.class) Predicate predicate,
-      @PageableDefault(direction = Direction.DESC, sort = "createdAt") Pageable pageable,
+      Pageable pageable,
       @RequestHeader(value = "X-User-Name") String userName,
       @RequestHeader(value = "X-User-Role") String userRole
-      ) {
+  ) {
 
     // TODO 허브 관리자는 담당 허브만 조회
     // 현재도 해당 권한이 유효한지
@@ -90,7 +89,7 @@ public class ProductController {
       @Valid @RequestBody ProductRequestDto productRequestDto,
       @RequestHeader(value = "X-User-Name") String userName,
       @RequestHeader(value = "X-User-Role") String userRole
-      ) {
+  ) {
 
     // TODO 권한 확인 (마스터, 담당 허브 관리자, 본인 업체)
     // 1. 현재도 해당 권한이 유효한지

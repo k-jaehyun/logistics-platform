@@ -46,11 +46,17 @@ public class ProductRepositoryCustomImpl implements ProductRepositoryCustom {
     size = (size == 30 || size == 50) ? size : 10;
     pageable = PageRequest.of(pageable.getPageNumber(), size, pageable.getSort());
 
+    // 입력값이 없다면 생성일순, 수정일순을 기준으로 정렬
+    Sort sort = pageable.getSort().isSorted() ? pageable.getSort() : Sort.by(
+        Sort.Order.desc("createdAt"),
+        Sort.Order.desc("updatedAt")
+    );
+
     List<ProductResponseDto> results = queryFactory
         .select(new QProductResponseDto(product))
         .from(product)
         .where(builder)
-        .orderBy(getDynamicSort(pageable.getSort(), product.getType(), product.getMetadata()))
+        .orderBy(getDynamicSort(sort, product.getType(), product.getMetadata()))
         .offset(pageable.getOffset())
         .limit(pageable.getPageSize())
         .fetch();
