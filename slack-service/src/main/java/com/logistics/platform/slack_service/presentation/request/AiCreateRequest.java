@@ -11,9 +11,7 @@ public class AiCreateRequest {
 
   private String productName;
 
-  private Long price;
-
-  private Long count;
+  private String startDate;
 
   private String startHubAddress;
 

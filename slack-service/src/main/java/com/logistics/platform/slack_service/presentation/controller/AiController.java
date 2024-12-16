@@ -3,7 +3,6 @@ package com.logistics.platform.slack_service.presentation.controller;
 import com.logistics.platform.slack_service.application.service.ai.AiService;
 import com.logistics.platform.slack_service.common.ResponseDto;
 import com.logistics.platform.slack_service.presentation.request.AiCreateRequest;
-import com.logistics.platform.slack_service.presentation.response.AiCreateResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -14,6 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 @RequestMapping("/api/slacks/ai")
 public class AiController {
+
   private final AiService aiService;
 
   @PostMapping

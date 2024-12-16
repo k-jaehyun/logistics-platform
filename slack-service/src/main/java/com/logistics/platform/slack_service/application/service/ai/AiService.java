@@ -80,16 +80,14 @@ public class AiService {
     return String.format(
         "User: %s\n" +
             "Product: %s\n" +
-            "Price: %d\n" +
-            "Count: %d\n" +
+            "StartDate: %s\n" +
             "Start Hub Address: %s\n" +
             "Central Hub Address: %s\n" +
             "End Hub Address: %s\n\n" +
             "Based on the above information, %s",
         request.getUserName(),
         request.getProductName(),
-        request.getPrice(),
-        request.getCount(),
+        request.getStartDate(),
         request.getStartHubAddress(),
         request.getCentralHubAddress(),
         request.getEndHubAddress(),
