@@ -20,10 +20,10 @@ public class DeliveryRouteResponseDto {
   private UUID startHubId;
   private UUID endHubId;
   private UUID deliveryManagerId;
-  private Long estimatedDuration;
-  private Long estimatedDistance;
-  private Long actualDuration;
-  private Long actualDistance;
+  private Double estimatedDuration;
+  private Double estimatedDistance;
+  private Double actualDuration;
+  private Double actualDistance;
   private DeliveryRouteStatus status;
   private Long sequence;
 

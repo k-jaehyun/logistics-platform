@@ -19,9 +19,9 @@ public class DeliveryRouteRequestDto {
   private UUID startHubId;
   private UUID endHubId;
   private UUID deliveryManagerId;
-  private Long estimatedDuration;
-  private Long estimatedDistance;
-  private DeliveryRouteStatus status;
+  private Double estimatedDuration;
+  private Double estimatedDistance;
+  private DeliveryRouteStatus status; // 여기서 이거 삭제하고 기본값 허브대기중 이런걸로 해두고, updateRequestDto 따로 만들지...
   private Long sequence;
 
 }
