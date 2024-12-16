@@ -1,6 +1,7 @@
 package com.logistics.platform.order_service.application.service;
 
 import com.logistics.platform.order_service.application.dto.ProductResponseDto;
+import com.logistics.platform.order_service.application.dto.UserDto;
 import com.logistics.platform.order_service.domain.model.Order;
 import com.logistics.platform.order_service.domain.repository.OrderRepository;
 import com.logistics.platform.order_service.presentation.global.exception.CustomApiException;
@@ -23,6 +24,8 @@ public class OrderService {
 
   private final OrderRepository orderRepository;
   private final ProductService productService;
+  private final DeliveryService deliveryService;
+  private final UserSerivce userSerivce;
 
   @CircuitBreaker(name = "OrderService", fallbackMethod = "handleOrderFailure")
   public OrderResponseDto createOrder(OrderRequestDto orderRequestDto, String userName,
@@ -43,10 +46,6 @@ public class OrderService {
     productService.adjustProductQuantity(product.getProductId(),
         -orderRequestDto.getProductQuantity());
 
-    // TODO supplyCompanyId 검증
-
-    // TODO receiveCompanyId 검증
-
     Order order = Order.builder()
         .productId(orderRequestDto.getProductId())
         .supplyCompayId(orderRequestDto.getSupplyCompanyId())
@@ -55,11 +54,13 @@ public class OrderService {
         .totalPrice(totalPrice)
         .orderRequest(orderRequestDto.getOrderRequest())
         .createdBy(userName)
+        .address(orderRequestDto.getAddress())
         .build();
 
-    // TODO 배송 생성 추가
-
     orderRepository.save(order);
+
+    UserDto userInfo = userSerivce.getUserInfo(userName, userRole);
+    deliveryService.createDelivery(order, userInfo.getUserId(), userInfo.getSlackId());
 
     return new OrderResponseDto(order);
   }
@@ -124,7 +125,8 @@ public class OrderService {
         orderRequestDto.getProductQuantity(),
         orderRequestDto.getOrderRequest(),
         totalPrice,
-        userName
+        userName,
+        orderRequestDto.getAddress()
     );
 
     return new OrderResponseDto(order);

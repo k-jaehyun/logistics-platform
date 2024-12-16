@@ -29,4 +29,6 @@ public class OrderRequestDto {
   @Size(max = 255, message = "Order request must not exceed 255 characters")
   private String orderRequest;
 
+  private String address;
+
 }

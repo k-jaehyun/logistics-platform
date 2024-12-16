@@ -42,9 +42,8 @@ public class Order {
   @Column(nullable = false)
   private UUID receiveCompanyId;
 
-  // TODO Order가 생성된 이후 Delivery가 생성되기 때문에 Feign이나 큐를 이용한 구현이 필요
-//  @Column(nullable = false)
-//  private UUID deliveryId;
+  @Column(nullable = false)
+  private String address;
 
   @Column(nullable = false)
   private Long productQuantity;
@@ -94,7 +93,8 @@ public class Order {
       Long productQuantity,
       Long totalPrice,
       String orderRequest,
-      String createdBy
+      String createdBy,
+      String address
   ) {
     this.productId = productId;
     this.supplyCompayId = supplyCompayId;
@@ -103,10 +103,11 @@ public class Order {
     this.totalPrice = totalPrice;
     this.orderRequest = orderRequest;
     this.createdBy = createdBy;
+    this.address = address;
   }
 
   public void update(UUID productId, UUID supplyCompanyId, UUID receiveCompanyId,
-      Long productQuantity, String orderRequest, Long totalPrice, String userName) {
+      Long productQuantity, String orderRequest, Long totalPrice, String userName, String address) {
     if (productId != null) {
       this.productId = productId;
     }
@@ -124,6 +125,9 @@ public class Order {
     }
     if (totalPrice != null) {
       this.totalPrice = totalPrice;
+    }
+    if (address != null) {
+      this.address = address;
     }
     this.updatedBy = userName;
   }

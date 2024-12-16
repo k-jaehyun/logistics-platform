@@ -28,6 +28,8 @@ public class OrderResponseDto {
 
   private String message;
 
+  private String address;
+
   @QueryProjection
   public OrderResponseDto(Order order) {
     this.orderID = order.getId();
@@ -36,6 +38,7 @@ public class OrderResponseDto {
     this.supplyCompanyId = order.getSupplyCompayId();
     this.receiveCompanyId = order.getReceiveCompanyId();
     this.orderRequest = order.getOrderRequest();
+    this.address = order.getAddress();
   }
 
   public OrderResponseDto(String message) {
