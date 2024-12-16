@@ -27,12 +27,16 @@ public class CompanyService {
   private final HubService hubService;
 
   public CompanyResponse createCompany(CompanyCreateRequest companyCreateRequest, String role,
-      String userName) {
-    if (role.equals("ROLE_MASTER") || role.equals("ROLE_HUB_MANAGER")) {
+      String userName, Long userId) {
+    if (role.equals("ROLE_MASTER")) {
+    } else if (role.equals("ROLE_HUB_MANAGER")) {
+      HubResponseDto hubDto = hubService.getHubDtoByHubId(companyCreateRequest.getHubId());
+      if (!hubDto.getHubManagerId().equals(userId)) {
+        throw new CustomApiException("권한이 없습니다.");
+      }
     } else {
       throw new CustomApiException("권한이 없습니다.");
     }
-    HubResponseDto hubDto = hubService.getHubDtoByHubId(companyCreateRequest.getHubId());
 
     if (companyRepository.findByCompanyNameAndIsDeletedFalse(
         companyCreateRequest.getCompanyName()).isPresent()) {
@@ -100,11 +104,19 @@ public class CompanyService {
 
   @Transactional
   public CompanyResponse modifyCompany(UUID companyId, CompanyModifyRequest companyModifyRequest,
-      String role, String userName) {
-    if (role.equals("ROLE_MASTER") || role.equals("ROLE_HUB_MANAGER") || role.equals(
-        "ROLE_COMPANY_MANAGER")) {
-    } else {
-      throw new CustomApiException("권한이 없습니다.");
+      String role, String userName, Long userId) {
+    if (role.equals("ROLE_MASTER")) {
+    } else if (role.equals("ROLE_HUB_MANAGER")) {
+      HubResponseDto hubDto = hubService.getHubDtoByHubId(companyModifyRequest.getHubId());
+      if (!hubDto.getHubManagerId().equals(userId)) {
+        throw new CustomApiException("권한이 없습니다.");
+      }
+    } else if (role.equals("ROLE_COMPANY_MANAGER")) {
+      Company company = companyRepository.findByCompanyIdAndIsDeletedFalse(companyId).orElseThrow(
+          () -> new CustomApiException("해당 companyId가 존재하지 않습니다."));
+      if (!company.getCompanyManagerId().equals(userId)) {
+        throw new CustomApiException("권한이 없습니다.");
+      }
     }
 
     Company company = companyRepository.findByCompanyIdAndIsDeletedFalse(companyId).orElseThrow(
@@ -115,8 +127,15 @@ public class CompanyService {
   }
 
   @Transactional
-  public void deleteCompany(UUID companyId, String role, String userName) {
-    if (role.equals("ROLE_MASTER") || role.equals("ROLE_HUB_MANAGER")) {
+  public void deleteCompany(UUID companyId, String role, String userName, Long userId) {
+    if (role.equals("ROLE_MASTER")) {
+    } else if (role.equals("ROLE_HUB_MANAGER")) {
+      Company company = companyRepository.findByCompanyIdAndIsDeletedFalse(companyId).orElseThrow(
+          () -> new CustomApiException("해당 companyId가 존재하지 않습니다."));
+      HubResponseDto hubDto = hubService.getHubDtoByHubId(company.getHubId());
+      if (!hubDto.getHubManagerId().equals(userId)) {
+        throw new CustomApiException("권한이 없습니다.");
+      }
     } else {
       throw new CustomApiException("권한이 없습니다.");
     }
