@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RequiredArgsConstructor
@@ -27,9 +28,12 @@ public class UserController {
     private final UserService userService;
 
     @GetMapping("")
-    public ResponseDto<Page<UserResDto>> getUsers(Pageable pageable) {
+    public ResponseDto<Page<UserResDto>> getUsers(
+        @RequestParam(defaultValue = "createdAt") String sort,
+        @RequestParam(defaultValue = "DESC") String direction,
+        @RequestParam(defaultValue = "10") int size) {
         return new ResponseDto<>(ResponseDto.SUCCESS, "사용자 목록이 조회되었습니다.",
-            userService.getUsers(pageable));
+            userService.getUsers(sort, direction, size));
     }
 
     @GetMapping("/{userId}")
