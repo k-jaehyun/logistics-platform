@@ -52,7 +52,8 @@ public class HubController {
   @GetMapping
   public Page<HubResponse> search(
       @RequestParam(name = "keyword", required = false, defaultValue = "") String keyword,
-      Pageable pageable) {
+      Pageable pageable
+  ) {
     return hubService.searchHubs(keyword, pageable);
   }
 

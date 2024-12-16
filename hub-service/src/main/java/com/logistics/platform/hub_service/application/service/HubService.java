@@ -19,7 +19,9 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -73,6 +75,17 @@ public class HubService {
 
   @Transactional(readOnly = true)
   public Page<HubResponse> searchHubs(String keyword, Pageable pageable) {
+
+    int size = pageable.getPageSize();
+    size = (size == 30 || size == 50) ? size : 10;
+
+    Sort sort = pageable.getSort().isSorted() ? pageable.getSort() : Sort.by(
+        Sort.Order.desc("createdAt"),
+        Sort.Order.desc("updatedAt")
+    );
+
+    pageable = PageRequest.of(pageable.getPageNumber(), size, sort);
+
     Page<Hub> hubs;
     if (keyword == null || keyword.trim().isEmpty()) {
       hubs = hubRepository.findAllByIsDeletedFalse(pageable);
