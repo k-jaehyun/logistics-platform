@@ -71,29 +71,28 @@ public class DeliveryManagerRepositoryCustomImpl implements DeliveryManagerRepos
 
   // 최대 배송순번 조회 메서드 추가
   @Override
-  public Optional<Long> findMaxDeliveryOrderNumber() {
+  public Optional<Long> findMaxDeliveryOrderNumberByDeliveryType(DeliveryType deliveryType) {
     QDeliveryManager deliveryManager = QDeliveryManager.deliveryManager;
 
     Long maxOrderNumber = queryFactory
         .select(deliveryManager.deliveryOrderNumber.max())
         .from(deliveryManager)
         .where(
-            //deliveryManager.isDeleted.eq(false)  // 이것때문에 삭제된 것도 영향받음
-             deliveryManager.deliveryType.eq(DeliveryType.HUB))
+             deliveryManager.deliveryType.eq(deliveryType), deliveryManager.isDeleted.eq(false))
         .fetchOne();
 
     return Optional.ofNullable(maxOrderNumber);
   }
 
   @Override
-  public Optional<Long> findMinDeliveryOrderNumber() {
+  public Optional<Long> findMinDeliveryOrderNumberByDeliveryType(DeliveryType deliveryType) {
     QDeliveryManager deliveryManager = QDeliveryManager.deliveryManager;
     Long minOrderNumber = queryFactory
         .select(deliveryManager.deliveryOrderNumber.max())
         .from(deliveryManager)
         .where(
             //deliveryManager.isDeleted.eq(false)  // 이것때문에 삭제된 것도 영향받음
-            deliveryManager.deliveryType.eq(DeliveryType.HUB))
+            deliveryManager.deliveryType.eq(deliveryType), deliveryManager.isDeleted.eq(false))
         .fetchOne();
 
     return Optional.ofNullable(minOrderNumber);

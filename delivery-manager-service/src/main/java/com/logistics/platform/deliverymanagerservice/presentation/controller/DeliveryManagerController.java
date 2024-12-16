@@ -76,10 +76,9 @@ public class DeliveryManagerController {
   // 배송담당자 삭제
   @DeleteMapping("/{deliveryManagerId}")
   public ResponseDto<DeliveryManagerResponseDto> deleteDeliveryManager(
-      @PathVariable UUID deliveryManagerId,
-      @RequestHeader("deletedBy") String deletedBy) {
+      @PathVariable UUID deliveryManagerId) {
 
-    DeliveryManagerResponseDto deliveryManagerResponseDto = deliveryManagerService.deleteDeliveryManager(deliveryManagerId, deletedBy);
+    DeliveryManagerResponseDto deliveryManagerResponseDto = deliveryManagerService.deleteDeliveryManager(deliveryManagerId);
 
     return new ResponseDto<>(ResponseDto.SUCCESS, "배송담당자가 삭제되었습니다.", deliveryManagerResponseDto);
   }

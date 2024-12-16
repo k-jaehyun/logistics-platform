@@ -1,9 +1,11 @@
 package com.logistics.platform.deliverymanagerservice.application.service;
 
+import com.logistics.platform.deliverymanagerservice.application.dto.UserDto;
 import com.logistics.platform.deliverymanagerservice.domain.model.DeliveryManager;
 import com.logistics.platform.deliverymanagerservice.domain.model.DeliveryType;
 import com.logistics.platform.deliverymanagerservice.domain.repository.DeliveryManagerRepository;
 import com.logistics.platform.deliverymanagerservice.infrastructure.client.HubClient;
+import com.logistics.platform.deliverymanagerservice.infrastructure.client.UserClient;
 import com.logistics.platform.deliverymanagerservice.presentation.global.exception.CustomApiException;
 import com.logistics.platform.deliverymanagerservice.presentation.request.DeliveryManagerRequestDto;
 import com.logistics.platform.deliverymanagerservice.presentation.response.DeliveryManagerResponseDto;
@@ -23,29 +25,51 @@ public class DeliveryManagerService {
 
   private final DeliveryManagerRepository deliveryManagerRepository;
   private final HubClient hubClient;
+  private final UserClient userClient;
+  private final ManagerOrderIndexService managerOrderIndexService;
+  private final DeliveryType deliveryType = DeliveryType.HUB;
+  private final UserSerivce userSerivce;
 
   // 1. 배송담당자 생성
   public DeliveryManagerResponseDto createDeliveryManager(DeliveryManagerRequestDto deliveryManagerRequestDto) {
     // 존재하는 User인지 확인
-    // 이미 배송담당자로 등록되어있는 User인지 확인
+    UserDto userDto = userClient.getUserInfo(
+        deliveryManagerRequestDto.getUserName(),  // userName만 사용
+        "ROLE_IGNORE"  // 불필요한 값, 형식 맞추기 용도
+    );
 
-    // 존재하는 Hub인지 확인 -> 안해도?
-    boolean hubExists = hubClient.checkIfHubExists(deliveryManagerRequestDto.getHubId()); // hub에 코드가 있진 x
-
-    if (!hubExists) {
-      throw new CustomApiException("존재하지 않는 허브ID입니다.");
+    if (userDto == null) {
+      throw new CustomApiException("유효하지 않은 유저입니다.");
     }
 
-    // 가장 큰 배송순번 조회 -> 배송 타입에 따라 다르게 해야? -> 아니면 나중에 조회 할 때 타입에 따라 순번?
-    Long maxOrderNumber = deliveryManagerRepository.findMaxDeliveryOrderNumber().orElse(0L)+ 1;
+    // 이미 배송담당자로 등록되어있는 User인지 확인
+    if (deliveryManagerRepository.existsByUserId(deliveryManagerRequestDto.getUserId())) {
+      throw new CustomApiException("이미 등록된 배송담당자입니다.");
+    }
 
-    // 유효한 배송타입인지 확인 -> 성능상 이게 위쪽에서 하는게 좋을듯
-    validateDeliveryType(deliveryManagerRequestDto.getDeliveryType());
+    // 배송타입별 배송순번 로직
+    DeliveryType deliveryType = deliveryManagerRequestDto.getDeliveryType();
+
+    Long maxOrderNumber;
+
+    if (deliveryType == DeliveryType.HUB) { // 허브 배송담당자 로직
+      maxOrderNumber = deliveryManagerRepository.findMaxDeliveryOrderNumberByDeliveryType(DeliveryType.HUB).orElse(0L) + 1;
+    } else if (deliveryType == DeliveryType.COMPANY) { //업체 배송담당자 로직
+      // 존재하는 Hub인지 확인 -> 안해도?
+      // 업체베송담당자는 소속허브 ID가 존재하는 ID인지 확인해야 한대서 일단 넣어봤습니당...
+      boolean hubExists = hubClient.checkIfHubExists(deliveryManagerRequestDto.getHubId());
+      if (!hubExists) {
+        throw new CustomApiException("존재하지 않는 허브ID입니다.");
+      }
+      maxOrderNumber = deliveryManagerRepository.findMaxDeliveryOrderNumberByDeliveryType(DeliveryType.COMPANY).orElse(0L) + 1;
+    } else {
+      throw new CustomApiException("유효하지 않은 배송 타입입니다."); // 둘 중에 없으면 메세지 던지기
+    }
 
     DeliveryManager savedDeliveryManager = DeliveryManager.builder()
-        .userId(deliveryManagerRequestDto.getUserId())
+        .userId(userDto.getUserId())
         .hubId(deliveryManagerRequestDto.getHubId())
-        .slackId(deliveryManagerRequestDto.getSlackId())
+        .slackId(userDto.getSlackId())
         .deliveryType(deliveryManagerRequestDto.getDeliveryType())
         .deliveryOrderNumber(maxOrderNumber) // 자동 증가
         .build();
@@ -54,7 +78,6 @@ public class DeliveryManagerService {
 
     return new DeliveryManagerResponseDto(savedDeliveryManager);
   }
-  // 피드백 참고하여 검증로직 아래로 옮김
 
 
   // 2. 배송담당자 수정
@@ -105,7 +128,7 @@ public class DeliveryManagerService {
 
   // 5. 배송담당자 삭제
   @Transactional
-  public DeliveryManagerResponseDto deleteDeliveryManager(UUID deliveryManagerId, String deletedBy) {
+  public DeliveryManagerResponseDto deleteDeliveryManager(UUID deliveryManagerId) {
 
     DeliveryManager deliveryManager = deliveryManagerRepository.findById(deliveryManagerId)
         .orElseThrow(() -> new CustomApiException("존재하지 않는 배송담당자ID입니다."));
@@ -114,12 +137,12 @@ public class DeliveryManagerService {
       throw new CustomApiException("이미 삭제된 배송담당자입니다.");
     }
 
-    deliveryManager.deleteDeliveryManager(deletedBy);  // 삭제자 나중에 헤더에서
+    deliveryManager.deleteDeliveryManager();  // 삭제자 나중에 헤더에서
 
     return new DeliveryManagerResponseDto(deliveryManager);
   }
 
-
+/*
   // 배송타입 검증
   public void validateDeliveryType(DeliveryType deliveryType) {
     if (deliveryType == null) {
@@ -129,28 +152,37 @@ public class DeliveryManagerService {
       throw new CustomApiException("유효하지 않은 배송 유형입니다.");
     }
   }
+   // 필요없을듯...?
+ */
 
+  // 6. 배송담당자 배정
   @Transactional
   public DeliveryManagerResponseDto getNextAvailableDeliveryManager() {
+
+    // 현재 배송순번 인덱스를 시스템에서 관리하는 방식 적용
+    Long currentOrderIndex = managerOrderIndexService.getCurrentOrderIndex(deliveryType);
     // 요건 다음 배송순번이 아닌 배송순번 1번째인 사람만 조회되는듯
-    DeliveryManager nextManager = deliveryManagerRepository.findFirstByIsDeletedFalseAndDeliveryTypeOrderByDeliveryOrderNumberAsc(DeliveryType.HUB);
+    DeliveryManager nextManager = deliveryManagerRepository
+        .findFirstByIsDeletedFalseAndDeliveryTypeAndDeliveryOrderNumber(deliveryType, currentOrderIndex)
+        .orElseThrow(() -> new CustomApiException("배정 가능한 배송담당자가 없습니다."));
 
     if (nextManager == null) {
       throw new CustomApiException("배정 가능한 배송담당자가 없습니다.");
     }
 
     // 최소 및 최대 배송 순번 조회 -> 타입에 따라 다르게 되어있지 않음
-    Long minOrderNumber = deliveryManagerRepository.findMinDeliveryOrderNumber()
+    Long minOrderNumber = deliveryManagerRepository.findMinDeliveryOrderNumberByDeliveryType(deliveryType)
         .orElseThrow(() -> new CustomApiException("배송 순번 조회 오류"));
-    Long maxOrderNumber = deliveryManagerRepository.findMaxDeliveryOrderNumber()
+    Long maxOrderNumber = deliveryManagerRepository.findMaxDeliveryOrderNumberByDeliveryType(deliveryType)
         .orElseThrow(() -> new CustomApiException("배송 순번 조회 오류"));
 
     // 배송 순번 증가 및 순환 로직 -> 배송순번을 변경하는 것 보다 시스템에서 다음 호출할 배송순번을 기억하는 것이 좋을듯
     Long currentOrderNumber = nextManager.getDeliveryOrderNumber();
     Long nextOrderNumber = (currentOrderNumber >= maxOrderNumber) ? minOrderNumber : currentOrderNumber + 1;
 
-    nextManager.setDeliveryOrderNumber(nextOrderNumber);  // 다음 순번 설정
-    deliveryManagerRepository.save(nextManager);  // 업데이트된 순번 저장
+    // 다음 배송 순번 인덱스 계산 및 업데이트
+    Long nextOrderIndex = (currentOrderIndex >= maxOrderNumber) ? minOrderNumber : currentOrderIndex + 1;
+    managerOrderIndexService.updateCurrentOrderIndex(deliveryType, nextOrderIndex);
 
     return new DeliveryManagerResponseDto(nextManager.getId());
   }
