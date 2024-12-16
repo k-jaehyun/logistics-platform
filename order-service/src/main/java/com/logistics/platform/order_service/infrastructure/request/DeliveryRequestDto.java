@@ -1,8 +1,6 @@
 package com.logistics.platform.order_service.infrastructure.request;
 
-import com.logistics.platform.order_service.domain.model.Order;
 import java.util.UUID;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -10,21 +8,24 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-@AllArgsConstructor
 public class DeliveryRequestDto {
 
+  private UUID userId;
+  private UUID startHubId;
+  private UUID endHubId;
   private UUID orderId;
-
-  private String address; // Order에 address 추가해줘야할듯
-
-  private UUID recipientId; // recipientId인지 recipient인지
-
+  private String recipient;
   private String recipientSlackId;
+  private String address;
 
-  public DeliveryRequestDto(Order order, UUID userId, String userSlackId) {
-    this.orderId = order.getId();
-    this.address = order.getAddress();
-    this.recipientId = userId;
+  public DeliveryRequestDto(UUID userId, UUID startHubId, UUID endHubId, UUID orderId,
+      String recipient, String userSlackId, String address) {
+    this.userId = userId;
+    this.startHubId = startHubId;
+    this.endHubId = endHubId;
+    this.orderId = orderId;
+    this.recipient = recipient;
     this.recipientSlackId = userSlackId;
+    this.address = address;
   }
 }

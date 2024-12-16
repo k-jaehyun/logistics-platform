@@ -26,6 +26,7 @@ public class OrderService {
   private final ProductService productService;
   private final DeliveryService deliveryService;
   private final UserSerivce userSerivce;
+  private final CompanyService companyService;
 
   @CircuitBreaker(name = "OrderService", fallbackMethod = "handleOrderFailure")
   public OrderResponseDto createOrder(OrderRequestDto orderRequestDto, String userName,
@@ -59,8 +60,16 @@ public class OrderService {
 
     orderRepository.save(order);
 
+    // 유저 서버의 유저 정보 호출
     UserDto userInfo = userSerivce.getUserInfo(userName, userRole);
-    deliveryService.createDelivery(order, userInfo.getUserId(), userInfo.getSlackId());
+
+    // 업체 서버의 업체 정보 호출
+    UUID startHubId = companyService.getCompanyHubId(orderRequestDto.getSupplyCompanyId());
+    UUID endHubId = companyService.getCompanyHubId(orderRequestDto.getReceiveCompanyId());
+
+    // 배송 서버에 배송 생성 호출
+    deliveryService.createDelivery(userInfo.getUserId(), startHubId, endHubId, order.getId(),
+        userName, userInfo.getSlackId(), order.getAddress());
 
     return new OrderResponseDto(order);
   }
