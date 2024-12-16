@@ -37,13 +37,8 @@ public class ProductController {
       @RequestHeader(value = "X-User-Name") String userName,
       @RequestHeader(value = "X-User-Role") String userRole) {
 
-    // TODO 권한 확인 (마스터, 담당 허브 관리자, 본인 업체)
-    // 1. 현재도 해당 권한이 유효한지 --> filter로 처리? -> auth 무조건 1번 호출 -> 성능?
-    // 2. 업체담당자라면 업체 서비스에서 업체담당자가 맞는지 확인
-    // 3. 담당 허브 관리자라면 담당 허브가 어디인지
-
     ProductResponseDto productResponseDto = productService.createProduct(productRequestDto,
-        userName);
+        userName, userRole);
 
     return new ResponseDto<>(ResponseDto.SUCCESS, "상품이 생성되었습니다.", productResponseDto);
   }
@@ -55,11 +50,8 @@ public class ProductController {
       @RequestHeader(value = "X-User-Role") String userRole
   ) {
 
-    // TODO 허브 관리자는 담당 허브만 조회
-    // 현재도 해당 권한이 유효한지
-    // 담당 허브가 어디인지
-
-    ProductResponseDto productResponseDto = productService.getProduct(productId);
+    ProductResponseDto productResponseDto = productService.getProduct(productId, userName,
+        userRole);
 
     return new ResponseDto<>(ResponseDto.SUCCESS, "상품이 조회되었습니다.", productResponseDto);
   }
@@ -73,12 +65,8 @@ public class ProductController {
       @RequestHeader(value = "X-User-Role") String userRole
   ) {
 
-    // TODO 허브 관리자는 담당 허브만 조회
-    // 현재도 해당 권한이 유효한지
-    // 담당 허브가 어디인지
-
     PagedModel<ProductResponseDto> productResponseDtoPage
-        = productService.getProductsPage(uuidList, predicate, pageable);
+        = productService.getProductsPage(uuidList, predicate, pageable, userName, userRole);
 
     return new ResponseDto<>(ResponseDto.SUCCESS, "상품이 목록이 조회되었습니다.", productResponseDtoPage);
   }
@@ -91,13 +79,8 @@ public class ProductController {
       @RequestHeader(value = "X-User-Role") String userRole
   ) {
 
-    // TODO 권한 확인 (마스터, 담당 허브 관리자, 본인 업체)
-    // 1. 현재도 해당 권한이 유효한지
-    // 2. 업체담당자라면 업체 서비스에서 업체담당자가 맞는지 확인
-    // 3. 담당 허브 관리자라면 담당 허브가 어디인지
-
     ProductResponseDto productResponseDto
-        = productService.updateProduct(productId, productRequestDto, userName);
+        = productService.updateProduct(productId, productRequestDto, userName, userRole);
 
     return new ResponseDto<>(ResponseDto.SUCCESS, "상품이 수정되었습니다.", productResponseDto);
   }
@@ -109,9 +92,8 @@ public class ProductController {
       @RequestHeader(value = "X-User-Role") String userRole
   ) {
 
-    // TODO 권한 확인 (마스터, 담당 허브 관리자)
-
-    ProductResponseDto productResponseDto = productService.deleteProduct(productId, userName);
+    ProductResponseDto productResponseDto = productService.deleteProduct(productId, userName,
+        userRole);
 
     return new ResponseDto<>(
         ResponseDto.SUCCESS,
@@ -121,8 +103,7 @@ public class ProductController {
 
   @GetMapping("/{productId}/info")
   public ProductResponseDto getProductDto(@PathVariable UUID productId) {
-    ProductResponseDto productResponseDto = productService.getProduct(productId);
-    return productResponseDto;
+    return productService.getProductWithOutValidateRole(productId);
   }
 
   @PostMapping("/{productId}/quantity/adjustment")

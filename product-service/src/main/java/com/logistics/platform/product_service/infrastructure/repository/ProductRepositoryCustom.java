@@ -9,5 +9,8 @@ import org.springframework.data.domain.Pageable;
 
 public interface ProductRepositoryCustom {
 
+  Page<ProductResponseDto> findAllByHubManager(List<UUID> uuidList, Predicate predicate, Pageable pageable,
+      UUID hubIdByManagerId);
+
   Page<ProductResponseDto> findAll(List<UUID> uuidList, Predicate predicate, Pageable pageable);
 }
