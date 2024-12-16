@@ -32,7 +32,7 @@ public class OrderRepositoryImpl implements OrderRepositoryCustom {
 
   @Override
   public Page<OrderResponseDto> findAllToPage(
-      List<UUID> uuidList, Predicate predicate, Pageable pageable) {
+      List<UUID> uuidList, Predicate predicate, Pageable pageable, String userName) {
 
     QOrder order = QOrder.order;
 
@@ -41,6 +41,7 @@ public class OrderRepositoryImpl implements OrderRepositoryCustom {
       builder.and(order.id.in(uuidList));
     }
     builder.and(order.isDeleted.eq(false)); // isDeleted=false 만 조회
+    builder.and(order.createdBy.eq(userName));
 
     // size 10, 30, 50 이 아니라면 10으로 고정
     int size = pageable.getPageSize();

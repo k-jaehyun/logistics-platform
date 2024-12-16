@@ -4,7 +4,7 @@ import java.util.UUID;
 
 public interface DeliveryService {
 
-  void createDelivery(UUID userId, UUID startHubId, UUID endHubId, UUID orderId, String recipient,
+  void createDelivery(Long userId, UUID startHubId, UUID endHubId, UUID orderId, String recipient,
       String userSlackId, String address);
 
 }

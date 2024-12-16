@@ -15,7 +15,7 @@ public class DeliveryServiceImpl implements DeliveryService {
 
   @Override
   @Async
-  public void createDelivery(UUID userId, UUID startHubId, UUID endHubId, UUID orderId,
+  public void createDelivery(Long userId, UUID startHubId, UUID endHubId, UUID orderId,
       String recipient, String userSlackId, String address) {
     deliveryClient.createDelivery(
         new DeliveryRequestDto(userId, startHubId, endHubId, orderId, recipient, userSlackId,

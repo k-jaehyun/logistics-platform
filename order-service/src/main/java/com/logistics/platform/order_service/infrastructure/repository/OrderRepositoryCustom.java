@@ -9,6 +9,7 @@ import org.springframework.data.domain.Pageable;
 
 public interface OrderRepositoryCustom {
 
-  Page<OrderResponseDto> findAllToPage(List<UUID> uuidList, Predicate predicate, Pageable pageable);
+  Page<OrderResponseDto> findAllToPage(List<UUID> uuidList, Predicate predicate, Pageable pageable,
+      String userName);
 
 }

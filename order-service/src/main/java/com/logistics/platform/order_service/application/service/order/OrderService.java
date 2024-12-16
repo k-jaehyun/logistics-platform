@@ -1,6 +1,7 @@
 package com.logistics.platform.order_service.application.service.order;
 
 import com.logistics.platform.order_service.application.dto.ProductResponseDto;
+import com.logistics.platform.order_service.application.dto.Role;
 import com.logistics.platform.order_service.application.dto.UserDto;
 import com.logistics.platform.order_service.application.service.delivery.DeliveryService;
 import com.logistics.platform.order_service.application.service.user.UserSerivce;
@@ -78,14 +79,17 @@ public class OrderService {
     return new OrderResponseDto(order);
   }
 
-  public OrderResponseDto getOrder(UUID orderId, String userName, String userRole) {
+  public OrderResponseDto getOrder(UUID orderId, String userName) {
 
-    // TODO 마스터는 모두, 본인 주문 or 담당 허브만 조회되도록 수정
     Order order = orderRepository.findById(orderId)
         .orElseThrow(() -> new CustomApiException("This Order ID does not exist."));
 
     if (order.getIsDeleted()) {
       throw new CustomApiException("This order has been deleted.");
+    }
+
+    if (!order.getCreatedBy().equals(userName)) {
+      throw new CustomApiException("본인의 주문만 조회 할 수 있습니다.");
     }
 
     return new OrderResponseDto(order);
@@ -95,9 +99,8 @@ public class OrderService {
       List<UUID> uuidList, Predicate predicate, Pageable pageable, String userName,
       String userRole) {
 
-    // TODO 마스터는 모두, 본인 주문 or 담당 허브만 조회되도록 수정
     Page<OrderResponseDto> orderResponseDtoPage = orderRepository.findAllToPage(uuidList, predicate,
-        pageable);
+        pageable, userName);
 
     return new PagedModel<>(orderResponseDtoPage);
   }
@@ -107,7 +110,18 @@ public class OrderService {
   public OrderResponseDto updateOrder(UUID orderId, OrderRequestDto orderRequestDto,
       String userName, String userRole) {
 
-    // TODO 마스터는 모두, 담당 허브만 수정되도록 수정
+    // 현재 권한이 유지되고 있는지 확인
+    UserDto user = userSerivce.getUserInfo(userName, userRole);
+    validateCurrentRole(userRole, user);
+
+    // 마스터는 모두, 허브담당자는 담당 허브만 수정 가능
+    if (!user.getRole().equals(Role.MASTER)) {
+      if(!user.getRole().equals(Role.HUB_MANAGER)) {
+        throw new CustomApiException("권한 없음");
+      }
+      // TODO 배송경로의 허브중 담당 허브가 있는지 확인
+    }
+
     Order order = orderRepository.findById(orderId)
         .orElseThrow(() -> new CustomApiException("This Order ID does not exist."));
 
@@ -154,6 +168,18 @@ public class OrderService {
       throw new CustomApiException("This order has already been deleted.");
     }
 
+    // 현재 권한이 유지되고 있는지 확인
+    UserDto user = userSerivce.getUserInfo(userName, userRole);
+    validateCurrentRole(userRole, user);
+
+    // 마스터는 모두, 허브담당자는 담당 허브만 수정 가능
+    if (!user.getRole().equals(Role.MASTER)) {
+      if(!user.getRole().equals(Role.HUB_MANAGER)) {
+        throw new CustomApiException("권한 없음");
+      }
+      // TODO 배송경로의 허브중 담당 허브가 있는지 확인
+    }
+
     // TODO 이미 배송중이라면 삭제 불가
 
     // 재고 수량 복구
@@ -163,6 +189,14 @@ public class OrderService {
 
     return new OrderResponseDto(order);
   }
+
+
+  private void validateCurrentRole(String userRole, UserDto user) {
+    if (!user.getRole().getRole().equals(userRole)) {
+      throw new CustomApiException("권한이 일치하지 않습니다. 재로그인 해주세요.");
+    }
+  }
+
 
   public OrderResponseDto handleOrderFailure(OrderRequestDto orderRequestDto, String userName,
       String userRole, Throwable t) {
