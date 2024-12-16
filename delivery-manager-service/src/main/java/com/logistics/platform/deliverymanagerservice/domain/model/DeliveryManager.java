@@ -34,7 +34,7 @@ public class DeliveryManager extends AuditingFields {
   private UUID hubId;
 
   @Column(nullable = false)
-  private UUID slackId;
+  private String slackId;
 
   @Column(nullable = false)
   @Enumerated(EnumType.STRING)

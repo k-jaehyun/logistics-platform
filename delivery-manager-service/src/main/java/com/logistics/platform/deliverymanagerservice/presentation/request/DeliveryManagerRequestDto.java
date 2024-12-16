@@ -17,7 +17,7 @@ public class DeliveryManagerRequestDto {
 
   private Long userId;
   private UUID hubId;
-  private UUID slackId;
+  private String slackId;
   private DeliveryType deliveryType;
   // private Long deliveryOrderNumber;
   // 배송순번을 값을 받아올지, 아니면 generateNumber 이런걸로 엔터티에서 생성로직 추가해서 넣어줄지

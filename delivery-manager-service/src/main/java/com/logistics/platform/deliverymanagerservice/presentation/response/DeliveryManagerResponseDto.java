@@ -18,7 +18,7 @@ public class DeliveryManagerResponseDto {
   private UUID deliveryManagerId;
   private Long userId;
   private UUID hubId;
-  private UUID slackId;
+  private String slackId;
   private DeliveryType deliveryType;
   private Long deliveryOrderNumber;
 
