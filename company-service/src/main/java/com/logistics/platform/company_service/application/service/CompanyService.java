@@ -26,7 +26,8 @@ public class CompanyService {
   private final CompanyRepository companyRepository;
   private final HubService hubService;
 
-  public CompanyResponse createCompany(CompanyCreateRequest companyCreateRequest, String role, String userName) {
+  public CompanyResponse createCompany(CompanyCreateRequest companyCreateRequest, String role,
+      String userName) {
     if (role.equals("ROLE_MASTER") || role.equals("ROLE_HUB_MANAGER")) {
     } else {
       throw new CustomApiException("권한이 없습니다.");
@@ -57,7 +58,8 @@ public class CompanyService {
 
   @Transactional(readOnly = true)
   public CompanyResponse getCompany(UUID companyId, String role) {
-    if (role.equals("ROLE_MASTER") || role.equals("ROLE_HUB_MANAGER") || role.equals("ROLE_DELIVERY_MANAGER") || role.equals("ROLE_COMPANY_MANAGER")) {
+    if (role.equals("ROLE_MASTER") || role.equals("ROLE_HUB_MANAGER") || role.equals(
+        "ROLE_DELIVERY_MANAGER") || role.equals("ROLE_COMPANY_MANAGER")) {
     } else {
       throw new CustomApiException("권한이 없습니다.");
     }
@@ -70,7 +72,8 @@ public class CompanyService {
 
   @Transactional(readOnly = true)
   public Page<CompanyResponse> searchCompanies(String keyword, Pageable pageable, String role) {
-    if (role.equals("ROLE_MASTER") || role.equals("ROLE_HUB_MANAGER") || role.equals("ROLE_DELIVERY_MANAGER") || role.equals("ROLE_COMPANY_MANAGER")) {
+    if (role.equals("ROLE_MASTER") || role.equals("ROLE_HUB_MANAGER") || role.equals(
+        "ROLE_DELIVERY_MANAGER") || role.equals("ROLE_COMPANY_MANAGER")) {
     } else {
       throw new CustomApiException("권한이 없습니다.");
     }
@@ -96,8 +99,10 @@ public class CompanyService {
   }
 
   @Transactional
-  public CompanyResponse modifyCompany(UUID companyId, CompanyModifyRequest companyModifyRequest, String role, String userName) {
-    if (role.equals("ROLE_MASTER") || role.equals("ROLE_HUB_MANAGER") || role.equals("ROLE_COMPANY_MANAGER")) {
+  public CompanyResponse modifyCompany(UUID companyId, CompanyModifyRequest companyModifyRequest,
+      String role, String userName) {
+    if (role.equals("ROLE_MASTER") || role.equals("ROLE_HUB_MANAGER") || role.equals(
+        "ROLE_COMPANY_MANAGER")) {
     } else {
       throw new CustomApiException("권한이 없습니다.");
     }

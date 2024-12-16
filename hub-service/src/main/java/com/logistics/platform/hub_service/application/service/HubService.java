@@ -34,6 +34,10 @@ public class HubService {
 
   public HubResponse createHub(HubCreateRequest hubCreateRequest, String role, String userName)
       throws IOException, InterruptedException, ApiException {
+    if (role.equals("ROLE_MASTER")) {
+    } else {
+      throw new CustomApiException("권한이 없습니다.");
+    }
 
     if (hubRepository.findByHubNameAndIsDeletedFalse(
         hubCreateRequest.getHubName()).isPresent()) {
@@ -57,7 +61,7 @@ public class HubService {
         .longitude(latLngByAddress.getLongitude())
         .latitude(latLngByAddress.getLatitude())
         .location(GeoUtils.toPoint(latLngByAddress.getLongitude(), latLngByAddress.getLatitude()))
-        .createdBy("임시 생성자")
+        .createdBy(userName)
         .isDeleted(false)
         .build();
 
@@ -67,14 +71,25 @@ public class HubService {
 
   @Transactional(readOnly = true)
   @Cacheable(cacheNames = "hubCache", cacheManager = "cacheManager")
-  public HubResponse getHub(UUID hubId, String role, String userName) {
+  public HubResponse getHub(UUID hubId, String role) {
+    if (role.equals("ROLE_MASTER") || role.equals("ROLE_HUB_MANAGER") || role.equals(
+        "ROLE_DELIVERY_MANAGER") || role.equals("ROLE_COMPANY_MANAGER")) {
+    } else {
+      throw new CustomApiException("권한이 없습니다.");
+    }
+
     Hub hub = hubRepository.findByHubIdAndIsDeletedFalse(hubId).orElseThrow(
         () -> new CustomApiException("해당 hubId가 존재하지 않습니다."));
     return new HubResponse(hub);
   }
 
   @Transactional(readOnly = true)
-  public Page<HubResponse> searchHubs(String keyword, Pageable pageable, String role, String userName) {
+  public Page<HubResponse> searchHubs(String keyword, Pageable pageable, String role) {
+    if (role.equals("ROLE_MASTER") || role.equals("ROLE_HUB_MANAGER") || role.equals(
+        "ROLE_DELIVERY_MANAGER") || role.equals("ROLE_COMPANY_MANAGER")) {
+    } else {
+      throw new CustomApiException("권한이 없습니다.");
+    }
 
     int size = pageable.getPageSize();
     size = (size == 30 || size == 50) ? size : 10;
@@ -96,7 +111,12 @@ public class HubService {
   }
 
   @Transactional
-  public HubResponse modifyHub(UUID hubId, HubModifyRequest hubModifyRequest, String role, String userName) {
+  public HubResponse modifyHub(UUID hubId, HubModifyRequest hubModifyRequest, String role,
+      String userName) {
+    if (role.equals("ROLE_MASTER")) {
+    } else {
+      throw new CustomApiException("권한이 없습니다.");
+    }
 
     if (hubRepository.findByHubNameAndIsDeletedFalse(
         hubModifyRequest.getHubName()).isPresent()) {
@@ -106,20 +126,25 @@ public class HubService {
     Hub hub = hubRepository.findByHubIdAndIsDeletedFalse(hubId).orElseThrow(
         () -> new CustomApiException("해당 hubId가 존재하지 않습니다."));
 
-    hub.changeHub(hubModifyRequest);
+    hub.changeHub(hubModifyRequest, userName);
     Hub savedHub = hubRepository.save(hub);
     return new HubResponse(savedHub);
   }
 
   @Transactional
   public void deleteHub(UUID hubId, String role, String userName) {
+    if (role.equals("ROLE_MASTER")) {
+    } else {
+      throw new CustomApiException("권한이 없습니다.");
+    }
+
     Hub hub = hubRepository.findByHubIdAndIsDeletedFalse(hubId).orElseThrow(
         () -> new CustomApiException("해당 hubId가 존재하지 않습니다."));
-    hub.deleteHub();
+    hub.deleteHub(userName);
   }
 
   @Transactional(readOnly = true)
-  public List<UUID> findHubIdByHubManagerId(Long hubManagerId, String role, String userName) {
+  public List<UUID> findHubIdByHubManagerId(Long hubManagerId) {
     return hubRepository.findByHubManagerIdAndIsDeletedFalse(hubManagerId);
   }
 }

@@ -27,6 +27,11 @@ public class HubRouteService {
   @Transactional
   public List<HubRouteCreateResponse> createHubRoute(HubRouteCreateRequest hubRouteCreateRequest,
       String role, String userName) {
+    if (role.equals("ROLE_MASTER")) {
+    } else {
+      throw new CustomApiException("권한이 없습니다.");
+    }
+
     Hub startHub = hubRepository.findByHubIdAndIsDeletedFalse(hubRouteCreateRequest.getStartHubId())
         .orElseThrow(
             () -> new CustomApiException("해당 hubId가 존재하지 않습니다."));
@@ -58,7 +63,7 @@ public class HubRouteService {
             secondDirections.get(0)))
         .estimatedDistance(Double.parseDouble(firstDirections.get(1)) + Double.parseDouble(
             secondDirections.get(1)))
-        .createdBy("임시 생성자")
+        .createdBy(userName)
         .isDeleted(false)
         .build();
     HubRoute savedHubRoute = hubRouteRepository.save(hubRoute);

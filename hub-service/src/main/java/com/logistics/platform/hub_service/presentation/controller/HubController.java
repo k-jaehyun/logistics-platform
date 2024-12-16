@@ -42,27 +42,24 @@ public class HubController {
 
   @GetMapping("/{hubId}")
   public ResponseDto<HubResponse> get(@PathVariable UUID hubId,
-      @RequestHeader(value = "X-User-Role") String role,
-      @RequestHeader(value = "X-User-Name") String userName) {
-    HubResponse hubResponse = hubService.getHub(hubId, role, userName);
+      @RequestHeader(value = "X-User-Role") String role) {
+    HubResponse hubResponse = hubService.getHub(hubId, role);
     return new ResponseDto<>(ResponseDto.SUCCESS, "허브 단건 조회가 완료되었습니다.", hubResponse);
   }
 
   // HubClient 용
   @GetMapping("/{hubId}/info")
   public HubResponse getByHubClient(@PathVariable UUID hubId,
-      @RequestHeader(value = "X-User-Role") String role,
-      @RequestHeader(value = "X-User-Name") String userName) {
-    return hubService.getHub(hubId, role, userName);
+      @RequestHeader(value = "X-User-Role") String role) {
+    return hubService.getHub(hubId, role);
   }
 
   @GetMapping
   public Page<HubResponse> search(
       @RequestParam(name = "keyword", required = false, defaultValue = "") String keyword,
       Pageable pageable,
-      @RequestHeader(value = "X-User-Role") String role,
-      @RequestHeader(value = "X-User-Name") String userName) {
-    return hubService.searchHubs(keyword, pageable, role, userName);
+      @RequestHeader(value = "X-User-Role") String role) {
+    return hubService.searchHubs(keyword, pageable, role);
   }
 
   @PatchMapping("/{hubId}")
@@ -83,10 +80,8 @@ public class HubController {
   }
 
   @GetMapping("/{hubManagerId}/hubIds")
-  public ResponseDto<List<UUID>> getHubIds(@PathVariable Long hubManagerId,
-      @RequestHeader(value = "X-User-Role") String role,
-      @RequestHeader(value = "X-User-Name") String userName) {
-    List<UUID> hubIdByHubManagerIds = hubService.findHubIdByHubManagerId(hubManagerId, role, userName);
+  public ResponseDto<List<UUID>> getHubIds(@PathVariable Long hubManagerId) {
+    List<UUID> hubIdByHubManagerIds = hubService.findHubIdByHubManagerId(hubManagerId);
     return new ResponseDto<>(ResponseDto.SUCCESS, "담당 허브Id 조회가 완료되었습니다.", hubIdByHubManagerIds);
   }
 

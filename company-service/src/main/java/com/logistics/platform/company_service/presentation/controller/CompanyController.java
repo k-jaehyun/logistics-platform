@@ -33,7 +33,8 @@ public class CompanyController {
       @RequestBody @Valid CompanyCreateRequest companyCreateRequest,
       @RequestHeader(value = "X-User-Role") String role,
       @RequestHeader(value = "X-User-Name") String userName) {
-    CompanyResponse companyResponse = companyService.createCompany(companyCreateRequest, role, userName);
+    CompanyResponse companyResponse = companyService.createCompany(companyCreateRequest, role,
+        userName);
     return new ResponseDto<>(ResponseDto.SUCCESS, "업체가 생성되었습니다.", companyResponse);
   }
 
@@ -59,7 +60,8 @@ public class CompanyController {
       @RequestBody @Valid CompanyModifyRequest companyModifyRequest,
       @RequestHeader(value = "X-User-Role") String role,
       @RequestHeader(value = "X-User-Name") String userName) {
-    CompanyResponse companyResponse = companyService.modifyCompany(companyId, companyModifyRequest, role, userName);
+    CompanyResponse companyResponse = companyService.modifyCompany(companyId, companyModifyRequest,
+        role, userName);
     return new ResponseDto<>(ResponseDto.SUCCESS, "업체 수정이 완료되었습니다.", companyResponse);
   }
 
