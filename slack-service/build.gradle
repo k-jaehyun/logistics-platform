@@ -29,6 +29,9 @@ ext {
 
 dependencies {
 
+	// AI httpclient
+	implementation 'org.apache.httpcomponents.client5:httpclient5:5.2.1'
+
 	// validation
 	implementation 'org.springframework.boot:spring-boot-starter-validation'
 

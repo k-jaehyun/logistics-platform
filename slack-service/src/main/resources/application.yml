@@ -1,5 +1,5 @@
 server:
-  port: 0  # 임시 포트, 이후 Config 서버 설정으로 덮어씌움
+  port: 19099
 
 spring:
   application:
@@ -21,3 +21,8 @@ eureka:
 slack:
   bot:
     token: ${BOT_TOKEN}
+
+google:
+  gemini:
+    api:
+      key: ${GEMINI_TOKEN}
