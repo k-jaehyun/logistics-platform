@@ -2,6 +2,7 @@ package com.logistics.platform.delivery_service.delivery.presentation.controller
 
 
 import com.logistics.platform.delivery_service.delivery.application.service.DeliveryService;
+import com.logistics.platform.delivery_service.delivery.presentation.request.DeliveryUpdateRequestDto;
 import com.logistics.platform.delivery_service.global.global.ResponseDto;
 import com.logistics.platform.delivery_service.delivery.presentation.request.DeliveryRequestDto;
 import com.logistics.platform.delivery_service.delivery.presentation.response.DeliveryResponseDto;
@@ -57,8 +58,8 @@ public class DeliveryController {
   @PatchMapping("/{deliveryId}")
   public ResponseDto<DeliveryResponseDto> updateDelivery(
       @PathVariable UUID deliveryId,
-      @RequestBody DeliveryRequestDto deliveryRequestDto) {
-    DeliveryResponseDto response = deliveryService.updateDelivery(deliveryId, deliveryRequestDto);
+      @RequestBody DeliveryUpdateRequestDto deliveryUpdateRequestDto) {
+    DeliveryResponseDto response = deliveryService.updateDelivery(deliveryId, deliveryUpdateRequestDto);
     return new ResponseDto<>(ResponseDto.SUCCESS, "배송이 수정되었습니다.", response);
   }
 

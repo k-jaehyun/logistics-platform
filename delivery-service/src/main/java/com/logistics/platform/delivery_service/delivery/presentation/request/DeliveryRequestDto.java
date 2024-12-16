@@ -18,14 +18,11 @@ import lombok.Setter;
 public class DeliveryRequestDto {
 
   private Long userId;
-  private UUID deliveryRouteId;
   private UUID startHubId;
   private UUID endHubId;
   private UUID orderId;
-  private DeliveryStatus deliveryStatus;
   private String recipient;
   private String recipientSlackId;
   private String address;
-  private Boolean isDeleted;
 
 }

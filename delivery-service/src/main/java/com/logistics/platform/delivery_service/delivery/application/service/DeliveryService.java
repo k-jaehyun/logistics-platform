@@ -6,6 +6,7 @@ import com.logistics.platform.delivery_service.delivery.domain.model.Delivery;
 import com.logistics.platform.delivery_service.delivery.domain.model.DeliveryStatus;
 import com.logistics.platform.delivery_service.delivery.domain.repository.DeliveryRepository;
 import com.logistics.platform.delivery_service.delivery.infrastructure.client.HubClient;
+import com.logistics.platform.delivery_service.delivery.presentation.request.DeliveryUpdateRequestDto;
 import com.logistics.platform.delivery_service.deliveryRoute.application.service.DeliveryRouteService;
 import com.logistics.platform.delivery_service.deliveryRoute.domain.model.DeliveryRoute;
 import com.logistics.platform.delivery_service.deliveryRoute.domain.model.DeliveryRouteStatus;
@@ -84,7 +85,7 @@ public class DeliveryService {
 
   // 4. 배송 수정
   @Transactional
-  public DeliveryResponseDto updateDelivery(UUID deliveryId, DeliveryRequestDto deliveryRequestDto) {
+  public DeliveryResponseDto updateDelivery(UUID deliveryId, DeliveryUpdateRequestDto deliveryUpdateRequestDto) {
     Delivery delivery = deliveryRepository.findById(deliveryId)
         .orElseThrow(() -> new CustomApiException("존재하지 않는 배송ID입니다."));
 
@@ -95,7 +96,7 @@ public class DeliveryService {
       throw new CustomApiException("이미 취소된 배송입니다.");
     }
 
-    delivery.updateDelivery(deliveryRequestDto);
+    delivery.updateDelivery(deliveryUpdateRequestDto);
     deliveryRepository.save(delivery);
 
     return new DeliveryResponseDto(delivery, mapToResponseDtos(delivery.getDeliveryRoutes()));
