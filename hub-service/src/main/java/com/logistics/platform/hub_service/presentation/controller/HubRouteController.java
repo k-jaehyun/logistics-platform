@@ -8,6 +8,7 @@ import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -20,7 +21,9 @@ public class HubRouteController {
 
   @PostMapping
   public List<HubRouteCreateResponse> create(
-      @RequestBody @Valid HubRouteCreateRequest hubRouteCreateRequest) {
-    return hubRouteService.createHubRoute(hubRouteCreateRequest);
+      @RequestBody @Valid HubRouteCreateRequest hubRouteCreateRequest,
+      @RequestHeader(value = "X-User-Role") String role,
+      @RequestHeader(value = "X-User-Name") String userName) {
+    return hubRouteService.createHubRoute(hubRouteCreateRequest, role, userName);
   }
 }

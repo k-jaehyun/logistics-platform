@@ -32,7 +32,7 @@ public class HubService {
   private final HubRepository hubRepository;
   private final GeocodingService geocodingService;
 
-  public HubResponse createHub(HubCreateRequest hubCreateRequest)
+  public HubResponse createHub(HubCreateRequest hubCreateRequest, String role, String userName)
       throws IOException, InterruptedException, ApiException {
 
     if (hubRepository.findByHubNameAndIsDeletedFalse(
@@ -67,14 +67,14 @@ public class HubService {
 
   @Transactional(readOnly = true)
   @Cacheable(cacheNames = "hubCache", cacheManager = "cacheManager")
-  public HubResponse getHub(UUID hubId) {
+  public HubResponse getHub(UUID hubId, String role, String userName) {
     Hub hub = hubRepository.findByHubIdAndIsDeletedFalse(hubId).orElseThrow(
         () -> new CustomApiException("해당 hubId가 존재하지 않습니다."));
     return new HubResponse(hub);
   }
 
   @Transactional(readOnly = true)
-  public Page<HubResponse> searchHubs(String keyword, Pageable pageable) {
+  public Page<HubResponse> searchHubs(String keyword, Pageable pageable, String role, String userName) {
 
     int size = pageable.getPageSize();
     size = (size == 30 || size == 50) ? size : 10;
@@ -96,7 +96,7 @@ public class HubService {
   }
 
   @Transactional
-  public HubResponse modifyHub(UUID hubId, HubModifyRequest hubModifyRequest) {
+  public HubResponse modifyHub(UUID hubId, HubModifyRequest hubModifyRequest, String role, String userName) {
 
     if (hubRepository.findByHubNameAndIsDeletedFalse(
         hubModifyRequest.getHubName()).isPresent()) {
@@ -112,14 +112,14 @@ public class HubService {
   }
 
   @Transactional
-  public void deleteHub(UUID hubId) {
+  public void deleteHub(UUID hubId, String role, String userName) {
     Hub hub = hubRepository.findByHubIdAndIsDeletedFalse(hubId).orElseThrow(
         () -> new CustomApiException("해당 hubId가 존재하지 않습니다."));
     hub.deleteHub();
   }
 
   @Transactional(readOnly = true)
-  public List<UUID> findHubIdByHubManagerId(Long hubManagerId) {
+  public List<UUID> findHubIdByHubManagerId(Long hubManagerId, String role, String userName) {
     return hubRepository.findByHubManagerIdAndIsDeletedFalse(hubManagerId);
   }
 }

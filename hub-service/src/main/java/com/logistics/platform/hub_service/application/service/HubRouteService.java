@@ -25,7 +25,8 @@ public class HubRouteService {
   private final HubRepository hubRepository;
 
   @Transactional
-  public List<HubRouteCreateResponse> createHubRoute(HubRouteCreateRequest hubRouteCreateRequest) {
+  public List<HubRouteCreateResponse> createHubRoute(HubRouteCreateRequest hubRouteCreateRequest,
+      String role, String userName) {
     Hub startHub = hubRepository.findByHubIdAndIsDeletedFalse(hubRouteCreateRequest.getStartHubId())
         .orElseThrow(
             () -> new CustomApiException("해당 hubId가 존재하지 않습니다."));
@@ -53,8 +54,10 @@ public class HubRouteService {
     HubRoute hubRoute = HubRoute.builder()
         .startHubId(startHub.getHubId())
         .endHubId(endHub.getHubId())
-        .estimatedDuration(Double.parseDouble(firstDirections.get(0)) + Double.parseDouble(secondDirections.get(0)))
-        .estimatedDistance(Double.parseDouble(firstDirections.get(1)) + Double.parseDouble(secondDirections.get(1)))
+        .estimatedDuration(Double.parseDouble(firstDirections.get(0)) + Double.parseDouble(
+            secondDirections.get(0)))
+        .estimatedDistance(Double.parseDouble(firstDirections.get(1)) + Double.parseDouble(
+            secondDirections.get(1)))
         .createdBy("임시 생성자")
         .isDeleted(false)
         .build();

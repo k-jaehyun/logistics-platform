@@ -26,8 +26,11 @@ public class CompanyService {
   private final CompanyRepository companyRepository;
   private final HubService hubService;
 
-  public CompanyResponse createCompany(CompanyCreateRequest companyCreateRequest) {
-
+  public CompanyResponse createCompany(CompanyCreateRequest companyCreateRequest, String role, String userName) {
+    if (role.equals("ROLE_MASTER") || role.equals("ROLE_HUB_MANAGER")) {
+    } else {
+      throw new CustomApiException("권한이 없습니다.");
+    }
     HubResponseDto hubDto = hubService.getHubDtoByHubId(companyCreateRequest.getHubId());
 
     if (companyRepository.findByCompanyNameAndIsDeletedFalse(
@@ -45,7 +48,7 @@ public class CompanyService {
         .phoneNumber(companyCreateRequest.getPhoneNumber())
         .roadAddress(companyCreateRequest.getRoadAddress())
         .companyType(companyTypeSet)
-        .createdBy("임시 생성자")
+        .createdBy(userName)
         .isDeleted(false)
         .build();
     Company savedCompany = companyRepository.save(company);
@@ -53,7 +56,12 @@ public class CompanyService {
   }
 
   @Transactional(readOnly = true)
-  public CompanyResponse getCompany(UUID companyId) {
+  public CompanyResponse getCompany(UUID companyId, String role) {
+    if (role.equals("ROLE_MASTER") || role.equals("ROLE_HUB_MANAGER") || role.equals("ROLE_DELIVERY_MANAGER") || role.equals("ROLE_COMPANY_MANAGER")) {
+    } else {
+      throw new CustomApiException("권한이 없습니다.");
+    }
+
     Company company = companyRepository.findByCompanyIdAndIsDeletedFalse(companyId).orElseThrow(
         () -> new CustomApiException("해당 companyId가 존재하지 않습니다."));
 
@@ -61,7 +69,11 @@ public class CompanyService {
   }
 
   @Transactional(readOnly = true)
-  public Page<CompanyResponse> searchCompanies(String keyword, Pageable pageable) {
+  public Page<CompanyResponse> searchCompanies(String keyword, Pageable pageable, String role) {
+    if (role.equals("ROLE_MASTER") || role.equals("ROLE_HUB_MANAGER") || role.equals("ROLE_DELIVERY_MANAGER") || role.equals("ROLE_COMPANY_MANAGER")) {
+    } else {
+      throw new CustomApiException("권한이 없습니다.");
+    }
 
     int size = pageable.getPageSize();
     size = (size == 30 || size == 50) ? size : 10;
@@ -84,19 +96,28 @@ public class CompanyService {
   }
 
   @Transactional
-  public CompanyResponse modifyCompany(UUID companyId, CompanyModifyRequest companyModifyRequest) {
+  public CompanyResponse modifyCompany(UUID companyId, CompanyModifyRequest companyModifyRequest, String role, String userName) {
+    if (role.equals("ROLE_MASTER") || role.equals("ROLE_HUB_MANAGER") || role.equals("ROLE_COMPANY_MANAGER")) {
+    } else {
+      throw new CustomApiException("권한이 없습니다.");
+    }
+
     Company company = companyRepository.findByCompanyIdAndIsDeletedFalse(companyId).orElseThrow(
         () -> new CustomApiException("해당 companyId가 존재하지 않습니다."));
-    company.changeCompany(companyModifyRequest);
+    company.changeCompany(companyModifyRequest, userName);
     Company savedCompany = companyRepository.save(company);
     return new CompanyResponse(savedCompany);
   }
 
   @Transactional
-  public void deleteCompany(UUID companyId) {
+  public void deleteCompany(UUID companyId, String role, String userName) {
+    if (role.equals("ROLE_MASTER") || role.equals("ROLE_HUB_MANAGER")) {
+    } else {
+      throw new CustomApiException("권한이 없습니다.");
+    }
     Company company = companyRepository.findByCompanyIdAndIsDeletedFalse(companyId).orElseThrow(
         () -> new CustomApiException("해당 companyId가 존재하지 않습니다."));
-    company.deleteCompany();
+    company.deleteCompany(userName);
   }
 
 }
