@@ -34,14 +34,14 @@ public class DeliveryRouteService {
   private final HubClient hubClient;
 
   // 1. 배송 경로 생성
+  @Transactional
   public List<DeliveryRouteResponseDto> createDeliveryRoutes(Delivery savedDelivery) {
     List<HubRouteResponseDto> hubRoutes = hubClient.getHubRoutes(
         savedDelivery.getStartHubId(),
         savedDelivery.getEndHubId()
     );
 
-    Long sequence = 1L;
-    List<DeliveryRouteResponseDto> createdRoutes = new ArrayList<>();
+    Long sequence = 0L;
 
     for (HubRouteResponseDto hubRoute : hubRoutes) {
       DeliveryManagerResponseDto deliveryManager =
@@ -63,12 +63,12 @@ public class DeliveryRouteService {
           .build();
 
       savedDelivery.addDeliveryRoute(deliveryRoute);  // 양방향 매핑 설정
-      createdRoutes.add(new DeliveryRouteResponseDto(deliveryRoute));
+      // 저장
+      deliveryRouteRepository.save(deliveryRoute);
     }
 
-    // 저장
-    deliveryRouteRepository.saveAll(savedDelivery.getDeliveryRoutes());
-    return createdRoutes;  // 생성된 경로 반환
+
+    return savedDelivery.getDeliveryRoutes().stream().map(DeliveryRouteResponseDto::new).toList();  // 생성된 경로 반환 // deli
   }
 
 

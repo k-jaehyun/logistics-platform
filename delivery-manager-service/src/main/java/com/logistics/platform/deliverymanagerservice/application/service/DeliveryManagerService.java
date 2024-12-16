@@ -29,17 +29,17 @@ public class DeliveryManagerService {
     // 존재하는 User인지 확인
     // 이미 배송담당자로 등록되어있는 User인지 확인
 
-    // 존재하는 Hub인지 확인
-    boolean hubExists = hubClient.checkIfHubExists(deliveryManagerRequestDto.getHubId());
+    // 존재하는 Hub인지 확인 -> 안해도?
+    boolean hubExists = hubClient.checkIfHubExists(deliveryManagerRequestDto.getHubId()); // hub에 코드가 있진 x
 
     if (!hubExists) {
       throw new CustomApiException("존재하지 않는 허브ID입니다.");
     }
 
-    // 가장 큰 배송순번 조회
+    // 가장 큰 배송순번 조회 -> 배송 타입에 따라 다르게 해야? -> 아니면 나중에 조회 할 때 타입에 따라 순번?
     Long maxOrderNumber = deliveryManagerRepository.findMaxDeliveryOrderNumber().orElse(0L)+ 1;
 
-    // 유효한 배송타입인지 확인
+    // 유효한 배송타입인지 확인 -> 성능상 이게 위쪽에서 하는게 좋을듯
     validateDeliveryType(deliveryManagerRequestDto.getDeliveryType());
 
     DeliveryManager savedDeliveryManager = DeliveryManager.builder()
@@ -132,19 +132,20 @@ public class DeliveryManagerService {
 
   @Transactional
   public DeliveryManagerResponseDto getNextAvailableDeliveryManager() {
+    // 요건 다음 배송순번이 아닌 배송순번 1번째인 사람만 조회되는듯
     DeliveryManager nextManager = deliveryManagerRepository.findFirstByIsDeletedFalseAndDeliveryTypeOrderByDeliveryOrderNumberAsc(DeliveryType.HUB);
 
     if (nextManager == null) {
       throw new CustomApiException("배정 가능한 배송담당자가 없습니다.");
     }
 
-    // 최소 및 최대 배송 순번 조회
+    // 최소 및 최대 배송 순번 조회 -> 타입에 따라 다르게 되어있지 않음
     Long minOrderNumber = deliveryManagerRepository.findMinDeliveryOrderNumber()
         .orElseThrow(() -> new CustomApiException("배송 순번 조회 오류"));
     Long maxOrderNumber = deliveryManagerRepository.findMaxDeliveryOrderNumber()
         .orElseThrow(() -> new CustomApiException("배송 순번 조회 오류"));
 
-    // 배송 순번 증가 및 순환 로직
+    // 배송 순번 증가 및 순환 로직 -> 배송순번을 변경하는 것 보다 시스템에서 다음 호출할 배송순번을 기억하는 것이 좋을듯
     Long currentOrderNumber = nextManager.getDeliveryOrderNumber();
     Long nextOrderNumber = (currentOrderNumber >= maxOrderNumber) ? minOrderNumber : currentOrderNumber + 1;
 

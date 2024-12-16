@@ -29,7 +29,7 @@ public class DeliveryRouteController {
 
   private final DeliveryRouteService deliveryRouteService;
 
-  /* 베송생성시 함께 생성됨 그래서 필요한가..?
+  /* 베송생성시 함께 생성됨 그래서 필요한가..? -> 필요!
   // 배송 경로 생성
   @PostMapping
   public ResponseDto<DeliveryRouteResponseDto> createDeliveryRoute(
