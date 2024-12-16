@@ -28,7 +28,7 @@ public class CompanyResponse {
     this.companyManagerId = company.getCompanyManagerId();
     this.companyName = company.getCompanyName();
     this.phoneNumber = company.getPhoneNumber();
-    this.address = company.getAddress();
+    this.address = company.getRoadAddress();
     this.checkCompanyType = company.getCompanyType();
   }
 }
