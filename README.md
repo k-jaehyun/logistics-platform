@@ -92,7 +92,7 @@ AI 연동 관리
 
 
 ## 📑 ERD
-![image](https://github.com/user-attachments/assets/601e1313-5469-4de5-9db4-013f80146a97)
+![team4erd](https://github.com/user-attachments/assets/297b320f-a622-4329-8847-8ff088fe336e)
 
 ## 📁 프로젝트 파일 구조
 
