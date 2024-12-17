@@ -75,8 +75,8 @@ public class Slack {
   }
 
   public void update(SlackRequestDto slackRequestDto, String userName) {
-    if (slackRequestDto.getReceiverSlackId() != null) {
-      this.receiverSlackId = slackRequestDto.getReceiverSlackId();
+    if (slackRequestDto.getDeliveryManagerSlackId() != null) {
+      this.receiverSlackId = slackRequestDto.getDeliveryManagerSlackId();
     }
     if (slackRequestDto.getContent() != null) {
       this.content = slackRequestDto.getContent();

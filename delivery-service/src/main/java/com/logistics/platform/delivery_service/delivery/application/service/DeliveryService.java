@@ -4,7 +4,6 @@ package com.logistics.platform.delivery_service.delivery.application.service;
 import com.logistics.platform.delivery_service.delivery.domain.model.Delivery;
 import com.logistics.platform.delivery_service.delivery.domain.model.DeliveryStatus;
 import com.logistics.platform.delivery_service.delivery.domain.repository.DeliveryRepository;
-import com.logistics.platform.delivery_service.delivery.infrastructure.client.HubClient;
 import com.logistics.platform.delivery_service.delivery.presentation.request.DeliveryRequestDto;
 import com.logistics.platform.delivery_service.delivery.presentation.request.DeliveryUpdateRequestDto;
 import com.logistics.platform.delivery_service.delivery.presentation.response.DeliveryResponseDto;
@@ -30,7 +29,7 @@ public class DeliveryService {
 
   private final DeliveryRepository deliveryRepository;
   private final DeliveryRouteService deliveryRouteService;
-  private final HubClient hubClient;
+  private final SlackService slackService;
 
   // 1. 배송 생성
   @CircuitBreaker(name = "DeliveryService", fallbackMethod = "handleDeliveryFailure")
@@ -54,6 +53,9 @@ public class DeliveryService {
     // 경로 생성 서비스 호출
     List<DeliveryRouteResponseDto> createdRoutes = deliveryRouteService.createDeliveryRoutes(
         savedDelivery, userName, userRole);
+
+    slackService.sendMessage(createdRoutes.get(0).getDeliveryManagerSlackId(), createdRoutes.get(0).getStartHubId(), createdRoutes.get(0).getEndHubId(), createdRoutes.get(0).getEstimatedDistance(), createdRoutes.get(0).getEstimatedDuration(), userName, userRole);
+    slackService.sendMessage(createdRoutes.get(1).getDeliveryManagerSlackId(), createdRoutes.get(1).getStartHubId(), createdRoutes.get(1).getEndHubId(), createdRoutes.get(1).getEstimatedDistance(), createdRoutes.get(1).getEstimatedDuration(), userName, userRole);
 
     return new DeliveryResponseDto(savedDelivery, createdRoutes);
   }

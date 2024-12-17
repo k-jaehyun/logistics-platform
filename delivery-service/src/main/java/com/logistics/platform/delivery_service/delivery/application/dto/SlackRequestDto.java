@@ -1,4 +1,4 @@
-package com.logistics.platform.slack_service.presentation.request;
+package com.logistics.platform.delivery_service.delivery.application.dto;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import java.util.UUID;
@@ -25,4 +25,12 @@ public class SlackRequestDto {
   private Double estimatedDistance;
 
   private String content;
+
+  public SlackRequestDto(String deliveryManagerSlackId, UUID startHubId, UUID endHubId, Double estimatedDuration, Double estimatedDistance) {
+    this.deliveryManagerSlackId = deliveryManagerSlackId;
+    this.startHubId = startHubId;
+    this.endHubId = endHubId;
+    this.estimatedDuration = estimatedDuration;
+    this.estimatedDistance = estimatedDistance;
+  }
 }

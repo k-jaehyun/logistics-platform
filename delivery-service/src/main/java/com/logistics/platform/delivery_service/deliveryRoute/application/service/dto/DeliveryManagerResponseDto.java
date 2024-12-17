@@ -14,7 +14,7 @@ import lombok.Setter;
 public class DeliveryManagerResponseDto {
 
   private UUID deliveryManagerId;       // 배송담당자 ID
-  // private String managerName;   // 배송담당자 이름
+  private String deliveryManagerSlackId;   // 배송담당자 slackId
   // private String status;     // 배정 가능 여부를 위한 상태(배정가능/배송중)
 
 }

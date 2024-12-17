@@ -198,7 +198,7 @@ public class DeliveryManagerService {
         (currentOrderIndex >= maxOrderNumber) ? minOrderNumber : currentOrderIndex + 1;
     managerOrderIndexService.updateCurrentOrderIndex(deliveryType, nextOrderIndex);
 
-    return new DeliveryManagerResponseDto(nextManager.getId());
+    return new DeliveryManagerResponseDto(nextManager.getId(), nextManager.getSlackId());
   }
 
 

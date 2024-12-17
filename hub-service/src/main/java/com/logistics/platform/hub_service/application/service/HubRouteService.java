@@ -56,19 +56,30 @@ public class HubRouteService {
         centralHub.getLongitude() + "," + centralHub.getLatitude(),
         endHub.getLongitude() + "," + endHub.getLatitude());
 
-    HubRoute hubRoute = HubRoute.builder()
+    HubRoute hubRoute1 = HubRoute.builder()
         .startHubId(startHub.getHubId())
-        .endHubId(endHub.getHubId())
-        .estimatedDuration(Double.parseDouble(firstDirections.get(0)) + Double.parseDouble(
-            secondDirections.get(0)))
-        .estimatedDistance(Double.parseDouble(firstDirections.get(1)) + Double.parseDouble(
-            secondDirections.get(1)))
+        .endHubId(centralHub.getHubId())
+        .estimatedDuration(Double.parseDouble(firstDirections.get(0)))
+        .estimatedDistance(Double.parseDouble(firstDirections.get(1)))
         .createdBy(userName)
         .isDeleted(false)
         .build();
-    HubRoute savedHubRoute = hubRouteRepository.save(hubRoute);
 
-    savedHubRouteList.add(new HubRouteCreateResponse(savedHubRoute));
+    HubRoute hubRoute2 = HubRoute.builder()
+        .startHubId(centralHub.getHubId())
+        .endHubId(endHub.getHubId())
+        .estimatedDuration(Double.parseDouble(secondDirections.get(0)))
+        .estimatedDistance(Double.parseDouble(secondDirections.get(1)))
+        .createdBy(userName)
+        .isDeleted(false)
+        .build();
+
+    HubRoute savedHubRoute1 = hubRouteRepository.save(hubRoute1);
+    HubRoute savedHubRoute2 = hubRouteRepository.save(hubRoute2);
+
+
+    savedHubRouteList.add(new HubRouteCreateResponse(savedHubRoute1));
+    savedHubRouteList.add(new HubRouteCreateResponse(savedHubRoute2));
 
     return savedHubRouteList;
   }

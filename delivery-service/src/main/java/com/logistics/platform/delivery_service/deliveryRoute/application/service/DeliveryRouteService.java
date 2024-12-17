@@ -15,6 +15,7 @@ import com.logistics.platform.delivery_service.deliveryRoute.presentation.reques
 import com.logistics.platform.delivery_service.deliveryRoute.presentation.response.DeliveryRouteResponseDto;
 import com.logistics.platform.delivery_service.global.global.exception.CustomApiException;
 import com.querydsl.core.types.Predicate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
@@ -45,6 +46,8 @@ public class DeliveryRouteService {
 
     Long sequence = 0L;
 
+    List<DeliveryRouteResponseDto> deliveryRouteResponseDtoList = new ArrayList<>();
+
     for (HubRouteResponseDto hubRoute : hubRoutes) {
       DeliveryManagerResponseDto deliveryManager =
           deliveryManagerClient.getNextAvailableDeliveryManager();
@@ -67,12 +70,14 @@ public class DeliveryRouteService {
           .build();
 
       savedDelivery.addDeliveryRoute(deliveryRoute);  // 양방향 매핑 설정
+
+      deliveryRouteResponseDtoList.add(
+          new DeliveryRouteResponseDto(deliveryRoute, deliveryManager.getDeliveryManagerSlackId()));
       // 저장
       deliveryRouteRepository.save(deliveryRoute);
     }
 
-
-    return savedDelivery.getDeliveryRoutes().stream().map(DeliveryRouteResponseDto::new).toList();  // 생성된 경로 반환 // deli
+    return deliveryRouteResponseDtoList; // 생성된 경로 반환 // deli
   }
 
 
@@ -91,14 +96,17 @@ public class DeliveryRouteService {
 
   // 3. 배송 경로 목록 조회
   @Transactional(readOnly = true)
-  public PagedModel<DeliveryRouteResponseDto> getDeliveryRoutes(List<UUID> uuidList, Predicate predicate, Pageable pageable) {
-    Page<DeliveryRouteResponseDto> deliveryRoutePage = deliveryRouteRepository.findAll(uuidList, predicate, pageable);
+  public PagedModel<DeliveryRouteResponseDto> getDeliveryRoutes(List<UUID> uuidList,
+      Predicate predicate, Pageable pageable) {
+    Page<DeliveryRouteResponseDto> deliveryRoutePage = deliveryRouteRepository.findAll(uuidList,
+        predicate, pageable);
     return new PagedModel<>(deliveryRoutePage);
   }
 
   // 4. 배송 경로 수정
   @Transactional
-  public DeliveryRouteResponseDto updateDeliveryRoute(UUID deliveryRouteId, DeliveryRouteRequestDto deliveryRouteRequestDto) {
+  public DeliveryRouteResponseDto updateDeliveryRoute(UUID deliveryRouteId,
+      DeliveryRouteRequestDto deliveryRouteRequestDto) {
     DeliveryRoute deliveryRoute = deliveryRouteRepository.findById(deliveryRouteId)
         .orElseThrow(() -> new CustomApiException("존재하지 않는 배송 경로 ID입니다."));
 
@@ -106,7 +114,8 @@ public class DeliveryRouteService {
       throw new CustomApiException("이미 삭제된 배송 경로입니다.");
     }
 
-    deliveryRoute.updateActualMetrics(deliveryRouteRequestDto.getEstimatedDuration(), deliveryRouteRequestDto.getEstimatedDistance());
+    deliveryRoute.updateActualMetrics(deliveryRouteRequestDto.getEstimatedDuration(),
+        deliveryRouteRequestDto.getEstimatedDistance());
     deliveryRoute.updateStatus(deliveryRouteRequestDto.getStatus());
     deliveryRouteRepository.save(deliveryRoute);
     return new DeliveryRouteResponseDto(deliveryRoute);

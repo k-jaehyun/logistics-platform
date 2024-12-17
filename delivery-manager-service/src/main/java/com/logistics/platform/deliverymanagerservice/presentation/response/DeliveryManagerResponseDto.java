@@ -20,7 +20,7 @@ public class DeliveryManagerResponseDto {
   private UUID deliveryManagerId;
   private Long userId;
   private UUID hubId;
-  private String slackId;
+  private String deliveryManagerSlackId;
   private DeliveryType deliveryType;
   private Long deliveryOrderNumber;
   private String message;
@@ -30,14 +30,15 @@ public class DeliveryManagerResponseDto {
     this.deliveryManagerId = deliveryManager.getId();
     this.userId = deliveryManager.getUserId();
     this.hubId = deliveryManager.getHubId();
-    this.slackId = deliveryManager.getSlackId();
+    this.deliveryManagerSlackId = deliveryManager.getSlackId();
     this.deliveryType = deliveryManager.getDeliveryType();
     this.deliveryOrderNumber = deliveryManager.getDeliveryOrderNumber();
   }
 
   // UUID 기반 생성자 추가
-  public DeliveryManagerResponseDto(UUID deliveryManagerId) {
+  public DeliveryManagerResponseDto(UUID deliveryManagerId, String deliveryManagerSlackId) {
     this.deliveryManagerId = deliveryManagerId;
+    this.deliveryManagerSlackId = deliveryManagerSlackId;
   }
 
 
