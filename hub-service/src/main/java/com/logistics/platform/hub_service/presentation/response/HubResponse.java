@@ -17,6 +17,8 @@ public class HubResponse implements Serializable {
 
   private HubType hubType;
 
+  private String centerPostalCode;
+
   private String roadAddress;
 
   private String postalCode;
@@ -31,6 +33,7 @@ public class HubResponse implements Serializable {
     this.hubManagerId = hub.getHubManagerId();
     this.hubName = hub.getHubName();
     this.hubType = hub.getHubType();
+    this.centerPostalCode = hub.getCenterPostalCode();
     this.roadAddress = hub.getRoadAddress();
     this.postalCode = hub.getPostalCode();
     this.latitude = hub.getLatitude();

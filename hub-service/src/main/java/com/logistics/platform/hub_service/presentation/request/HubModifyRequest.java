@@ -15,6 +15,9 @@ public class HubModifyRequest {
   private String hubName;
 
   @NotEmpty
+  private String centerPostalCode;
+
+  @NotEmpty
   private String roadAddress;
 
   @NotEmpty

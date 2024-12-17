@@ -17,12 +17,14 @@ public class HubResponseDto {
 
   private HubType hubType;
 
+  private String centerPostalCode;
+
   private String roadAddress;
 
   private String postalCode;
 
-  private double latitude;
+  private Double latitude;
 
-  private double longitude;
+  private Double longitude;
 
 }

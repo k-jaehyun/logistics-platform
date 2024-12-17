@@ -48,6 +48,9 @@ public class Hub {
   private HubType hubType;
 
   @Column(nullable = false)
+  private String centerPostalCode;
+
+  @Column(nullable = false)
   private String roadAddress;
 
   @Column(nullable = false)
@@ -90,18 +93,19 @@ public class Hub {
   @Column(nullable = false)
   private Boolean isDeleted = false;
 
-  public void changeHub(HubModifyRequest hubModifyRequest) {
+  public void changeHub(HubModifyRequest hubModifyRequest, String userName) {
     this.hubManagerId = hubModifyRequest.getHubManagerId();
     this.hubName = hubModifyRequest.getHubName();
     this.hubType = !hubModifyRequest.getIsHubTypeReceiver() ? HubType.localHub
         : HubType.centralHub;
+    this.centerPostalCode = hubModifyRequest.getCenterPostalCode();
     this.roadAddress = hubModifyRequest.getRoadAddress();
     this.postalCode = hubModifyRequest.getPostalCode();
-    // todo 나중에 수정자 업데이트 추가
+    this.deletedBy = userName;
   }
 
-  public void deleteHub() {
+  public void deleteHub(String userName) {
     this.isDeleted = true;
-    // todo 나중에 삭제자 업데이트 추가
+    this.deletedBy = userName;
   }
 }

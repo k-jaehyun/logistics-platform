@@ -61,4 +61,10 @@ public class UserService {
         user.deleteUser();
     }
 
+    public UserResDto getUserId(String username) {
+        User user = userRepository.findByUsernameAndIsDeletedFalse(username).orElseThrow(
+            () -> new CustomApiException("존재하지 않는 사용자입니다"));
+        return new UserResDto(user.getId(), user.getUsername(), user.getNumber(), user.getEmail(),
+            user.getSlackId(), user.getRole());
+    }
 }
