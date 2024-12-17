@@ -1,4 +1,4 @@
-package com.logistics.platform.auth_service.common.entity;
+package com.logistics.platform.auth_service.presentation.global.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.EntityListeners;

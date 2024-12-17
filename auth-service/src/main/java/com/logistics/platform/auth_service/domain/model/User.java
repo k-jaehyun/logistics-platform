@@ -1,6 +1,6 @@
 package com.logistics.platform.auth_service.domain.model;
 
-import com.logistics.platform.auth_service.common.entity.BaseEntity;
+import com.logistics.platform.auth_service.presentation.global.entity.BaseEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;

@@ -1,4 +1,4 @@
-package com.logistics.platform.auth_service.common;
+package com.logistics.platform.auth_service.presentation.global;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;

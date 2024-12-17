@@ -1,9 +1,9 @@
 package com.logistics.platform.auth_service.presentation.controller;
 
 import com.logistics.platform.auth_service.application.dto.CustomUserDetails;
-import com.logistics.platform.auth_service.application.dto.UserResDto;
+import com.logistics.platform.auth_service.presentation.response.UserResDto;
 import com.logistics.platform.auth_service.application.service.UserService;
-import com.logistics.platform.auth_service.common.ResponseDto;
+import com.logistics.platform.auth_service.presentation.global.ResponseDto;
 import com.logistics.platform.auth_service.presentation.request.DeleteReqDto;
 import com.logistics.platform.auth_service.presentation.request.PasswordUpdateReqDto;
 import jakarta.validation.Valid;

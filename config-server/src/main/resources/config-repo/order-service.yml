@@ -61,3 +61,12 @@ management:
     metrics:
       export:
         enabled: true
+
+springdoc:
+  api-docs:
+    version: openapi_3_1
+    enabled: true
+    path: /swagger/order/v3/api-docs
+  enable-spring-security: true
+  default-consumes-media-type: application/json
+  default-produces-media-type: application/json

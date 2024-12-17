@@ -1,4 +1,4 @@
-package com.logistics.platform.auth_service.application.dto;
+package com.logistics.platform.auth_service.presentation.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

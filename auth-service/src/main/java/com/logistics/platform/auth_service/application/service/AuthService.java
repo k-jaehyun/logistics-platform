@@ -1,8 +1,8 @@
 package com.logistics.platform.auth_service.application.service;
 
-import com.logistics.platform.auth_service.application.dto.SignupResDto;
-import com.logistics.platform.auth_service.application.dto.UserResDto;
-import com.logistics.platform.auth_service.common.exception.CustomApiException;
+import com.logistics.platform.auth_service.presentation.response.SignupResDto;
+import com.logistics.platform.auth_service.presentation.response.UserResDto;
+import com.logistics.platform.auth_service.presentation.global.exception.CustomApiException;
 import com.logistics.platform.auth_service.domain.model.Role;
 import com.logistics.platform.auth_service.domain.model.User;
 import com.logistics.platform.auth_service.domain.repository.UserRepository;
