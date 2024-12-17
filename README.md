@@ -32,7 +32,7 @@
 슬랙 메시지 관리
 AI 연동 관리
   
-  ## 🧑🏻‍💻 팀 구성
+## 🧑🏻‍💻 팀 구성
 <table>
 <tbody>
 <tr>
@@ -95,14 +95,15 @@ AI 연동 관리
 ![team4erd](https://github.com/user-attachments/assets/297b320f-a622-4329-8847-8ff088fe336e)
 
 ## 📁 프로젝트 파일 구조
-Microservices Architecture
-Layered Architecture + DDD
+- Microservices Architecture
+- Layered Architecture + DDD
 
 ## ⚙️ 실행 방법
 - Java 17
 
 - postgreSQL DB 설정 정보 환경변수에 등록
-```spring:
+```
+spring:
     datasource:
       driver-class-name: org.postgresql.Driver
       url: ${DB_URL} # jdbc:postgresql://localhost:5432/{DB이름}
@@ -111,5 +112,29 @@ Layered Architecture + DDD
 ```
 
 - 필요한 API KEY 환경변수에 등록
+- 
 - hub-service : 구글 API KEY, 카카오 API KEY
+```
+google:
+  maps:
+    api:
+      key: ${GOOGLE_API_KEY}
+
+kakao:
+  api:
+    key: ${KAKAO_API_KEY}
+```
+  
 - slack-service : 슬랙 봇 API KEY, 구글 Gemini API KEY
+```
+slack:
+  bot:
+    token: ${BOT_TOKEN}
+
+google:
+  gemini:
+    api:
+      key: ${GEMINI_TOKEN}
+```
+
+  
