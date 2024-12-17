@@ -31,18 +31,24 @@ public class DeliveryManagerController {
   // 배송담당자 생성
   @PostMapping
   public ResponseDto<DeliveryManagerResponseDto> createDeliveryManager(
-      @RequestBody DeliveryManagerRequestDto deliveryManagerRequestDto) {
+      @RequestBody DeliveryManagerRequestDto deliveryManagerRequestDto,
+      @RequestHeader("X-User-Name") String userName,
+      @RequestHeader("X-User-Role") String userRole
+  ) {
 
-    DeliveryManagerResponseDto deliveryManagerResponseDto = deliveryManagerService.createDeliveryManager(deliveryManagerRequestDto);
+    DeliveryManagerResponseDto deliveryManagerResponseDto = deliveryManagerService.createDeliveryManager(
+        deliveryManagerRequestDto, userName, userRole);
 
     return new ResponseDto<>(ResponseDto.SUCCESS, "배송담당자가 생성되었습니다.", deliveryManagerResponseDto);
   }
 
   // 배송담당자 조회
   @GetMapping("/{deliveryManagerId}")
-  public ResponseDto<DeliveryManagerResponseDto> getDeliveryManager(@PathVariable UUID deliveryManagerId) {
+  public ResponseDto<DeliveryManagerResponseDto> getDeliveryManager(
+      @PathVariable UUID deliveryManagerId) {
 
-    DeliveryManagerResponseDto deliveryManagerResponseDto = deliveryManagerService.getDeliveryManager(deliveryManagerId);
+    DeliveryManagerResponseDto deliveryManagerResponseDto = deliveryManagerService.getDeliveryManager(
+        deliveryManagerId);
 
     return new ResponseDto<>(ResponseDto.SUCCESS, "배송담당자가 조회되었습니다.", deliveryManagerResponseDto);
   }
@@ -57,7 +63,8 @@ public class DeliveryManagerController {
     PagedModel<DeliveryManagerResponseDto> deliveryManagerResponseDtoPage
         = deliveryManagerService.getDeliveryManagersPage(uuidList, predicate, pageable);
 
-    return new ResponseDto<>(ResponseDto.SUCCESS, "배송담당자 목록이 조회되었습니다.", deliveryManagerResponseDtoPage);
+    return new ResponseDto<>(ResponseDto.SUCCESS, "배송담당자 목록이 조회되었습니다.",
+        deliveryManagerResponseDtoPage);
   }
 
 
@@ -67,7 +74,8 @@ public class DeliveryManagerController {
       @PathVariable UUID deliveryManagerId,
       @RequestBody DeliveryManagerRequestDto deliveryManagerRequestDto) {
 
-    DeliveryManagerResponseDto deliveryManagerResponseDto = deliveryManagerService.updateDeliveryManager(deliveryManagerId, deliveryManagerRequestDto);
+    DeliveryManagerResponseDto deliveryManagerResponseDto = deliveryManagerService.updateDeliveryManager(
+        deliveryManagerId, deliveryManagerRequestDto);
 
     return new ResponseDto<>(ResponseDto.SUCCESS, "배송담당자가 수정되었습니다.", deliveryManagerResponseDto);
   }
@@ -76,12 +84,18 @@ public class DeliveryManagerController {
   // 배송담당자 삭제
   @DeleteMapping("/{deliveryManagerId}")
   public ResponseDto<DeliveryManagerResponseDto> deleteDeliveryManager(
-      @PathVariable UUID deliveryManagerId,
-      @RequestHeader("deletedBy") String deletedBy) {
+      @PathVariable UUID deliveryManagerId) {
 
-    DeliveryManagerResponseDto deliveryManagerResponseDto = deliveryManagerService.deleteDeliveryManager(deliveryManagerId, deletedBy);
+    DeliveryManagerResponseDto deliveryManagerResponseDto = deliveryManagerService.deleteDeliveryManager(
+        deliveryManagerId);
 
     return new ResponseDto<>(ResponseDto.SUCCESS, "배송담당자가 삭제되었습니다.", deliveryManagerResponseDto);
+  }
+
+  @GetMapping("/next")
+  public DeliveryManagerResponseDto getNextAvailableDeliveryManager() {
+
+    return deliveryManagerService.getNextAvailableDeliveryManager();
   }
 
 }

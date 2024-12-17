@@ -16,9 +16,9 @@ public class CompanyServiceApplication {
     SpringApplication.run(CompanyServiceApplication.class, args);
   }
 
-  @Bean
-  public FeignErrorDecoder getFeignErrorDecoder() {
-    return new FeignErrorDecoder();
-  }
+//  @Bean
+//  public FeignErrorDecoder getFeignErrorDecoder() {
+//    return new FeignErrorDecoder();
+//  }
 
 }

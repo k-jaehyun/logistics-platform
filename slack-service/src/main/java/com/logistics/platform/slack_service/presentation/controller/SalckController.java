@@ -102,4 +102,12 @@ public class SalckController {
     messageService.sendMessageToUser(userSlackId, message);
   }
 
+  @PostMapping("/deliveryManager")
+  public void createMessageToDeliveryManager(
+      @RequestBody SlackRequestDto slackRequestDto,
+      @RequestHeader(value = "X-User-Name") String userName
+  ) {
+    slackService.createMessage(slackRequestDto, userName);
+  }
+
 }

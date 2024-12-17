@@ -94,7 +94,7 @@ public class Product {
   }
 
 
-  public void update(ProductRequestDto productRequestDto) {
+  public void update(ProductRequestDto productRequestDto, String userName) {
     if (productRequestDto.getProductName() != null) {
       this.productName = productRequestDto.getProductName();
     }
@@ -110,14 +110,14 @@ public class Product {
     if (productRequestDto.getHubId() != null) {
       this.hubId = productRequestDto.getHubId();
     }
-    // 수정자 추가
+    this.updatedBy = userName;
 
   }
 
-  public void delete() {
+  public void delete(String userName) {
     this.isDeleted = true;
     this.deletedAt = LocalDateTime.now();
-    // 삭제자 추가
+    this.deletedBy = userName;
   }
 
   public Product adjustCount(Long quantity) {

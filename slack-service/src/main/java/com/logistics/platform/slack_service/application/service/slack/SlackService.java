@@ -29,13 +29,18 @@ public class SlackService {
 
     String senderSlackId = authService.getSlackIdByUsername(username);
 
-    String sendTs = messageService.sendMessageToUser(slackRequestDto.getReceiverSlackId(),
-        slackRequestDto.getContent());
+    String content = "출발 허브: " + slackRequestDto.getStartHubId() + "\n"
+            + "도착 허브: " + slackRequestDto.getEndHubId() + "\n"
+            + "예상 거리: " + slackRequestDto.getEstimatedDistance() + " km \n"
+            + "예상 시간: " + slackRequestDto.getEstimatedDuration() + " h";
+
+    String sendTs = messageService.sendMessageToUser(slackRequestDto.getDeliveryManagerSlackId(),
+        content);
 
     Slack slack = new Slack(
         senderSlackId,
-        slackRequestDto.getReceiverSlackId(),
-        slackRequestDto.getContent(),
+        slackRequestDto.getDeliveryManagerSlackId(),
+        content,
         username,
         sendTs
     );
