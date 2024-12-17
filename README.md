@@ -107,7 +107,8 @@ Layered Architecture + DDD
       driver-class-name: org.postgresql.Driver
       url: ${DB_URL} # jdbc:postgresql://localhost:5432/{DB이름}
       username: ${DB_USERNAME} # postgres
-      password: ${DB_PASSWORD}```
+      password: ${DB_PASSWORD}
+```
 
 - 필요한 API KEY 환경변수에 등록
 - hub-service : 구글 API KEY, 카카오 API KEY
