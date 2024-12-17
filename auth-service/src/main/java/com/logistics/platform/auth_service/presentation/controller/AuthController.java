@@ -1,8 +1,8 @@
 package com.logistics.platform.auth_service.presentation.controller;
 
-import com.logistics.platform.auth_service.application.dto.SignupResDto;
+import com.logistics.platform.auth_service.presentation.response.SignupResDto;
 import com.logistics.platform.auth_service.application.service.AuthService;
-import com.logistics.platform.auth_service.common.ResponseDto;
+import com.logistics.platform.auth_service.presentation.global.ResponseDto;
 import com.logistics.platform.auth_service.presentation.request.SignupReqDto;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;

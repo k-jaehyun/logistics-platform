@@ -1,4 +1,4 @@
-package com.logistics.platform.auth_service.config.jwt;
+package com.logistics.platform.auth_service.infrastructure.config.jwt.filter;
 
 import com.logistics.platform.auth_service.application.dto.CustomUserDetails;
 import com.logistics.platform.auth_service.application.service.CustomUserDetailsService;
@@ -12,18 +12,18 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 @Slf4j
 @RequiredArgsConstructor
-public class JwtAuthenticationFilter extends OncePerRequestFilter {
+public class JwtAuthorizationFilter extends OncePerRequestFilter {
 
     private final CustomUserDetailsService customUserDetailsService;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response,
         FilterChain filterChain) throws ServletException, IOException {
+
         String username = request.getHeader("X-User-Name");
         String role = request.getHeader("X-User-Role");
         log.info("username {}, role {}", username, role);

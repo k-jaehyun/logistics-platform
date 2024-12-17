@@ -1,9 +1,9 @@
-package com.logistics.platform.auth_service.config;
+package com.logistics.platform.auth_service.infrastructure.config;
 
 import com.logistics.platform.auth_service.application.service.CustomUserDetailsService;
-import com.logistics.platform.auth_service.config.jwt.JwtAuthenticationFilter;
-import com.logistics.platform.auth_service.config.jwt.JwtUtil;
-import com.logistics.platform.auth_service.config.jwt.LoginFilter;
+import com.logistics.platform.auth_service.infrastructure.config.jwt.filter.JwtAuthorizationFilter;
+import com.logistics.platform.auth_service.infrastructure.config.jwt.JwtUtil;
+import com.logistics.platform.auth_service.infrastructure.config.jwt.filter.LoginFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -49,11 +49,12 @@ public class SecurityConfig {
             .httpBasic((httpBasic) -> httpBasic.disable());
 
         http
-            .addFilterBefore(new JwtAuthenticationFilter(customUserDetailsService), UsernamePasswordAuthenticationFilter.class);
+            .addFilterBefore(new JwtAuthorizationFilter(customUserDetailsService), UsernamePasswordAuthenticationFilter.class);
 
         http
             .authorizeHttpRequests(
-                (auth) -> auth.requestMatchers("/api/auth/**").permitAll()
+                (auth) -> auth.requestMatchers("/swagger/**").permitAll()
+                    .requestMatchers( "/api/auth/**").permitAll()
                     .anyRequest().authenticated());
 
         http

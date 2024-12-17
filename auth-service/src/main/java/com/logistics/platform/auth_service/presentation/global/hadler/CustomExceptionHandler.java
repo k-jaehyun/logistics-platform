@@ -1,6 +1,7 @@
-package com.logistics.platform.auth_service.common.exception;
+package com.logistics.platform.auth_service.presentation.global.hadler;
 
-import com.logistics.platform.auth_service.common.ResponseDto;
+import com.logistics.platform.auth_service.presentation.global.ResponseDto;
+import com.logistics.platform.auth_service.presentation.global.exception.CustomApiException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;

@@ -1,4 +1,4 @@
-package com.logistics.platform.auth_service.application.dto;
+package com.logistics.platform.auth_service.presentation.response;
 
 import com.logistics.platform.auth_service.domain.model.Role;
 import lombok.AllArgsConstructor;

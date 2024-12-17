@@ -1,7 +1,8 @@
-package com.logistics.platform.auth_service.config.jwt;
+package com.logistics.platform.auth_service.infrastructure.config.jwt.filter;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.logistics.platform.auth_service.application.dto.CustomUserDetails;
+import com.logistics.platform.auth_service.infrastructure.config.jwt.JwtUtil;
 import com.logistics.platform.auth_service.presentation.request.SigninReqDto;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.http.HttpServletRequest;

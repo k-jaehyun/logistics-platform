@@ -1,4 +1,4 @@
-package com.logistics.platform.auth_service.config;
+package com.logistics.platform.auth_service.infrastructure.config;
 
 import com.logistics.platform.auth_service.application.dto.CustomUserDetails;
 import java.util.Optional;
