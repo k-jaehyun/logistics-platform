@@ -30,6 +30,10 @@ spring:
           uri: lb://delivery-service
           predicates:
             - Path=/api/deliveries/**
+        - id: delivery-manager-service
+          uri: lb://delivery-manager-service
+          predicates:
+            - Path=/api/delivery-managers/**
         - id: hub-service
           uri: lb://hub-service
           predicates:

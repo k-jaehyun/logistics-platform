@@ -73,8 +73,8 @@ public class OrderService {
     UUID endHubId = companyService.getCompanyHubId(orderRequestDto.getReceiveCompanyId());
 
     // 배송 서버에 배송 생성 호출
-    deliveryService.createDelivery(userInfo.getUserId(), startHubId, endHubId, order.getId(),
-        userName, userInfo.getSlackId(), order.getAddress());
+    deliveryService.createDelivery(userInfo.getId(), startHubId, endHubId, order.getId(),
+        userName, userInfo.getSlackId(), order.getAddress(), userName, userRole);
 
     return new OrderResponseDto(order);
   }
