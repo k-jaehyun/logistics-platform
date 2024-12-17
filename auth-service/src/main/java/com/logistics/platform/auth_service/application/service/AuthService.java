@@ -1,6 +1,7 @@
 package com.logistics.platform.auth_service.application.service;
 
 import com.logistics.platform.auth_service.application.dto.SignupResDto;
+import com.logistics.platform.auth_service.application.dto.UserResDto;
 import com.logistics.platform.auth_service.common.exception.CustomApiException;
 import com.logistics.platform.auth_service.domain.model.Role;
 import com.logistics.platform.auth_service.domain.model.User;
@@ -38,6 +39,23 @@ public class AuthService {
         return new SignupResDto(userRepository.save(user).getId());
     }
 
+    public Boolean validationRole(String userName, String userRole) {
+        User user = userRepository.findByUsernameAndIsDeletedFalse(userName)
+            .orElseThrow(() -> new CustomApiException("존재하지 않는 사용자입니다"));
+
+        if (userRole.equals(user.getRole().getRole())) {
+            return true;
+        }
+        return false;
+    }
+
+    public UserResDto getUser(Long id) {
+        User user = userRepository.findByIdAndIsDeletedFalse(id)
+            .orElseThrow(() -> new CustomApiException("사용자가 존재하지 않습니다"));
+        return new UserResDto(user.getId(), user.getUsername(), user.getNumber(), user.getEmail(),
+            user.getSlackId(), user.getRole());
+    }
+
     private Role validateRole(String role) {
         try {
             return Role.valueOf(role.toUpperCase());
@@ -46,4 +64,11 @@ public class AuthService {
         }
     }
 
+    public String getSlackIdByUsername(String username) {
+        User user = userRepository.findByUsernameAndIsDeletedFalse(username).orElse(null);
+        if (user != null) {
+            return user.getSlackId();
+        }
+        return null;
+    }
 }
