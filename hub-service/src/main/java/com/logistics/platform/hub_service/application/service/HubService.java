@@ -147,4 +147,11 @@ public class HubService {
   public List<UUID> findHubIdByHubManagerId(Long hubManagerId) {
     return hubRepository.findByHubManagerIdAndIsDeletedFalse(hubManagerId);
   }
+
+  @Transactional(readOnly = true)
+  public HubResponse getHubInfo(UUID hubId) {
+    Hub hub = hubRepository.findByHubIdAndIsDeletedFalse(hubId).orElseThrow(
+        () -> new CustomApiException("해당 hubId가 존재하지 않습니다."));
+    return new HubResponse(hub);
+  }
 }

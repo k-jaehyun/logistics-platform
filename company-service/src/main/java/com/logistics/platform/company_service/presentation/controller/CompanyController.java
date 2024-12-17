@@ -32,17 +32,15 @@ public class CompanyController {
   public ResponseDto<CompanyResponse> create(
       @RequestBody @Valid CompanyCreateRequest companyCreateRequest,
       @RequestHeader(value = "X-User-Role") String role,
-      @RequestHeader(value = "X-User-Name") String userName,
-      @RequestHeader(value = "X-User-Id") Long userId) {
+      @RequestHeader(value = "X-User-Name") String userName) {
     CompanyResponse companyResponse = companyService.createCompany(companyCreateRequest, role,
-        userName, userId);
+        userName);
     return new ResponseDto<>(ResponseDto.SUCCESS, "업체가 생성되었습니다.", companyResponse);
   }
 
   @GetMapping("/{companyId}")
   public ResponseDto<CompanyResponse> get(@PathVariable UUID companyId,
-      @RequestHeader(value = "X-User-Role") String role,
-      @RequestHeader(value = "X-User-Name") String userName) {
+      @RequestHeader(value = "X-User-Role") String role) {
     CompanyResponse companyResponse = companyService.getCompany(companyId, role);
     return new ResponseDto<>(ResponseDto.SUCCESS, "업체 단건 조회가 완료되었습니다.", companyResponse);
   }
@@ -51,8 +49,7 @@ public class CompanyController {
   public Page<CompanyResponse> search(
       @RequestParam(name = "keyword", required = false, defaultValue = "") String keyword,
       Pageable pageable,
-      @RequestHeader(value = "X-User-Role") String role,
-      @RequestHeader(value = "X-User-Name") String userName) {
+      @RequestHeader(value = "X-User-Role") String role) {
     return companyService.searchCompanies(keyword, pageable, role);
   }
 
@@ -60,19 +57,17 @@ public class CompanyController {
   public ResponseDto<CompanyResponse> modify(@PathVariable UUID companyId,
       @RequestBody @Valid CompanyModifyRequest companyModifyRequest,
       @RequestHeader(value = "X-User-Role") String role,
-      @RequestHeader(value = "X-User-Name") String userName,
-      @RequestHeader(value = "X-User-Id") Long userId) {
+      @RequestHeader(value = "X-User-Name") String userName) {
     CompanyResponse companyResponse = companyService.modifyCompany(companyId, companyModifyRequest,
-        role, userName, userId);
+        role, userName);
     return new ResponseDto<>(ResponseDto.SUCCESS, "업체 수정이 완료되었습니다.", companyResponse);
   }
 
   @PutMapping("/{companyId}")
   public ResponseDto<CompanyResponse> delete(@PathVariable UUID companyId,
       @RequestHeader(value = "X-User-Role") String role,
-      @RequestHeader(value = "X-User-Name") String userName,
-      @RequestHeader(value = "X-User-Id") Long userId) {
-    companyService.deleteCompany(companyId, role, userName, userId);
+      @RequestHeader(value = "X-User-Name") String userName) {
+    companyService.deleteCompany(companyId, role, userName);
     return new ResponseDto<>(ResponseDto.SUCCESS, "업체 삭제가 완료되었습니다.");
   }
 

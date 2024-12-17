@@ -22,18 +22,35 @@ public class FeignErrorDecoder implements ErrorDecoder {
       throw new RuntimeException("응답을 읽는 중 문제가 발생했습니다.", e);
     }
 
-    // 에러의 msg 부분을 가져와 json 형태로 만들어줌
-    String errorMessage = null;
-    try {
-      errorMessage = objectMapper.readTree(body).path("msg").asText();
-      if (errorMessage.isEmpty()) {
-        errorMessage = "에러 메시지가 없습니다.";
+    String errorMessage;
+
+    // JSON 형식인지 확인하고 처리
+    if (isJson(body)) {
+      try {
+        errorMessage = objectMapper.readTree(body).path("msg").asText();
+        if (errorMessage.isEmpty()) {
+          errorMessage = "에러 메시지가 없습니다.";
+        }
+      } catch (JsonProcessingException e) {
+        throw new RuntimeException("JSON 파싱 중 문제가 발생했습니다.", e);
       }
-    } catch (JsonProcessingException e) {
-      throw new RuntimeException("JSON 파싱 중 문제가 발생했습니다.", e);
+    } else {
+      // JSON이 아닐 경우 body 전체를 에러 메시지로 반환
+      errorMessage = body;
     }
 
     return new CustomApiException(errorMessage);
   }
+
+  // JSON 유효성 검사 메서드
+  private boolean isJson(String body) {
+    try {
+      objectMapper.readTree(body);
+      return true;
+    } catch (IOException e) {
+      return false;
+    }
+  }
 }
+
 

@@ -58,4 +58,9 @@ public class UserController {
     public UserResDto getUserInfo(@AuthenticationPrincipal CustomUserDetails customUserDetails) {
         return userService.getUser(customUserDetails.getUserId());
     }
+
+    @GetMapping("/infoUserId")
+    public UserResDto getUserId(@AuthenticationPrincipal CustomUserDetails customUserDetails) {
+        return userService.getUserId(customUserDetails.getUsername());
+    }
 }

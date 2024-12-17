@@ -1,5 +1,5 @@
 server:
-  port: 19097  # 임시 포트, 이후 Config 서버 설정으로 덮어씌움
+  port: 0  # 임시 포트, 이후 Config 서버 설정으로 덮어씌움
 
 spring:
   application:
@@ -12,25 +12,6 @@ spring:
         enabled: true
         service-id: config-server
 
-  datasource:
-    url: ${DB_URL}
-    username: ${DB_USERNAME}
-    password: ${DB_PASSWORD}
-    driver-class-name: org.postgresql.Driver
-
-  data:
-    redis:
-      host: localhost
-      port: 6379
-      username: default
-      password: systempass
-
-  jpa:
-    properties:
-      hibernate:
-        dialect: org.hibernate.spatial.dialect.postgis.PostgisPG95Dialect
-    hibernate:
-      ddl-auto: update
 
 # Eureka server 연결 (호스트 이름: localhost, 포트: 19090)
 eureka:
