@@ -1,5 +1,6 @@
 package com.logistics.platform.auth_service.application.dto;
 
+import com.logistics.platform.auth_service.domain.model.Role;
 import com.logistics.platform.auth_service.domain.model.User;
 import java.util.Collection;
 import java.util.Collections;
@@ -28,4 +29,11 @@ public class CustomUserDetails implements UserDetails {
         return user.getUsername();
     }
 
+    public Long getUserId() {
+        return user.getId();
+    }
+
+    public String getRole() {
+        return user.getRole().getRole();
+    }
 }
