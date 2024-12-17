@@ -1,4 +1,4 @@
-package com.logistics.platform.auth_service.config.jwt;
+package com.logistics.platform.auth_service.infrastructure.config.jwt;
 
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.Jwts.SIG;
