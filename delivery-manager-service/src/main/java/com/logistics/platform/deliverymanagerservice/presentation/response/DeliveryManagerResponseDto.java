@@ -1,5 +1,6 @@
 package com.logistics.platform.deliverymanagerservice.presentation.response;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.logistics.platform.deliverymanagerservice.domain.model.DeliveryManager;
 import com.logistics.platform.deliverymanagerservice.domain.model.DeliveryType;
 import com.querydsl.core.annotations.QueryProjection;
@@ -13,6 +14,7 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class DeliveryManagerResponseDto {
 
   private UUID deliveryManagerId;
@@ -21,6 +23,7 @@ public class DeliveryManagerResponseDto {
   private String slackId;
   private DeliveryType deliveryType;
   private Long deliveryOrderNumber;
+  private String message;
 
   @QueryProjection
   public DeliveryManagerResponseDto(DeliveryManager deliveryManager){
@@ -38,4 +41,7 @@ public class DeliveryManagerResponseDto {
   }
 
 
+  public DeliveryManagerResponseDto(String message) {
+    this.message = message;
+  }
 }

@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 @FeignClient(name = "delivery-manager-service")
 public interface DeliveryManagerClient {
 
-  @GetMapping("/api/delivery-managers/{deliveryManagerId}/info")
+  @GetMapping("/api/delivery-managers/next")
   DeliveryManagerResponseDto getNextAvailableDeliveryManager();
 
 }

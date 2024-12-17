@@ -1,6 +1,6 @@
 package com.logistics.platform.deliverymanagerservice.application.service;
 
-import com.logistics.platform.deliverymanagerservice.application.dto.UserDto;
+import com.logistics.platform.deliverymanagerservice.application.dto.UserResDto;
 import com.logistics.platform.deliverymanagerservice.domain.model.DeliveryManager;
 import com.logistics.platform.deliverymanagerservice.domain.model.DeliveryType;
 import com.logistics.platform.deliverymanagerservice.domain.repository.DeliveryManagerRepository;
@@ -10,6 +10,7 @@ import com.logistics.platform.deliverymanagerservice.presentation.global.excepti
 import com.logistics.platform.deliverymanagerservice.presentation.request.DeliveryManagerRequestDto;
 import com.logistics.platform.deliverymanagerservice.presentation.response.DeliveryManagerResponseDto;
 import com.querydsl.core.types.Predicate;
+import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import java.util.List;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
@@ -31,14 +32,17 @@ public class DeliveryManagerService {
   private final UserSerivce userSerivce;
 
   // 1. 배송담당자 생성
-  public DeliveryManagerResponseDto createDeliveryManager(DeliveryManagerRequestDto deliveryManagerRequestDto) {
+  @CircuitBreaker(name = "DeliveryManagerService", fallbackMethod = "handleDeliveryManagerFailure")
+  public DeliveryManagerResponseDto createDeliveryManager(
+      DeliveryManagerRequestDto deliveryManagerRequestDto,
+      String userName, String userRole) {
     // 존재하는 User인지 확인
-    UserDto userDto = userClient.getUserInfo(
-        deliveryManagerRequestDto.getUserName(),  // userName만 사용
-        "ROLE_IGNORE"  // 불필요한 값, 형식 맞추기 용도
+    UserResDto userResDto = userClient.getUserInfo(
+        deliveryManagerRequestDto.getUserName(),
+        userRole
     );
 
-    if (userDto == null) {
+    if (userResDto == null) {
       throw new CustomApiException("유효하지 않은 유저입니다.");
     }
 
@@ -53,7 +57,8 @@ public class DeliveryManagerService {
     Long maxOrderNumber;
 
     if (deliveryType == DeliveryType.HUB) { // 허브 배송담당자 로직
-      maxOrderNumber = deliveryManagerRepository.findMaxDeliveryOrderNumberByDeliveryType(DeliveryType.HUB).orElse(0L) + 1;
+      maxOrderNumber = deliveryManagerRepository.findMaxDeliveryOrderNumberByDeliveryType(
+          DeliveryType.HUB).orElse(0L);
     } else if (deliveryType == DeliveryType.COMPANY) { //업체 배송담당자 로직
       // 존재하는 Hub인지 확인 -> 안해도?
       // 업체베송담당자는 소속허브 ID가 존재하는 ID인지 확인해야 한대서 일단 넣어봤습니당...
@@ -61,17 +66,20 @@ public class DeliveryManagerService {
       if (!hubExists) {
         throw new CustomApiException("존재하지 않는 허브ID입니다.");
       }
-      maxOrderNumber = deliveryManagerRepository.findMaxDeliveryOrderNumberByDeliveryType(DeliveryType.COMPANY).orElse(0L) + 1;
+      maxOrderNumber = deliveryManagerRepository.findMaxDeliveryOrderNumberByDeliveryType(
+          DeliveryType.COMPANY).orElse(0L);
     } else {
       throw new CustomApiException("유효하지 않은 배송 타입입니다."); // 둘 중에 없으면 메세지 던지기
     }
 
     DeliveryManager savedDeliveryManager = DeliveryManager.builder()
-        .userId(userDto.getUserId())
+        .userId(userResDto.getId())
         .hubId(deliveryManagerRequestDto.getHubId())
-        .slackId(userDto.getSlackId())
+        .slackId(userResDto.getSlackId())
         .deliveryType(deliveryManagerRequestDto.getDeliveryType())
-        .deliveryOrderNumber(maxOrderNumber) // 자동 증가
+        .deliveryOrderNumber(maxOrderNumber + 1)
+        .createdBy(userName)
+        .isDeleted(false)
         .build();
 
     savedDeliveryManager = deliveryManagerRepository.save(savedDeliveryManager);
@@ -82,7 +90,8 @@ public class DeliveryManagerService {
 
   // 2. 배송담당자 수정
   @Transactional
-  public DeliveryManagerResponseDto updateDeliveryManager(UUID deliveryManagerId, DeliveryManagerRequestDto deliveryManagerRequestDto){
+  public DeliveryManagerResponseDto updateDeliveryManager(UUID deliveryManagerId,
+      DeliveryManagerRequestDto deliveryManagerRequestDto) {
 
     DeliveryManager deliveryManager = deliveryManagerRepository.findById(deliveryManagerId)
         .orElseThrow(() -> new CustomApiException("존재하지 않는 배송담당자ID입니다."));
@@ -106,7 +115,7 @@ public class DeliveryManagerService {
     DeliveryManager deliveryManager = deliveryManagerRepository.findById(deliveryManagerId)
         .orElseThrow(() -> new CustomApiException("존재하지 않는 배송담당자ID 입니다."));
 
-    if(deliveryManager.getIsDeleted()) {
+    if (deliveryManager.getIsDeleted()) {
       throw new CustomApiException("이미 삭제된 배송담당자입니다.");
     }
 
@@ -133,7 +142,7 @@ public class DeliveryManagerService {
     DeliveryManager deliveryManager = deliveryManagerRepository.findById(deliveryManagerId)
         .orElseThrow(() -> new CustomApiException("존재하지 않는 배송담당자ID입니다."));
 
-    if(deliveryManager.getIsDeleted()) {
+    if (deliveryManager.getIsDeleted()) {
       throw new CustomApiException("이미 삭제된 배송담당자입니다.");
     }
 
@@ -163,7 +172,8 @@ public class DeliveryManagerService {
     Long currentOrderIndex = managerOrderIndexService.getCurrentOrderIndex(deliveryType);
     // 요건 다음 배송순번이 아닌 배송순번 1번째인 사람만 조회되는듯
     DeliveryManager nextManager = deliveryManagerRepository
-        .findFirstByIsDeletedFalseAndDeliveryTypeAndDeliveryOrderNumber(deliveryType, currentOrderIndex)
+        .findFirstByIsDeletedFalseAndDeliveryTypeAndDeliveryOrderNumber(deliveryType,
+            currentOrderIndex)
         .orElseThrow(() -> new CustomApiException("배정 가능한 배송담당자가 없습니다."));
 
     if (nextManager == null) {
@@ -171,20 +181,30 @@ public class DeliveryManagerService {
     }
 
     // 최소 및 최대 배송 순번 조회 -> 타입에 따라 다르게 되어있지 않음
-    Long minOrderNumber = deliveryManagerRepository.findMinDeliveryOrderNumberByDeliveryType(deliveryType)
+    Long minOrderNumber = deliveryManagerRepository.findMinDeliveryOrderNumberByDeliveryType(
+            deliveryType)
         .orElseThrow(() -> new CustomApiException("배송 순번 조회 오류"));
-    Long maxOrderNumber = deliveryManagerRepository.findMaxDeliveryOrderNumberByDeliveryType(deliveryType)
+    Long maxOrderNumber = deliveryManagerRepository.findMaxDeliveryOrderNumberByDeliveryType(
+            deliveryType)
         .orElseThrow(() -> new CustomApiException("배송 순번 조회 오류"));
 
     // 배송 순번 증가 및 순환 로직 -> 배송순번을 변경하는 것 보다 시스템에서 다음 호출할 배송순번을 기억하는 것이 좋을듯
     Long currentOrderNumber = nextManager.getDeliveryOrderNumber();
-    Long nextOrderNumber = (currentOrderNumber >= maxOrderNumber) ? minOrderNumber : currentOrderNumber + 1;
+    Long nextOrderNumber =
+        (currentOrderNumber >= maxOrderNumber) ? minOrderNumber : currentOrderNumber + 1;
 
     // 다음 배송 순번 인덱스 계산 및 업데이트
-    Long nextOrderIndex = (currentOrderIndex >= maxOrderNumber) ? minOrderNumber : currentOrderIndex + 1;
+    Long nextOrderIndex =
+        (currentOrderIndex >= maxOrderNumber) ? minOrderNumber : currentOrderIndex + 1;
     managerOrderIndexService.updateCurrentOrderIndex(deliveryType, nextOrderIndex);
 
     return new DeliveryManagerResponseDto(nextManager.getId());
+  }
+
+
+  public DeliveryManagerResponseDto handleDeliveryManagerFailure(
+      DeliveryManagerRequestDto deliveryManagerRequestDto, Throwable t) {
+    return new DeliveryManagerResponseDto(t.getMessage());
   }
 
 }

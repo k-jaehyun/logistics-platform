@@ -1,6 +1,7 @@
 package com.logistics.platform.delivery_service.deliveryRoute.application.service;
 
 
+import com.logistics.platform.delivery_service.delivery.application.dto.HubRouteCreateRequest;
 import com.logistics.platform.delivery_service.delivery.application.dto.HubRouteResponseDto;
 import com.logistics.platform.delivery_service.delivery.domain.model.Delivery;
 import com.logistics.platform.delivery_service.delivery.domain.repository.DeliveryRepository;
@@ -14,7 +15,6 @@ import com.logistics.platform.delivery_service.deliveryRoute.presentation.reques
 import com.logistics.platform.delivery_service.deliveryRoute.presentation.response.DeliveryRouteResponseDto;
 import com.logistics.platform.delivery_service.global.global.exception.CustomApiException;
 import com.querydsl.core.types.Predicate;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
@@ -35,10 +35,12 @@ public class DeliveryRouteService {
 
   // 1. 배송 경로 생성
   @Transactional
-  public List<DeliveryRouteResponseDto> createDeliveryRoutes(Delivery savedDelivery) {
+  public List<DeliveryRouteResponseDto> createDeliveryRoutes(Delivery savedDelivery,
+      String userName, String userRole) {
     List<HubRouteResponseDto> hubRoutes = hubClient.getHubRoutes(
-        savedDelivery.getStartHubId(),
-        savedDelivery.getEndHubId()
+        new HubRouteCreateRequest(savedDelivery.getStartHubId(), savedDelivery.getEndHubId()),
+        userName,
+        userRole
     );
 
     Long sequence = 0L;
@@ -60,6 +62,8 @@ public class DeliveryRouteService {
           .deliveryManagerId(deliveryManager.getDeliveryManagerId())  // 담당자 ID 설정
           .sequence(sequence++)
           .status(DeliveryRouteStatus.WAITING_AT_HUB)
+          .createdBy(userName)
+          .isDeleted(false)
           .build();
 
       savedDelivery.addDeliveryRoute(deliveryRoute);  // 양방향 매핑 설정
@@ -122,10 +126,6 @@ public class DeliveryRouteService {
     return new DeliveryRouteResponseDto(deliveryRoute);
   }
 
-  // 허브 경로 조회 메서드.. 일단 만들어두기
-  private List<HubRouteResponseDto> findHubRoutes(UUID startHubId, UUID endHubId) {
-    return hubClient.getHubRoutes(startHubId, endHubId);  // 허브 서비스 API 호출
-  }
 
 }
 

@@ -2,10 +2,10 @@ package com.logistics.platform.delivery_service.delivery.presentation.controller
 
 
 import com.logistics.platform.delivery_service.delivery.application.service.DeliveryService;
-import com.logistics.platform.delivery_service.delivery.presentation.request.DeliveryUpdateRequestDto;
-import com.logistics.platform.delivery_service.global.global.ResponseDto;
 import com.logistics.platform.delivery_service.delivery.presentation.request.DeliveryRequestDto;
+import com.logistics.platform.delivery_service.delivery.presentation.request.DeliveryUpdateRequestDto;
 import com.logistics.platform.delivery_service.delivery.presentation.response.DeliveryResponseDto;
+import com.logistics.platform.delivery_service.global.global.ResponseDto;
 import com.querydsl.core.types.Predicate;
 import java.util.List;
 import java.util.UUID;
@@ -32,8 +32,13 @@ public class DeliveryController {
 
   // 배송 생성
   @PostMapping
-  public ResponseDto<DeliveryResponseDto> createDelivery(@RequestBody DeliveryRequestDto deliveryRequestDto) {
-    DeliveryResponseDto response = deliveryService.createDelivery(deliveryRequestDto);
+  public ResponseDto<DeliveryResponseDto> createDelivery(
+      @RequestBody DeliveryRequestDto deliveryRequestDto,
+      @RequestHeader(value = "X-User-Name") String userName,
+      @RequestHeader(value = "X-User-Role") String userRole
+  ) {
+    DeliveryResponseDto response = deliveryService.createDelivery(deliveryRequestDto, userName,
+        userRole);
     return new ResponseDto<>(ResponseDto.SUCCESS, "배송이 생성되었습니다.", response);
   }
 
@@ -50,7 +55,8 @@ public class DeliveryController {
       @RequestParam(required = false) List<UUID> uuidList,
       @RequestParam(required = false) Predicate predicate,
       Pageable pageable) {
-    PagedModel<DeliveryResponseDto> response = deliveryService.getDeliveries(uuidList, predicate, pageable);
+    PagedModel<DeliveryResponseDto> response = deliveryService.getDeliveries(uuidList, predicate,
+        pageable);
     return new ResponseDto<>(ResponseDto.SUCCESS, "배송 목록이 조회되었습니다.", response);
   }
 
@@ -59,7 +65,8 @@ public class DeliveryController {
   public ResponseDto<DeliveryResponseDto> updateDelivery(
       @PathVariable UUID deliveryId,
       @RequestBody DeliveryUpdateRequestDto deliveryUpdateRequestDto) {
-    DeliveryResponseDto response = deliveryService.updateDelivery(deliveryId, deliveryUpdateRequestDto);
+    DeliveryResponseDto response = deliveryService.updateDelivery(deliveryId,
+        deliveryUpdateRequestDto);
     return new ResponseDto<>(ResponseDto.SUCCESS, "배송이 수정되었습니다.", response);
   }
 

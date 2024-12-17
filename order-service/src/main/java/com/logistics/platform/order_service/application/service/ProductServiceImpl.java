@@ -14,7 +14,6 @@ public class ProductServiceImpl implements ProductService {
   private final ProductClient productClient;
 
   @Override
-  @Cacheable(value = "getProductCache", key = "#productId")
   public ProductResponseDto getProductDtoByProductId(UUID productId) {
     return productClient.getProductDtoByProductId(productId);
   }

@@ -1,6 +1,7 @@
 package com.logistics.platform.delivery_service.delivery.presentation.response;
 
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.logistics.platform.delivery_service.delivery.domain.model.Delivery;
 import com.logistics.platform.delivery_service.delivery.domain.model.DeliveryStatus;
 import com.logistics.platform.delivery_service.deliveryRoute.presentation.response.DeliveryRouteResponseDto;
@@ -16,6 +17,7 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class DeliveryResponseDto {
 
   private UUID deliveryId;
@@ -28,6 +30,7 @@ public class DeliveryResponseDto {
   private String recipient;
   private String recipientSlackId;
   private String address;
+  private String message;
 
   // 배송 경로 리스트 추가
   private List<DeliveryRouteResponseDto> deliveryRoutes;
@@ -44,5 +47,10 @@ public class DeliveryResponseDto {
     this.recipientSlackId = delivery.getRecipientSlackId();
     this.address = delivery.getAddress();
     this.deliveryRoutes = deliveryRoutes;
+  }
+
+
+  public DeliveryResponseDto(String message) {
+    this.message = message;
   }
 }
