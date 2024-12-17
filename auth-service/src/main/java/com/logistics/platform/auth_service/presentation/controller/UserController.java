@@ -32,7 +32,7 @@ public class UserController {
         @RequestParam(name = "keyword", required = false, defaultValue = "") String keyword,
         Pageable pageable) {
         return new ResponseDto<>(ResponseDto.SUCCESS, "사용자 목록이 조회되었습니다.",
-            userService.getUsers(pageable));
+            userService.getUsers(keyword, pageable));
     }
 
     @GetMapping("/{userId}")
