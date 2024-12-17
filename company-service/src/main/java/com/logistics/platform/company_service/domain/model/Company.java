@@ -77,10 +77,13 @@ public class Company {
   @Temporal(TemporalType.TIMESTAMP)
   private LocalDateTime deletedAt;
 
+  @Column(length = 100)
+  private String deletedBy;
+
   @Column(nullable = false)
   private Boolean isDeleted = false;
 
-  public void changeCompany(CompanyModifyRequest companyModifyRequest) {
+  public void changeCompany(CompanyModifyRequest companyModifyRequest, String userName) {
     this.hubId = companyModifyRequest.getHubId();
     this.companyName = companyModifyRequest.getCompanyName();
     this.phoneNumber = companyModifyRequest.getPhoneNumber();
@@ -88,11 +91,11 @@ public class Company {
         this.companyType =
         !companyModifyRequest.getIsCompanyTypeReceiver() ? CompanyType.MANUFACTURER
             : CompanyType.RECEIVER;
-    // todo 나중에 수정자 업데이트 추가
+    this.updatedBy = userName;
   }
 
-  public void deleteCompany() {
+  public void deleteCompany(String userName) {
     this.isDeleted = true;
-    // todo 나중에 삭제자 업데이트 추가
+    this.deletedBy = userName;
   }
 }
