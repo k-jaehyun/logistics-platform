@@ -8,6 +8,7 @@ import com.logistics.platform.hub_service.presentation.request.HubModifyRequest;
 import com.logistics.platform.hub_service.presentation.response.HubResponse;
 import jakarta.validation.Valid;
 import java.io.IOException;
+import java.util.List;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -30,36 +32,57 @@ public class HubController {
   private final HubService hubService;
 
   @PostMapping
-  public ResponseDto<HubResponse> create(@RequestBody @Valid HubCreateRequest hubCreateRequest)
+  public ResponseDto<HubResponse> create(@RequestBody @Valid HubCreateRequest hubCreateRequest,
+      @RequestHeader(value = "X-User-Role") String role,
+      @RequestHeader(value = "X-User-Name") String userName)
       throws IOException, InterruptedException, ApiException {
-    HubResponse hubResponse = hubService.createHub(hubCreateRequest);
+    HubResponse hubResponse = hubService.createHub(hubCreateRequest, role, userName);
     return new ResponseDto<>(ResponseDto.SUCCESS, "허브가 생성되었습니다.", hubResponse);
   }
 
   @GetMapping("/{hubId}")
-  public ResponseDto<HubResponse> get(@PathVariable UUID hubId) {
-    HubResponse hubResponse = hubService.getHub(hubId);
+  public ResponseDto<HubResponse> get(@PathVariable UUID hubId,
+      @RequestHeader(value = "X-User-Role") String role) {
+    HubResponse hubResponse = hubService.getHub(hubId, role);
     return new ResponseDto<>(ResponseDto.SUCCESS, "허브 단건 조회가 완료되었습니다.", hubResponse);
+  }
+
+  // HubClient 용
+  @GetMapping("/{hubId}/info")
+  public HubResponse getByHubClient(@PathVariable UUID hubId,
+      @RequestHeader(value = "X-User-Role") String role) {
+    return hubService.getHub(hubId, role);
   }
 
   @GetMapping
   public Page<HubResponse> search(
       @RequestParam(name = "keyword", required = false, defaultValue = "") String keyword,
-      Pageable pageable) {
-    return hubService.searchHubs(keyword, pageable);
+      Pageable pageable,
+      @RequestHeader(value = "X-User-Role") String role) {
+    return hubService.searchHubs(keyword, pageable, role);
   }
 
   @PatchMapping("/{hubId}")
   public ResponseDto<HubResponse> modify(@PathVariable UUID hubId,
-      @RequestBody @Valid HubModifyRequest hubModifyRequest) {
-    HubResponse hubResponse = hubService.modifyHub(hubId, hubModifyRequest);
+      @RequestBody @Valid HubModifyRequest hubModifyRequest,
+      @RequestHeader(value = "X-User-Role") String role,
+      @RequestHeader(value = "X-User-Name") String userName) {
+    HubResponse hubResponse = hubService.modifyHub(hubId, hubModifyRequest, role, userName);
     return new ResponseDto<>(ResponseDto.SUCCESS, "허브 수정이 완료되었습니다.", hubResponse);
   }
 
   @PutMapping("/{hubId}")
-  public ResponseDto<HubResponse> delete(@PathVariable UUID hubId) {
-    hubService.deleteHub(hubId);
+  public ResponseDto<HubResponse> delete(@PathVariable UUID hubId,
+      @RequestHeader(value = "X-User-Role") String role,
+      @RequestHeader(value = "X-User-Name") String userName) {
+    hubService.deleteHub(hubId, role, userName);
     return new ResponseDto<>(ResponseDto.SUCCESS, "허브 삭제가 완료되었습니다.");
+  }
+
+  @GetMapping("/{hubManagerId}/hubIds")
+  public ResponseDto<List<UUID>> getHubIds(@PathVariable Long hubManagerId) {
+    List<UUID> hubIdByHubManagerIds = hubService.findHubIdByHubManagerId(hubManagerId);
+    return new ResponseDto<>(ResponseDto.SUCCESS, "담당 허브Id 조회가 완료되었습니다.", hubIdByHubManagerIds);
   }
 
 

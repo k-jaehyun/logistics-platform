@@ -6,7 +6,7 @@ import java.util.UUID;
 import lombok.Getter;
 
 @Getter
-public class HubRouteResponse {
+public class HubRouteCreateResponse {
 
   private UUID hubRouteId;
 
@@ -18,7 +18,7 @@ public class HubRouteResponse {
 
   private Double estimatedDistance;
 
-  public HubRouteResponse(HubRoute hubRoute) {
+  public HubRouteCreateResponse(HubRoute hubRoute) {
     this.hubRouteId = hubRoute.getHubRouteId();
     this.startHubId = hubRoute.getStartHubId();
     this.endHubId = hubRoute.getEndHubId();

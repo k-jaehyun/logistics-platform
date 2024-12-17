@@ -1,6 +1,7 @@
 package com.logistics.platform.hub_service.domain.model;
 
 import jakarta.persistence.Column;
+import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EntityListeners;
 import jakarta.persistence.GeneratedValue;
@@ -9,6 +10,7 @@ import jakarta.persistence.Table;
 import jakarta.persistence.Temporal;
 import jakarta.persistence.TemporalType;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.UUID;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -40,13 +42,10 @@ public class HubRoute {
   private UUID endHubId;
 
   @Column(nullable = false)
-  private double estimatedDuration;
+  private Double estimatedDuration;
 
   @Column(nullable = false)
-  private double estimatedDistance;
-
-  @Column(nullable = false)
-  private String classification;
+  private Double estimatedDistance;
 
   @CreatedDate
   @Column(updatable = false, nullable = false)
