@@ -95,6 +95,20 @@ AI 연동 관리
 ![team4erd](https://github.com/user-attachments/assets/297b320f-a622-4329-8847-8ff088fe336e)
 
 ## 📁 프로젝트 파일 구조
-
+Microservices Architecture
+Layered Architecture + DDD
 
 ## ⚙️ 실행 방법
+- Java 17
+
+- postgreSQL DB 설정 정보 환경변수에 등록
+```spring:
+    datasource:
+      driver-class-name: org.postgresql.Driver
+      url: ${DB_URL} # jdbc:postgresql://localhost:5432/{DB이름}
+      username: ${DB_USERNAME} # postgres
+      password: ${DB_PASSWORD}```
+
+- 필요한 API KEY 환경변수에 등록
+- hub-service : 구글 API KEY, 카카오 API KEY
+- slack-service : 슬랙 봇 API KEY, 구글 Gemini API KEY
