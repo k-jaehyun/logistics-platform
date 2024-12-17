@@ -76,10 +76,10 @@ public class DeliveryService {
   @Transactional(readOnly = true)
   public PagedModel<DeliveryResponseDto> getDeliveries(List<UUID> uuidList, Predicate predicate,Pageable pageable) {
 
-    Page<DeliveryResponseDto> deliveryManagerResponseDtoPage
+    Page<DeliveryResponseDto> deliveryResponseDtoPage
         = deliveryRepository.findAll(uuidList, predicate, pageable);
 
-    return new PagedModel<>(deliveryManagerResponseDtoPage);
+    return new PagedModel<>(deliveryResponseDtoPage);
   }
 
 
