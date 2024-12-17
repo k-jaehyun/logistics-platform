@@ -23,20 +23,18 @@ public class UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
 
-    public Page<UserResDto> getUsers(String sort, String direction, int size) {
+    public Page<UserResDto> getUsers(String keyword, Pageable pageable) {
 
-        if (size != 10 && size != 30 && size != 50) {
-            size = 10;
-        }
+        int size = pageable.getPageSize();
 
-        Sort.Direction sortDirection =
-            direction.equalsIgnoreCase("DESC") ? Sort.Direction.DESC : Sort.Direction.ASC;
+        size = (size == 30 || size == 50) ? size : 10;
 
-        String sortBy =
-            "createdAt".equalsIgnoreCase(sort) || "updatedAt".equalsIgnoreCase(sort) ? sort
-                : "createdAt";
+        Sort sort = pageable.getSort().isSorted() ? pageable.getSort() : Sort.by(
+            Sort.Order.desc("createdAt"),
+            Sort.Order.desc("updatedAt")
+        );
 
-        Pageable pageable = PageRequest.of(0, size, Sort.by(sortDirection, sortBy));
+        pageable = PageRequest.of(pageable.getPageNumber(), size, sort);
 
         Page<User> users = userRepository.findByIsDeletedFalse(pageable);
         return users.map(user -> new UserResDto(user.getId(), user.getUsername(), user.getNumber(),

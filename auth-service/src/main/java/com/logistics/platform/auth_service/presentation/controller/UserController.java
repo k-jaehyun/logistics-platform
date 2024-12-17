@@ -29,11 +29,10 @@ public class UserController {
 
     @GetMapping("")
     public ResponseDto<Page<UserResDto>> getUsers(
-        @RequestParam(defaultValue = "createdAt") String sort,
-        @RequestParam(defaultValue = "DESC") String direction,
-        @RequestParam(defaultValue = "10") int size) {
+        @RequestParam(name = "keyword", required = false, defaultValue = "") String keyword,
+        Pageable pageable) {
         return new ResponseDto<>(ResponseDto.SUCCESS, "사용자 목록이 조회되었습니다.",
-            userService.getUsers(sort, direction, size));
+            userService.getUsers(pageable));
     }
 
     @GetMapping("/{userId}")
