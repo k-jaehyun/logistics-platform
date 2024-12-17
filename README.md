@@ -13,15 +13,26 @@
 
 ## 🗂️ 주요 서비스
 - eureka-server
+전체 어플리케이션 관리
 - config-server
+전체 어플리케이션 설정 파일 관리
 - gateway-service
+요청의 모든 인입 관리
 - auth-service
+인증 및 권한 확인 관리
 - company-service
+업체 관리
 - hub-service
+허브와 허브간 이동정보 관리
 - order-service
+주문 관리
 - delivery-manager-service
+배송과 배송 경로와 배송 담당자 관리
 - product-service
+상품 관리
 - slack-service
+슬랙 메시지 관리
+AI 연동 관리
   
   ## 🧑🏻‍💻 팀 구성
 <table>
