@@ -9,7 +9,9 @@ import com.logistics.platform.auth_service.presentation.request.PasswordUpdateRe
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,7 +23,19 @@ public class UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
 
-    public Page<UserResDto> getUsers(Pageable pageable) {
+    public Page<UserResDto> getUsers(String keyword, Pageable pageable) {
+
+        int size = pageable.getPageSize();
+
+        size = (size == 30 || size == 50) ? size : 10;
+
+        Sort sort = pageable.getSort().isSorted() ? pageable.getSort() : Sort.by(
+            Sort.Order.desc("createdAt"),
+            Sort.Order.desc("updatedAt")
+        );
+
+        pageable = PageRequest.of(pageable.getPageNumber(), size, sort);
+
         Page<User> users = userRepository.findByIsDeletedFalse(pageable);
         return users.map(user -> new UserResDto(user.getId(), user.getUsername(), user.getNumber(),
             user.getEmail(), user.getSlackId(), user.getRole()));
