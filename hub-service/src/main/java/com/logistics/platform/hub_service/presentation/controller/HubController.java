@@ -47,13 +47,6 @@ public class HubController {
     return new ResponseDto<>(ResponseDto.SUCCESS, "허브 단건 조회가 완료되었습니다.", hubResponse);
   }
 
-  // HubClient 용
-  @GetMapping("/{hubId}/info")
-  public HubResponse getByHubClient(@PathVariable UUID hubId,
-      @RequestHeader(value = "X-User-Role") String role) {
-    return hubService.getHub(hubId, role);
-  }
-
   @GetMapping
   public Page<HubResponse> search(
       @RequestParam(name = "keyword", required = false, defaultValue = "") String keyword,
@@ -83,6 +76,12 @@ public class HubController {
   public ResponseDto<List<UUID>> getHubIds(@PathVariable Long hubManagerId) {
     List<UUID> hubIdByHubManagerIds = hubService.findHubIdByHubManagerId(hubManagerId);
     return new ResponseDto<>(ResponseDto.SUCCESS, "담당 허브Id 조회가 완료되었습니다.", hubIdByHubManagerIds);
+  }
+
+  // HubClient 용
+  @GetMapping("/{hubId}/info")
+  public HubResponse getByHubClient(@PathVariable UUID hubId) {
+    return hubService.getHubInfo(hubId);
   }
 
 
