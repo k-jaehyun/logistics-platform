@@ -62,8 +62,13 @@ public class UserController {
         return userService.getUser(customUserDetails.getUserId());
     }
 
+    @GetMapping("/{userId}/info")
+    public UserResDto getUserInfo(@PathVariable Long userId) {
+        return userService.getUser(userId);
+
     @GetMapping("/infoUserId")
     public UserResDto getUserId(@AuthenticationPrincipal CustomUserDetails customUserDetails) {
         return userService.getUserId(customUserDetails.getUsername());
+
     }
 }
