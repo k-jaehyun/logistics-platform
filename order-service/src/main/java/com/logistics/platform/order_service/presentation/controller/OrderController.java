@@ -42,7 +42,7 @@ public class OrderController { // TODO 권한 검증, 실패시 처리 로직
         userRole);
 
     if (orderResponseDto.getMessage() == null) {
-      return new ResponseDto<>(ResponseDto.SUCCESS, "주문이 생성되었습니다.", orderResponseDto);
+      return new ResponseDto<>(ResponseDto.SUCCESS, "주문이 생성되었습니다. 배송을 확인해주세요.", orderResponseDto);
     } else {
       return new ResponseDto<>(ResponseDto.FAILURE, orderResponseDto.getMessage());
     }
