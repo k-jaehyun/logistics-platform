@@ -65,7 +65,7 @@ AI 연동 관리
 </td>
 <td align="center">
 <a href="https://github.com/Yuurim98">
-<img src="" width="100px;" alt="프로필이미지"/>
+<img src="docs/images/yurim.jpg" width="100px;" alt="프로필이미지"/>
 <br />
 <sub><b>최유림</b></span>
 <br />
