@@ -46,7 +46,7 @@
 <span>Company, Hub, HubRoute, Ai</span>
 </td>
 <td align="center">
-<a href="https://github.com/">
+<a href="https://github.com/hiimsajo">
 <img src="" width="100px;" alt="프로필이미지"/>
 <br />
 <sub><b>조승아</b></sub>
@@ -55,7 +55,7 @@
 <span>Delivery, DeliveryRoute, DeliveryManager</span>
 </td>
 <td align="center">
-<a href="https://github.com/e">
+<a href="https://github.com/Yuurim98">
 <img src="" width="100px;" alt="프로필이미지"/>
 <br />
 <sub><b>최유림</b></span>
@@ -71,7 +71,12 @@
 
 
 ## 🛠 개발 환경
-
+![Spring Boot](https://img.shields.io/badge/Spring%20Boot-6DB33F?style=for-the-badge&logo=springboot&logoColor=white)
+![PostgreSQL](https://img.shields.io/badge/PostgreSQL-336791?style=for-the-badge&logo=postgresql&logoColor=white)
+![Redis](https://img.shields.io/badge/redis-%23DD0031.svg?style=for-the-badge&logo=redis&logoColor=white)
+![Git](https://img.shields.io/badge/Git-F05032?style=for-the-badge&logo=git&logoColor=white)
+![Google Gemini AI](https://img.shields.io/badge/Google%20Gemini%20AI-4285F4?style=for-the-badge&logo=google&logoColor=white)
+![Slack](https://img.shields.io/badge/Slack-4A154B?style=for-the-badge&logo=slack&logoColor=white)
 
 ## 📃 인프라 설계서
 ![image](https://github.com/user-attachments/assets/776d0bfe-0a3f-44fe-96bd-58a476a28c87)
