@@ -101,7 +101,7 @@ AI 연동 관리
 
 ## ⚙️ 실행 방법
 - Java 17
-
+- Docker에서 openzipkin/zipkin, redis 이미지 실행
 - postgreSQL DB 설정 정보 환경변수에 등록
 ```
 spring:
