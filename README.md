@@ -119,7 +119,6 @@ spring:
 ```
 
 - 필요한 API KEY 환경변수에 등록
-- 
 - hub-service : 구글 API KEY, 카카오 API KEY
 ```
 google:
