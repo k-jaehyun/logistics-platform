@@ -56,7 +56,7 @@ AI 연동 관리
 </td>
 <td align="center">
 <a href="https://github.com/hiimsajo">
-<img src="" width="100px;" alt="프로필이미지"/>
+<img src="docs/images/seunga.jpg" width="100px;" alt="프로필이미지"/>
 <br />
 <sub><b>조승아</b></sub>
 </a>
@@ -65,7 +65,7 @@ AI 연동 관리
 </td>
 <td align="center">
 <a href="https://github.com/Yuurim98">
-<img src="" width="100px;" alt="프로필이미지"/>
+<img src="docs/images/yurim.jpg" width="100px;" alt="프로필이미지"/>
 <br />
 <sub><b>최유림</b></span>
 <br />
@@ -92,7 +92,7 @@ AI 연동 관리
 
 
 ## 📑 ERD
-
+![team4erd](https://github.com/user-attachments/assets/297b320f-a622-4329-8847-8ff088fe336e)
 
 ## 📁 프로젝트 파일 구조
 
