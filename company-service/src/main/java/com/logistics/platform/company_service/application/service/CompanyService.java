@@ -151,4 +151,9 @@ public class CompanyService {
     company.deleteCompany(userName);
   }
 
+  public UUID getCompanyHubId(UUID companyId) {
+    Company company = companyRepository.findByCompanyIdAndIsDeletedFalse(companyId).orElseThrow(
+        () -> new CustomApiException("해당 companyId가 존재하지 않습니다."));
+    return company.getHubId();
+  }
 }

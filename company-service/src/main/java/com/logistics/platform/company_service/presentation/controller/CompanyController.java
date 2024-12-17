@@ -71,4 +71,9 @@ public class CompanyController {
     return new ResponseDto<>(ResponseDto.SUCCESS, "업체 삭제가 완료되었습니다.");
   }
 
+  @GetMapping("/{companyId}/hub")
+  public UUID getCompanyHubId(@PathVariable UUID companyId) {
+    return companyService.getCompanyHubId(companyId);
+  }
+
 }

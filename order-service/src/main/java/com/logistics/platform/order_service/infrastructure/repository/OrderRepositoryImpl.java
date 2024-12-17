@@ -32,7 +32,7 @@ public class OrderRepositoryImpl implements OrderRepositoryCustom {
 
   @Override
   public Page<OrderResponseDto> findAllToPage(
-      List<UUID> uuidList, Predicate predicate, Pageable pageable) {
+      List<UUID> uuidList, Predicate predicate, Pageable pageable, String userName) {
 
     QOrder order = QOrder.order;
 
@@ -41,17 +41,24 @@ public class OrderRepositoryImpl implements OrderRepositoryCustom {
       builder.and(order.id.in(uuidList));
     }
     builder.and(order.isDeleted.eq(false)); // isDeleted=false 만 조회
+    builder.and(order.createdBy.eq(userName));
 
     // size 10, 30, 50 이 아니라면 10으로 고정
     int size = pageable.getPageSize();
     size = (size == 30 || size == 50) ? size : 10;
     pageable = PageRequest.of(pageable.getPageNumber(), size, pageable.getSort());
 
+    // 입력값이 없다면 생성일순, 수정일순을 기준으로 정렬
+    Sort sort = pageable.getSort().isSorted() ? pageable.getSort() : Sort.by(
+        Sort.Order.desc("createdAt"),
+        Sort.Order.desc("updatedAt")
+    );
+
     List<OrderResponseDto> results = queryFactory
         .select(new QOrderResponseDto(order))
         .from(order)
         .where(builder)
-        .orderBy(getDynamicSort(pageable.getSort(), order.getType(), order.getMetadata()))
+        .orderBy(getDynamicSort(sort, order.getType(), order.getMetadata()))
         .offset(pageable.getOffset())
         .limit(pageable.getPageSize())
         .fetch();
