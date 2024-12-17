@@ -38,7 +38,7 @@ AI 연동 관리
 <tr>
 <td align="center">
 <a href="https://github.com/k-jaehyun">
-<img src="" width="100px;" alt="프로필이미지"/>
+<img src="https://ca.slack-edge.com/T06B9PCLY1E-U07Q5EL6JPQ-f14a05f6d345-512" width="100px;" alt="프로필이미지"/>
 <br />
 <sub><b>[팀장] 김재현</b></sub>
 <br />
