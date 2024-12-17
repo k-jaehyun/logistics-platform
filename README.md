@@ -56,7 +56,7 @@ AI 연동 관리
 </td>
 <td align="center">
 <a href="https://github.com/hiimsajo">
-<img src="" width="100px;" alt="프로필이미지"/>
+<img src="docs/images/seunga.jpg" width="100px;" alt="프로필이미지"/>
 <br />
 <sub><b>조승아</b></sub>
 </a>
