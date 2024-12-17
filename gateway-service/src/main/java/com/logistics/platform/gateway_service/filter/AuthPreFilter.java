@@ -17,6 +17,8 @@ public class AuthPreFilter implements GlobalFilter {
 
     private static final String AUTH_SIGNUP = "/api/auth/signup";
     private static final String AUTH_SIGNIN = "/api/auth/signin";
+    private static final String AUTH_SWAGGER = "/swagger/";
+
     private final JwtUtil jwtUtil;
 
     @Override
@@ -24,7 +26,7 @@ public class AuthPreFilter implements GlobalFilter {
         String path = exchange.getRequest().getURI().getPath();
         log.info("uri {}", path);
 
-        if (path.startsWith(AUTH_SIGNUP) || path.startsWith(AUTH_SIGNIN)) {
+        if (path.startsWith(AUTH_SIGNUP) || path.startsWith(AUTH_SIGNIN) || path.startsWith(AUTH_SWAGGER)) {
             log.info("auth 인증 제외");
             return chain.filter(exchange);
         }
