@@ -107,44 +107,6 @@ AI 연동 관리
 ```
 예시 : auth-service
 ├─auth-service
-│  │  .gitattributes
-│  │  .gitignore
-│  │  build.gradle
-│  │  gradlew
-│  │  gradlew.bat
-│  │  settings.gradle
-│  │
-│  ├─.gradle
-│  │  │  file-system.probe
-│  │  │
-│  │  ├─8.11.1
-│  │  │  │  gc.properties
-│  │  │  │
-│  │  │  ├─checksums
-│  │  │  │      checksums.lock
-│  │  │  │
-│  │  │  ├─executionHistory
-│  │  │  │      executionHistory.bin
-│  │  │  │      executionHistory.lock
-│  │  │  │
-│  │  │  ├─expanded
-│  │  │  ├─fileChanges
-│  │  │  │      last-build.bin
-│  │  │  │
-│  │  │  ├─fileHashes
-│  │  │  │      fileHashes.bin
-│  │  │  │      fileHashes.lock
-│  │  │  │      resourceHashesCache.bin
-│  │  │  │
-│  │  │  └─vcsMetadata
-│  │  ├─buildOutputCleanup
-│  │  │      buildOutputCleanup.lock
-│  │  │      cache.properties
-│  │  │      outputFiles.bin
-│  │  │
-│  │  └─vcs-1
-│  │          gc.properties
-│  │
 │  ├─build
 │  │  ├─classes
 │  │  │  └─java
