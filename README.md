@@ -97,7 +97,7 @@ AI 연동 관리
 ## 📃 인프라 설계서
 >redis: 캐싱 / Geo Service: 길찾기 / AI: 메세지 발송
 
-![image](https://github.com/user-attachments/assets/776d0bfe-0a3f-44fe-96bd-58a476a28c87)
+![인프라 설계도](https://github.com/user-attachments/assets/a9f20ff2-1930-496a-b74d-e32d96de4306)
 
 ## 📑 ERD
 ![team4erd](https://github.com/user-attachments/assets/297b320f-a622-4329-8847-8ff088fe336e)
